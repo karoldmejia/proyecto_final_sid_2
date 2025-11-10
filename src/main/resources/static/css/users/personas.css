@@ -1,0 +1,215 @@
+:root {
+    --verde: #4cb979;
+    --blanco: #FAFAFA;
+    --negro: #1A1A1A;
+    --gris: #DBDBDB;
+    --gris-claro: #F5F5F5;
+    --gris-oscuro: #B5B5B5;
+    --header-height: 60px;
+    --label-padding: 8px 16px;
+}
+
+/* General */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--blanco);
+}
+
+/* Contenedor superior con botón y búsqueda */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Barra de búsqueda */
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--gris-claro);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    width: 300px;
+    border: 1px solid var(--gris);
+}
+
+.search-box input {
+    outline: none;
+    background: transparent;
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--negro);
+}
+
+.search-box .material-icons-round {
+    margin-right: 0.5rem;
+    color: var(--gris);
+}
+
+/* Botón añadir usuario */
+.add-user-btn {
+    background-color: var(--negro);
+    color: var(--blanco);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    transition: background-color 0.2s;
+}
+
+.add-user-btn:hover {
+    background-color: #000; /* un poco más oscuro */
+}
+
+.add-user-btn:active {
+    background-color: #111;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--blanco);
+    overflow: visible;
+}
+
+thead th {
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--negro);
+    padding: 0.75rem 1rem;
+}
+
+tbody td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--negro);
+    background-color: var(--blanco);
+}
+
+/* Acción en celda */
+.action-cell {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Botón de 3 puntos */
+.action-btn {
+    background-color: var(--gris-claro);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: var(--gris);
+}
+
+/* Menú desplegable */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--blanco);
+    border: 1px solid var(--gris);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    min-width: 150px;
+    z-index: 10;
+    color: var(--gris-oscuro);
+}
+
+.dropdown-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: var(--gris-oscuro);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--gris-claro);
+}
+
+.dropdown-menu .material-icons-round {
+    color: var(--gris-oscuro);
+}
+
+/* Mostrar menú al hacer click */
+.action-cell.show-menu .dropdown-menu {
+    display: block;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--blanco);
+    border: 1px solid var(--gris);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.close-modal .material-icons-round {
+    font-size: 1.5rem;
+    color: var(--gris);
+       transition: color 0.2s;
+}
+
+.close-modal:hover .material-icons-round,
+.close-modal:active .material-icons-round {
+    color: var(--negro);
+}
+
+.close-modal:hover,
+.close-modal:active {
+    background: transparent !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+

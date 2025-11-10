@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear cuenta - Physical Activity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/components/main.css}">
+</head>
+
+<body>
+<div class="login-container">
+    <!-- Sección Derecha (Formulario de Registro) -->
+    <div class="login-right">
+        <div class="header">
+            <img th:src="@{/images/logo/icesifit_logo_negro.svg}" alt="Logo IcesiFit">
+        </div>
+        <h2>¡Crea tu cuenta!</h2>
+
+        <form th:action="@{/mvc/signup/form}" method="post" class="login-form">
+
+            <div class="input-group">
+                <input type="text" id="name" name="name" class="form_input" placeholder=" " required>
+                <label for="name" class="form_label">Nombre</label>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="institutional_email" name="institutionalEmail" class="form_input" placeholder=" " required>
+                <label for="institutional_email" class="form_label">Correo institucional</label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" name="password" class="form_input" placeholder=" " required>
+                <label for="password" class="form_label">Contraseña</label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form_input" placeholder=" " required>
+                <label for="confirmPassword" class="form_label">Confirmar contraseña</label>
+            </div>
+
+            <div class="input-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <input type="checkbox" id="termsAccepted" required style="width: 18px; height: 18px;">
+                <label for="termsAccepted" style="font-size: 14px; color: var(--negro);">
+                    Acepto los términos y condiciones
+                </label>
+            </div>
+
+            <button type="submit">Crear cuenta</button>
+
+            <p class="signup-text">
+                ¿Ya tienes una cuenta?
+                <a th:href="@{/mvc/login}">Inicia sesión aquí</a>
+            </p>
+        </form>
+    </div>
+
+    <div class="login-left">
+        <div class="image-slider">
+            <div class="image-slider-inner">
+                <img th:src="@{/images/login_1.png}" alt="Ejercicio 1">
+                <img th:src="@{/images/login_2.png}" alt="Ejercicio 2">
+                <img th:src="@{/images/login_3.png}" alt="Ejercicio 3">
+                <img th:src="@{/images/login_1.png}" alt="Ejercicio 1">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

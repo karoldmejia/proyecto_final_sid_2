@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crear rol</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div class="form-wrapper">
+    <div class="form-container">
+        <h2 class="text-2xl font-bold mb-4">Crear rol</h2>
+
+        <!-- Formulario principal -->
+        <form th:action="@{/mvc/roles/add}" method="post">
+
+            <!-- Nombre -->
+            <div class="input-group">
+                <input id="name" name="name" type="text" maxlength="50"
+                       class="form_input" placeholder=" " required>
+                <label for="name" class="form_label">Nombre</label>
+            </div>
+
+            <!-- Descripción -->
+            <div class="input-group">
+                <textarea id="description" name="description" maxlength="500"
+                          class="form_input" placeholder=" "></textarea>
+                <label for="description" class="form_label">Descripción</label>
+            </div>
+
+            <!-- Permisos -->
+            <div class="input-group">
+                <label class="form_label_static">Permisos</label>
+                <div class="permissions-checkboxes">
+                    <div th:each="p : ${allPermissions}" class="permission-item">
+                        <input type="checkbox"
+                               th:id="|perm_${p.id}|"
+                               name="permissions"
+                               th:value="${p.id}">
+                        <label th:for="|perm_${p.id}|"
+                               th:text="${p.name}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="form-actions">
+                <a th:href="@{/mvc/roles}" class="form-btn btn-secondary">Cancelar</a>
+                <button type="submit" class="form-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

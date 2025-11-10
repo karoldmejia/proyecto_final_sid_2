@@ -1,0 +1,41 @@
+<div th:fragment="userHeader(activeTab)">
+    <div class="header">
+        <!-- Extremo izquierdo: Logo -->
+        <div class="header-left">
+            <img th:src="@{/images/logo/icesifit_logo_negro.svg}" alt="Logo">
+        </div>
+
+        <!-- Centro: Tabs -->
+        <div class="header-center">
+            <a th:href="@{/mvc/users}"
+               th:class="'tab ' + (${activeTab} == 'usuarios' ? 'active' : '')">
+                Usuarios
+                <span class="material-icons-round">keyboard_arrow_down</span>
+            </a>
+            <a th:href="@{/mvc/users}"
+               th:class="'tab ' + (${activeTab} == 'personas' ? 'active' : '')">
+                Personas
+            </a>
+            <a th:href="@{/mvc/roles}"
+               th:class="'tab ' + (${activeTab} == 'perfiles' ? 'active' : '')">
+                Perfiles
+            </a>
+            <a th:href="@{/mvc/permissions}"
+               th:class="'tab ' + (${activeTab} == 'privilegios' ? 'active' : '')">
+                Privilegios
+            </a>
+        </div>
+
+        <!-- Extremo derecho -->
+        <div class="header-right">
+            <div class="icon-btn">
+                <span class="material-icons-round">notifications</span>
+            </div>
+            <form th:action="@{/mvc/logout}" method="post" style="display:inline;">
+                <button type="submit" class="icon-btn">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

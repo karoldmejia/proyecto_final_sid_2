@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Agregar usuario</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div class="form-wrapper">
+    <div class="form-container">
+        <h2 class="text-2xl font-bold mb-4">Agregar usuario</h2>
+
+        <form th:action="@{/mvc/users/add}" method="post">
+            <!-- Nombre -->
+            <div class="input-group">
+                <input id="name" name="name" type="text" maxlength="50" class="form_input" placeholder=" " required>
+                <label for="name" class="form_label">Nombre</label>
+            </div>
+
+            <!-- Email -->
+            <div class="input-group">
+                <input id="institutionalEmail" name="institutionalEmail" type="email" maxlength="100" class="form_input" placeholder=" " required>
+                <label for="institutionalEmail" class="form_label">Email</label>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="input-group">
+                <input id="password" name="password" type="password" maxlength="255" minlength="6" class="form_input" placeholder=" " required>
+                <label for="password" class="form_label">Contraseña</label>
+            </div>
+
+            <!-- Rol -->
+            <div class="input-group">
+                <select id="role" name="role" class="form_input" required>
+                    <option value="" disabled selected>Selecciona un rol</option>
+                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                </select>
+                <label for="role" class="form_label">Rol</label>
+            </div>
+
+            <!-- Botones -->
+            <div class="form-actions">
+                <a th:href="@{/mvc/users}" class="form-btn btn-secondary">Cancelar</a>
+                <button type="submit" class="form-btn">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar usuario</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div class="form-wrapper">
+<div class="form-container">
+    <h2 class="text-2xl font-bold mb-4">Editar usuario</h2>
+
+    <!-- Mensaje de error si el usuario no existe -->
+    <div th:if="${actualUser == null}" class="form-error">
+        <strong>Usuario no encontrado.</strong>
+        <a th:href="@{/mvc/users}" class="underline text-red-700">Volver</a>
+    </div>
+
+    <!-- Formulario principal -->
+    <form th:if="${actualUser != null}" th:action="@{/mvc/users/edit}" method="post">
+        <input type="hidden" name="id" th:value="${actualUser.id}">
+
+        <!-- Nombre -->
+        <div class="input-group">
+            <input id="name" name="name" type="text" maxlength="50"
+                   th:value="${actualUser.name}" class="form_input" placeholder=" " required>
+            <label for="name" class="form_label">
+                Nombre
+            </label>
+        </div>
+
+        <!-- Correo -->
+        <div class="input-group">
+            <input id="institutionalEmail" name="institutionalEmail" type="email" maxlength="100"
+                   th:value="${actualUser.institutionalEmail}" class="form_input" placeholder=" " required>
+            <label for="institutionalEmail" class="form_label">
+                Email
+            </label>
+        </div>
+
+        <!-- Rol -->
+        <div class="input-group">
+            <select id="role" name="role" class="form_input" required>
+                <option value="" disabled>Selecciona un rol</option>
+                <option th:each="role : ${roles}"
+                        th:value="${role.id}"
+                        th:text="${role.name}"
+                        th:selected="${actualUser.role != null && role.id == actualUser.role.id}">
+                </option>
+            </select>
+            <label for="role" class="form_label">
+                Rol
+            </label>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+            <a th:href="@{/mvc/users}" class="form-btn btn-secondary">Cancelar</a>
+            <button type="submit" class="form-btn">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>
+</div>
+
+</body>
+</html>

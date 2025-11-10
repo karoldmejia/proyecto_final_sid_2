@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar permiso</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div class="form-wrapper">
+    <div class="form-container">
+        <h2 class="text-2xl font-bold mb-4">Editar permiso</h2>
+
+        <!-- Mensaje de error si el permiso no existe -->
+        <div th:if="${actualPermission == null}" class="form-error">
+            <strong>Permiso no encontrado.</strong>
+            <a th:href="@{/mvc/permissions}" class="underline text-red-700">Volver</a>
+        </div>
+
+        <!-- Formulario principal -->
+        <form th:if="${actualPermission != null}" th:action="@{/mvc/permissions/edit}" method="post">
+            <input type="hidden" name="id" th:value="${actualPermission.id}">
+
+            <!-- Nombre -->
+            <div class="input-group">
+                <input id="name" name="name" type="text" maxlength="50"
+                       th:value="${actualPermission.name}" class="form_input" placeholder=" " required>
+                <label for="name" class="form_label">
+                    Nombre
+                </label>
+            </div>
+
+            <!-- Descripción -->
+            <div class="input-group">
+                <textarea id="description" name="description" maxlength="500"
+                          class="form_input" placeholder=" " th:text="${actualPermission.description}"></textarea>
+                <label for="description" class="form_label">
+                    Descripción
+                </label>
+            </div>
+
+            <!-- Botones -->
+            <div class="form-actions">
+                <a th:href="@{/mvc/permissions}" class="form-btn btn-secondary">Cancelar</a>
+                <button type="submit" class="form-btn">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
