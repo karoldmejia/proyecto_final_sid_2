@@ -1,0 +1,228 @@
+/* =========================================================
+   SIDEBAR - CON CIERRE AUTOMÁTICO
+   ========================================================= */
+.sidebar {
+    grid-row: 1 / span 2;
+    background: var(--white);
+    border-right: 1px solid rgba(0,0,0,.06);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* Estado colapsado */
+.sidebar.collapsed {
+    width: 80px;
+    padding: 20px 10px;
+}
+
+/* Hover en estado colapsado */
+.sidebar.collapsed:hover {
+    width: 260px;
+    padding: 20px 16px;
+}
+
+/* Efecto de retraso al salir del hover */
+.sidebar.collapsed {
+    transition: all 0.3s ease, width 0.3s ease 0.5s;
+}
+
+.sidebar.collapsed:hover {
+    transition: all 0.3s ease;
+}
+
+/* === Branding === */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px 16px;
+    border-bottom: 1px dashed rgba(0,0,0,.08);
+    transition: all 0.3s ease;
+    min-height: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar.collapsed .sidebar-brand span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed:hover .sidebar-brand span {
+    opacity: 1;
+    width: auto;
+}
+
+.sidebar .logo {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed .logo {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+}
+
+/* === Menú === */
+.sidebar-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--border-radius);
+    color: var(--dark);
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar-menu a i {
+    width: 20px;
+    text-align: center;
+    color: var(--primary);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(67, 97, 238, 0.08);
+    transform: translateX(4px);
+    color: var(--primary);
+}
+
+.sidebar-menu a:hover i {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.sidebar-menu a.active,
+.sidebar-menu a[aria-current="page"] {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.05));
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+    border-left: 3px solid var(--primary);
+}
+
+/* Texto del menú colapsado */
+.sidebar.collapsed .sidebar-menu a span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed:hover .sidebar-menu a span {
+    opacity: 1;
+    width: auto;
+}
+
+/* Tooltip */
+.sidebar.collapsed .sidebar-menu a::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--navy);
+    color: var(--white);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar.collapsed .sidebar-menu a:hover::after {
+    opacity: 1;
+    visibility: visible;
+    left: calc(100% + 10px);
+}
+
+/* === Footer del sidebar === */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(0,0,0,.08);
+}
+
+.sidebar-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    background: var(--dark);
+    color: var(--white);
+    transition: var(--transition);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-footer a:hover {
+    background: var(--navy);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Footer colapsado */
+.sidebar.collapsed .sidebar-footer a span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed:hover .sidebar-footer a span {
+    opacity: 1;
+    width: auto;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.12);
+    border-radius: 10px;
+}
+
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,.12) transparent;
+}

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -25,9 +26,20 @@ public class UserMVCController {
     private final IUserService userService;
     private final IRoleService roleService;
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.getAuthorities().forEach(authority -> System.out.println(authority.getAuthority()));
+        return "admin/admin-dashboard";
+    }
+
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute(users);
+        model.addAttribute("users", users);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.getAuthorities().forEach(authority -> System.out.println(authority.getAuthority()));
         return "admin/users/list";

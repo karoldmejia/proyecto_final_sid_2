@@ -1,0 +1,257 @@
+/* ==================================================================
+   CSS para admin-layout.html - CORREGIDO
+   ================================================================== */
+:root {
+    --verde: #4cb979;
+    --blanco: #FAFAFA;
+    --negro: #1A1A1A;
+    --gris: #DBDBDB;
+    --gris-claro: #F5F5F5;
+    --gris-oscuro: #B5B5B5;
+
+    --sidebar-width: 260px;
+    --sidebar-width-collapsed: 80px;
+    --topbar-height: 70px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: var(--gris-claro);
+    color: var(--negro);
+}
+
+.layout-wrapper {
+    display: flex;
+}
+
+/* --- 1. Sidebar (Lateral) --- */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--negro);
+    color: var(--blanco);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: width 0.2s ease-in-out;
+}
+
+.sidebar-brand {
+    padding: 1.25rem;
+    height: var(--topbar-height);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #333;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.sidebar-brand .logo {
+    height: 35px;
+    flex-shrink: 0;
+}
+.sidebar-brand .brand-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.sidebar-menu ul {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 0;
+}
+.sidebar-menu li {
+    margin: 0.25rem 0.75rem;
+}
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gris-oscuro);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap;
+}
+
+.sidebar-menu a i {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar-menu a:hover {
+    background-color: #333;
+    color: var(--blanco);
+}
+.sidebar-menu li.active a {
+    background-color: var(--verde);
+    color: var(--blanco);
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding: 0.5rem 0.75rem 1rem 0.75rem;
+    border-top: 1px solid #333;
+}
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    color: var(--gris-oscuro);
+    text-decoration: none;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+.sidebar-footer a:hover {
+    background-color: #c84040;
+    color: var(--blanco);
+}
+
+/* --- ESTILOS DE SIDEBAR COLAPSADO --- */
+.admin-sidebar.collapsed {
+    width: var(--sidebar-width-collapsed);
+}
+.admin-sidebar.collapsed .brand-text,
+.admin-sidebar.collapsed .sidebar-menu span,
+.admin-sidebar.collapsed .sidebar-footer span {
+    display: none;
+}
+.admin-sidebar.collapsed .sidebar-brand {
+    justify-content: center;
+}
+
+/* --- 2. Contenido Principal --- */
+.admin-main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+.admin-main-content.sidebar-collapsed {
+    margin-left: var(--sidebar-width-collapsed);
+    width: calc(100% - var(--sidebar-width-collapsed));
+}
+
+/* 2.1. Topbar */
+.admin-topbar {
+    height: var(--topbar-height);
+    background-color: var(--blanco);
+    border-bottom: 1px solid var(--gris);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    flex-shrink: 0;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.topbar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--negro);
+    margin: 0;
+}
+
+.btn-toggle-sidebar {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--negro);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: none; /* Oculto en escritorio */
+}
+.btn-toggle-sidebar:hover {
+    background-color: var(--gris-claro);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.topbar-right a {
+    color: var(--negro);
+    font-size: 1.2rem;
+}
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+.topbar-user i {
+    font-size: 1.5rem;
+    color: var(--gris-oscuro);
+}
+
+/* 2.2. Contenido de Página */
+.page-content {
+    padding: 2rem;
+    flex-grow: 1;
+    background-color: var(--gris-claro);
+}
+
+/* 2.3. Footer */
+.admin-footer {
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gris-oscuro);
+    background-color: var(--blanco);
+    border-top: 1px solid var(--gris);
+}
+
+/* --- Responsividad (Móvil) - BREAKPOINT REDUCIDO A 768px --- */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        position: fixed;
+        left: calc(-1 * var(--sidebar-width));
+        transition: left 0.2s ease-in-out;
+    }
+    .admin-sidebar.is-open {
+        left: 0;
+    }
+    .admin-main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    .btn-toggle-sidebar {
+        display: block;
+    }
+    .admin-main-content.sidebar-collapsed {
+        margin-left: 0;
+        width: 100%;
+    }
+    .admin-sidebar.collapsed {
+        width: var(--sidebar-width);
+    }
+    .admin-sidebar.collapsed .brand-text,
+    .admin-sidebar.collapsed .sidebar-menu span,
+    .admin-sidebar.collapsed .sidebar-footer span {
+        display: inline-block;
+    }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}">
+<head>
+    <title th:text="${pageTitle}">Formulario de Ejercicio</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="form-wrapper">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+
+    <!-- Fuentes e íconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
+    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+
+    <div class="form-container">
+        <h2 th:text="${pageTitle}">Formulario de Ejercicio</h2>
+
+        <form th:action="@{/mvc/exercises/save}" th:object="${exercise}" method="post">
+
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="input-group">
+                <input type="text" th:field="*{name}" class="form_input" placeholder=" " required />
+                <label class="form_label">Nombre del Ejercicio</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" th:field="*{type}" class="form_input" placeholder=" " required />
+                <label class="form_label">Tipo (Ej. Fuerza, Cardio)</label>
+            </div>
+
+            <div class="input-group">
+                <select th:field="*{difficulty}" class="form_input" required>
+                    <option value="" disabled selected hidden></option>
+                    <option value="Principiante">Principiante</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                </select>
+                <label class="form_label form_label_static">Dificultad</label>
+            </div>
+
+            <div class="input-group">
+                <input type="number" th:field="*{duration}" class="form_input" placeholder=" " required />
+                <label class="form_label">Duración (minutos)</label>
+            </div>
+
+            <div class="input-group">
+                <textarea th:field="*{description}" class="form_input" rows="3" placeholder=" "></textarea>
+                <label class="form_label">Descripción</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" th:field="*{videoUrl}" class="form_input" placeholder=" " />
+                <label class="form_label">URL del Video (Opcional)</label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="form-btn">
+                    <span class="material-icons-round">save</span>
+                    Guardar
+                </button>
+                <a th:href="@{/mvc/exercises}" class="form-btn btn-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

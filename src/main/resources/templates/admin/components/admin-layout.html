@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE | Admin Gym Icesi">Admin Gym Icesi</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components/admin-layout.css}">
+
+
+
+</head>
+<body>
+
+<div class="layout-wrapper">
+
+    <aside class="admin-sidebar" role="navigation" aria-label="Menú lateral">
+        <div class="sidebar-brand">
+            <a th:href="@{/app/dashboard}" aria-label="Ir al inicio">
+                <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Gym Icesi" class="logo">
+                <span class="brand-text">Gym Icesi</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-menu">
+            <ul>
+                <li th:classappend="${page == 'dashboard'} ? 'active' : ''">
+                    <a th:href="@{/app/dashboard}" aria-current="page">
+                        <i class="fa-solid fa-house"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+                <li th:classappend="${page == 'personas'} ? 'active' : ''">
+                    <a th:href="@{/mvc/users}">
+                        <i class="fa-solid fa-users"></i> <span>Personas</span>
+                    </a>
+                </li>
+                <li th:classappend="${page == 'ejercicios'} ? 'active' : ''">
+                    <a th:href="@{/app/exercises}">
+                        <i class="fa-solid fa-fitness-center"></i> <span>Ejercicios</span>
+                    </a>
+                </li>
+                <li th:classappend="${page == 'rutinas'} ? 'active' : ''">
+                    <a th:href="@{/app/routines}">
+                        <i class="fa-solid fa-assignment"></i> <span>Rutinas</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a th:href="@{/mvc/logout}">
+                <i class="fa-solid fa-right-from-bracket"></i><span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="admin-main-content">
+
+        <header class="admin-topbar" role="banner" aria-label="Barra superior">
+            <div class="topbar-left">
+                <button class="btn-toggle-sidebar" aria-label="Abrir/cerrar menú">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="topbar-title" layout:fragment="page-title">Panel</h1>
+            </div>
+
+            <div class="topbar-right">
+                <a href="#" aria-label="Notificaciones">
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+                <div class="topbar-user" aria-label="Usuario">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span th:text="${#authentication?.name}">admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div layout:fragment="content">
+                <p>El contenido de la página se cargará aquí.</p>
+            </div>
+        </main>
+
+        <footer class="admin-footer">
+            © 2025 Universidad Cali | Proyecto Gym Icesi
+        </footer>
+    </div>
+
+</div>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.admin-sidebar');
+        const layout = document.querySelector('.admin-main-content');
+        const toggleBtn = document.querySelector('.btn-toggle-sidebar');
+
+        if (!sidebar || !layout) return; // No hacer nada si no existen
+
+        /* --- BLOQUE COMENTADO ---
+           Ya no se colapsa por defecto en escritorio
+
+        // Colapsar por defecto en escritorio
+        if (window.innerWidth > 1100) {
+            sidebar.classList.add('collapsed');
+            layout.classList.add('sidebar-collapsed');
+        }
+
+        // Expandir/Colapsar con mouse (solo en escritorio)
+        sidebar.addEventListener('mouseenter', function() {
+            if (window.innerWidth > 1100) {
+                sidebar.classList.remove('collapsed');
+                layout.classList.remove('sidebar-collapsed');
+            }
+        });
+
+        sidebar.addEventListener('mouseleave', function() {
+            if (window.innerWidth > 1100) {
+                sidebar.classList.add('collapsed');
+                layout.classList.add('sidebar-collapsed');
+            }
+        });
+
+        */
+
+        // Botón toggle para móvil (ESTO SÍ SE DEJA)
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('is-open'); // Clase para abrir en móvil
+            });
+        }
+    });
+</script>
+</body>
+</html>

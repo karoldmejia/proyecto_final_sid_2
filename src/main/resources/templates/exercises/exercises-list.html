@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}">
+<head>
+    <title>Lista de Ejercicios</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+
+    <!-- Fuentes e íconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
+    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <div class="header-actions">
+        <div class="search-box">
+            <span class="material-icons-round">search</span>
+            <input type="text" placeholder="Buscar ejercicio...">
+        </div>
+
+        <a th:href="@{/mvc/exercises/new}" class="add-user-btn">
+            <span class="material-icons-round">add</span>
+            Añadir Ejercicio
+        </a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Dificultad</th>
+            <th>Duración</th>
+            <th style="text-align: right;">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="exercise : ${exercises}">
+            <td th:text="${exercise.name}">Press de Banca</td>
+            <td th:text="${exercise.type}">Fuerza</td>
+            <td th:text="${exercise.difficulty}">Intermedio</td>
+            <td th:text="|${exercise.duration} min|">10 min</td>
+
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu">
+                    <a th:href="@{/mvc/exercises/edit/{id}(id=${exercise.id})}" class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </a>
+
+                    <form th:action="@{/mvc/exercises/delete/{id}(id=${exercise.id})}" th:method="post" style="margin: 0;">
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(exercises)}">
+            <td colspan="5" style="text-align: center;">No hay ejercicios para mostrar.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function toggleMenu(button) {
+            button.closest('.action-cell').classList.toggle('show-menu');
+        }
+        // Cerrar menú si se hace clic fuera
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.action-cell.show-menu').forEach(cell => {
+                if (!cell.contains(event.target)) {
+                    cell.classList.remove('show-menu');
+                }
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

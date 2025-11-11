@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 
 @Data
 public class ExerciseDTO {
+
     private ObjectId id;
     private String name;
     private String type;

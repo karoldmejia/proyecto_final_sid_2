@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE">Admin Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fuentes e íconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- CSS Base -->
+    <link rel="stylesheet" th:href="@{/main.css}">
+
+    <!-- CSS específico de cada página -->
+    <link rel="stylesheet" layout:fragment="page-css" />
+</head>
+<body>
+<!-- Header Admin Simple -->
+<header class="admin-header">
+    <div class="header-content">
+        <div class="header-title">
+            <h1>ICESI Fit - Admin</h1>
+        </div>
+        <div class="header-actions">
+            <span class="user-name" th:text="${#authentication?.principal?.username ?: 'Admin'}">Admin</span>
+            <a th:href="@{/logout}" class="logout-btn">
+                <span class="material-icons-round">logout</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Navegación Simple -->
+<nav class="admin-nav">
+    <div class="nav-content">
+        <a th:href="@{/mvc/admin/dashboard}" class="nav-link">Dashboard</a>
+        <a th:href="@{/mvc/admin/users}" class="nav-link active">Usuarios</a>
+        <a th:href="@{/mvc/admin/activities}" class="nav-link">Actividades</a>
+        <a th:href="@{/mvc/admin/reports}" class="nav-link">Reportes</a>
+    </div>
+</nav>
+
+<!-- Contenido Principal -->
+<main class="main-content">
+    <div layout:fragment="content">
+        <!-- El contenido de cada página se insertará aquí -->
+    </div>
+</main>
+
+<!-- Scripts específicos de cada página -->
+<script layout:fragment="page-scripts"></script>
+</body>
+</html>

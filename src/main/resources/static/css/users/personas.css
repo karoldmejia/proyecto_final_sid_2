@@ -1,3 +1,7 @@
+/* ==========================================================
+   personas.css — versión mejorada (grid limpio y balanceado)
+   ========================================================== */
+
 :root {
     --verde: #4cb979;
     --blanco: #FAFAFA;
@@ -5,211 +9,204 @@
     --gris: #DBDBDB;
     --gris-claro: #F5F5F5;
     --gris-oscuro: #B5B5B5;
-    --header-height: 60px;
-    --label-padding: 8px 16px;
 }
 
-/* General */
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--blanco);
-}
-
-/* Contenedor superior con botón y búsqueda */
+/* ====== ENCABEZADO Y BARRA DE BÚSQUEDA ====== */
 .header-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-/* Barra de búsqueda */
 .search-box {
     display: flex;
     align-items: center;
     background-color: var(--gris-claro);
-    border-radius: 8px;
+    border-radius: 9999px;
     padding: 0.5rem 1rem;
-    width: 300px;
-    border: 1px solid var(--gris);
+    gap: 0.4rem;
+    flex: 1;
+    max-width: 350px;
 }
 
 .search-box input {
+    border: none;
     outline: none;
     background: transparent;
-    flex: 1;
-    font-size: 0.875rem;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
     color: var(--negro);
 }
 
 .search-box .material-icons-round {
-    margin-right: 0.5rem;
-    color: var(--gris);
+    color: var(--gris-oscuro);
+    font-size: 1.3rem;
 }
 
-/* Botón añadir usuario */
 .add-user-btn {
-    background-color: var(--negro);
-    color: var(--blanco);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
+    background-color: var(--verde);
+    color: white;
+    border-radius: 9999px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    transition: background-color 0.2s;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
 .add-user-btn:hover {
-    background-color: #000; /* un poco más oscuro */
+    background-color: #3da567;
 }
 
-.add-user-btn:active {
-    background-color: #111;
+/* ====== GRID DE PERSONAS ====== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
 }
 
-/* Tabla */
-table {
-    width: 100%;
-    border-collapse: collapse;
+/* ====== TARJETAS ====== */
+.user-card {
     background-color: var(--blanco);
-    overflow: visible;
-}
-
-thead th {
-    text-align: left;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--negro);
-    padding: 0.75rem 1rem;
-}
-
-tbody td {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    color: var(--negro);
-    background-color: var(--blanco);
-}
-
-/* Acción en celda */
-.action-cell {
-    position: relative;
+    border: 1px solid var(--gris);
+    border-radius: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
 }
 
-/* Botón de 3 puntos */
-.action-btn {
-    background-color: var(--gris-claro);
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
+.user-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.user-card h2 {
+    font-size: 1.1rem;
+    color: var(--negro);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    word-break: break-word;
+}
+
+.user-card p {
+    font-size: 0.9rem;
+    color: #555;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.25rem;
-    transition: background-color 0.2s;
+    margin-top: 0.25rem;
 }
 
-.action-btn:hover {
+.user-card p .material-icons-round {
+    font-size: 1rem;
+    color: var(--gris-oscuro);
+    margin-right: 0.25rem;
+}
+
+/* ====== BOTONES ====== */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.card-actions button,
+.card-actions a {
+    border: none;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card-actions button {
+    background-color: var(--gris-claro);
+    color: var(--negro);
+}
+
+.card-actions button:hover {
     background-color: var(--gris);
 }
 
-/* Menú desplegable */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: var(--blanco);
-    border: 1px solid var(--gris);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    min-width: 150px;
-    z-index: 10;
-    color: var(--gris-oscuro);
+.card-actions a {
+    background-color: #ffe5e5;
+    color: #c62828;
+    text-decoration: none;
 }
 
-.dropdown-menu .dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    color: var(--gris-oscuro);
-    cursor: pointer;
-    transition: background-color 0.2s;
+.card-actions a:hover {
+    background-color: #ffc9c9;
 }
 
-.dropdown-menu .dropdown-item:hover {
-    background-color: var(--gris-claro);
-}
-
-.dropdown-menu .material-icons-round {
-    color: var(--gris-oscuro);
-}
-
-/* Mostrar menú al hacer click */
-.action-cell.show-menu .dropdown-menu {
-    display: block;
-}
-
+/* ====== MODAL ====== */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.45);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
 }
 
-.hidden {
+.modal-overlay.hidden {
     display: none;
 }
 
 .modal-content {
-    position: relative;
     background-color: var(--blanco);
-    border: 1px solid var(--gris);
-    border-radius: 12px;
+    border-radius: 1rem;
     padding: 2rem;
     width: 90%;
-    max-width: 450px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    animation: fadeIn 0.3s ease;
+    max-width: 600px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: showModal 0.25s ease;
 }
 
-.close-modal {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}
-
-.close-modal .material-icons-round {
-    font-size: 1.5rem;
-    color: var(--gris);
-       transition: color 0.2s;
-}
-
-.close-modal:hover .material-icons-round,
-.close-modal:active .material-icons-round {
-    color: var(--negro);
-}
-
-.close-modal:hover,
-.close-modal:active {
-    background: transparent !important;
-}
-
-@keyframes fadeIn {
+@keyframes showModal {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
 
+.close-modal {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--gris-oscuro);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: var(--negro);
+}
+
+/* ====== ESTADO VACÍO ====== */
+.text-center i {
+    color: var(--gris-oscuro);
+}
+
+.text-center p {
+    color: #666;
+    font-size: 0.95rem;
+}

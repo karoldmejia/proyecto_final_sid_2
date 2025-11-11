@@ -1,0 +1,674 @@
+/* =========================================================
+   VARIABLES Y PALETA DE COLORES - ACTUALIZADO
+   ========================================================= */
+:root {
+    /* Paleta Base (Verde/Negro) */
+    --verde: #4cb979;
+    --blanco: #FAFAFA;
+    --negro: #1A1A1A;
+    --gris: #DBDBDB;
+    --gris-claro: #F5F5F5;
+    --gris-oscuro: #B5B5B5;
+    --rojo-hover: #c84040; /* Para logout, basado en el CSS base */
+
+    /* Mapeo Semántico (Usado por el layout) */
+    --primary: var(--verde);
+    --primary-dark: #3da167; /* Verde más oscuro para hover */
+    --primary-light: #6ec390; /* Verde más claro */
+
+    /* Colores secundarios (Mapeados a neutros/sidebar) */
+    --secondary: var(--negro);
+    --secondary-dark: #000000;
+    --secondary-light: #333333; /* Usado para hover/bordes en sidebar */
+
+    /* Colores de acento */
+    --accent: var(--verde);
+    --accent-dark: var(--primary-dark);
+    --accent-light: var(--primary-light);
+
+    /* Colores neutros (Mapeo directo) */
+    --navy: var(--negro);
+    --dark: var(--negro);
+    --gray-dark: var(--gris-oscuro);
+    --gray: var(--gris);
+    --gray-light: var(--gris-claro);
+    --white: var(--blanco);
+
+    /* Colores de estado (Universales, se mantienen) */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
+    --danger: #ef4444;
+
+    /* Colores para elementos stripe (mapeados a la nueva paleta) */
+    --stripe-1: var(--verde);
+    --stripe-2: #3a0ca3; /* (Estos pueden quedar si te gustan) */
+    --stripe-3: #7209b7;
+    --stripe-4: #f72585;
+    --stripe-5: #4cc9f0;
+    --stripe-6: #4895ef;
+
+    /* Sombras (Se mantienen) */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 24px rgba(0,0,0,0.12);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+
+    /* Bordes (Se mantienen) */
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    --border-radius-lg: 16px;
+
+    /* Transiciones (Se mantienen) */
+    --transition: all 0.2s ease;
+    --transition-slow: all 0.3s ease;
+}
+
+/* =========================================================
+   RESET Y ESTILOS BASE - ACTUALIZADO
+   ========================================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* ACTUALIZADO */
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--gray-light); /* ACTUALIZADO */
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   LAYOUT PRINCIPAL
+   ========================================================= */
+.layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 70px 1fr; /* Ajustado a 70px como el base */
+    min-height: 100vh;
+    transition: grid-template-columns 0.3s ease;
+}
+
+/* Estado colapsado del layout */
+.layout.sidebar-collapsed {
+    grid-template-columns: 80px 1fr;
+}
+
+/* =========================================================
+   SIDEBAR - ACTUALIZADO
+   ========================================================= */
+.sidebar {
+    grid-row: 1 / span 2;
+    background: var(--dark); /* ACTUALIZADO */
+    border-right: 1px solid var(--secondary-light); /* ACTUALIZADO */
+    display: flex;
+    flex-direction: column;
+    padding: 0; /* Ajustado para que el brand ocupe todo */
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* box-shadow eliminado para un look más plano */
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* Estado colapsado del sidebar */
+.sidebar.collapsed {
+    width: 80px;
+    padding: 0 10px; /* Ajuste de padding */
+    gap: 16px;
+}
+
+/* Comportamiento hover para sidebar colapsado */
+.sidebar.collapsed:hover {
+    width: 260px;
+    padding: 0 16px; /* Ajuste de padding */
+    gap: 16px;
+}
+
+/* Efecto de retraso al salir del hover */
+.sidebar.collapsed {
+    transition: all 0.3s ease, width 0.3s ease 0.5s;
+}
+
+.sidebar.collapsed:hover {
+    transition: all 0.3s ease;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1.25rem; /* Ajustado */
+    height: 70px; /* Ajustado */
+    border-bottom: 1px solid var(--secondary-light); /* ACTUALIZADO */
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--white); /* Añadido */
+    box-sizing: border-box; /* Añadido */
+}
+
+/* Ocultar texto del brand en estado colapsado */
+.sidebar.collapsed .sidebar-brand span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+/* Mostrar texto del brand al hacer hover */
+.sidebar.collapsed:hover .sidebar-brand span {
+    opacity: 1;
+    width: auto;
+}
+
+.sidebar .logo {
+    height: 35px; /* Ajustado */
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed .sidebar-brand {
+    justify-content: center; /* Añadido */
+}
+
+.sidebar.collapsed .logo {
+    height: 35px; /* Ajustado */
+}
+
+.sidebar-menu {
+    padding: 0 0.75rem; /* Añadido padding lateral */
+}
+
+.sidebar-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Reducido gap */
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Ajustado */
+    padding: 0.9rem 1rem; /* Ajustado */
+    border-radius: var(--border-radius-sm); /* Ajustado */
+    color: var(--gray-dark); /* ACTUALIZADO */
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar-menu a i {
+    width: 24px; /* Ajustado */
+    text-align: center;
+    font-size: 1.1rem; /* Añadido */
+    color: var(--gray-dark); /* ACTUALIZADO */
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.sidebar-menu a:hover {
+    background: var(--secondary-light); /* ACTUALIZADO */
+    transform: none; /* Eliminado translateX */
+    color: var(--white); /* ACTUALIZADO */
+}
+
+.sidebar-menu a:hover i {
+    color: var(--white); /* ACTUALIZADO */
+    transform: none; /* Eliminado scale */
+}
+
+.sidebar-menu a[aria-current="page"],
+.sidebar-menu a.active {
+    background: var(--primary); /* ACTUALIZADO */
+    color: var(--white); /* ACTUALIZADO */
+    font-weight: 600; /* Añadido */
+    /* Estilos de gradiente, sombra y borde eliminados */
+}
+
+.sidebar-menu a.active i,
+.sidebar-menu a[aria-current="page"] i {
+    color: var(--white); /* ACTUALIZADO */
+}
+
+/* Ocultar texto del menú en estado colapsado */
+.sidebar.collapsed .sidebar-menu a span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+/* Mostrar texto del menú al hacer hover */
+.sidebar.collapsed:hover .sidebar-menu a span {
+    opacity: 1;
+    width: auto;
+}
+
+/* Tooltip para elementos del menú en estado colapsado */
+.sidebar.collapsed .sidebar-menu a::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--dark); /* ACTUALIZADO */
+    color: var(--white);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar.collapsed .sidebar-menu a:hover::after {
+    opacity: 1;
+    visibility: visible;
+    left: calc(100% + 10px);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 0.5rem 0.75rem 1rem 0.75rem; /* Ajustado */
+    border-top: 1px solid var(--secondary-light); /* ACTUALIZADO */
+}
+
+.sidebar-footer a {
+    display: flex; /* Cambiado a flex */
+    align-items: center;
+    gap: 1rem; /* Ajustado */
+    padding: 0.9rem 1rem; /* Ajustado */
+    border-radius: var(--border-radius-sm); /* Ajustado */
+    text-decoration: none;
+    background: transparent; /* ACTUALIZADO */
+    color: var(--gray-dark); /* ACTUALIZADO */
+    transition: var(--transition);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-footer a:hover {
+    background: var(--rojo-hover); /* ACTUALIZADO */
+    color: var(--white); /* Añadido */
+    transform: none; /* Eliminado */
+    box-shadow: none; /* Eliminado */
+}
+
+/* Footer en estado colapsado */
+.sidebar.collapsed .sidebar-footer a span {
+    opacity: 0;
+    width: 0;
+    transition: opacity 0.2s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed:hover .sidebar-footer a span {
+    opacity: 1;
+    width: auto;
+}
+
+/* Scrollbar del sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.12); /* Aclarado para fondo oscuro */
+    border-radius: 10px;
+}
+
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.12) transparent;
+}
+/* FIX: Eliminar el gap en estado colapsado para centrar bien el ícono */
+.sidebar.collapsed .sidebar-menu a,
+.sidebar.collapsed .sidebar-footer a {
+    gap: 0;
+    justify-content: center;
+}
+
+/* FIX: Restaurar el gap cuando el sidebar colapsado está en hover */
+.sidebar.collapsed:hover .sidebar-menu a,
+.sidebar.collapsed:hover .sidebar-footer a {
+    gap: 1rem;
+    justify-content: flex-start; /* Asegura que el texto se alinee a la izquierda */
+}
+/* =========================================================
+   TOPBAR - ACTUALIZADO
+   ========================================================= */
+.main-column {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.topbar {
+    height: 70px; /* Ajustado */
+    background: var(--white); /* ACTUALIZADO */
+    color: var(--dark); /* ACTUALIZADO */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Añadido */
+    gap: 16px;
+    padding: 0 1.5rem; /* Ajustado */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--gray); /* ACTUALIZADO */
+    /* box-shadow eliminado */
+}
+
+.topbar-left {
+    margin-left: 0; /* Eliminado auto */
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Ajustado */
+}
+
+.topbar-title {
+    font-weight: 600;
+    font-size: 1.5rem; /* Ajustado */
+    margin: 0; /* Añadido */
+}
+
+.btn-toggle-sidebar {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: var(--dark); /* ACTUALIZADO */
+    font-size: 1.25rem; /* Ajustado */
+    cursor: pointer;
+    padding: 0.5rem; /* Ajustado */
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+}
+
+.btn-toggle-sidebar:hover {
+    background: var(--gray-light); /* ACTUALIZADO */
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Ajustado */
+}
+
+.topbar-right a {
+    color: var(--dark); /* ACTUALIZADO */
+    text-decoration: none;
+    font-size: 1.2rem; /* Ajustado */
+    opacity: 1; /* Ajustado */
+    transition: var(--transition);
+    padding: 6px;
+    border-radius: var(--border-radius-sm);
+}
+
+.topbar-right a:hover {
+    opacity: 1;
+    background: var(--gray-light); /* ACTUALIZADO */
+    color: var(--dark); /* Asegurado */
+}
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Ajustado */
+    font-weight: 500; /* Ajustado */
+    padding: 6px; /* Eliminado padding lateral */
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.topbar-user i {
+    font-size: 1.5rem; /* Añadido */
+    color: var(--gray-dark); /* Añadido */
+}
+
+.topbar-user:hover {
+    background: var(--gray-light); /* ACTUALIZADO */
+}
+
+/* =========================================================
+   CONTENIDO PRINCIPAL DEL DASHBOARD
+   ========================================================= */
+/* (Estilos de contenido... Estos usarán automáticamente las nuevas variables) */
+.content, .admin-container {
+    padding: 2rem; /* Ajustado */
+    overflow: auto;
+    background: var(--gray-light); /* Asegurado */
+    flex: 1;
+}
+
+.dashboard-container {
+    padding: 2rem; /* Ajustado */
+    max-width: 1600px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); /* Ahora será Verde -> Negro */
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+/* (El resto de estilos de .dashboard-header y .stat-card se mantienen) */
+.header-content h1 { color: var(--white); font-size: 2rem; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px; }
+.header-content p { color: rgba(255,255,255,0.9); margin: 0; font-size: 1.1rem; }
+.header-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: var(--border-radius); padding: 16px 24px; display: flex; align-items: center; gap: 16px; min-width: 140px; transition: var(--transition); }
+.stat-card:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+.stat-card i { font-size: 2rem; color: var(--white); }
+.stat-info { display: flex; flex-direction: column; }
+.stat-value { font-size: 1.8rem; font-weight: 700; color: var(--white); line-height: 1; }
+.stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-top: 4px; }
+
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+    gap: 32px;
+}
+
+.dashboard-section {
+    background: var(--white); /* Usará --blanco */
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+.dashboard-section:hover { box-shadow: var(--shadow-lg); }
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-light); /* Usará --gris-claro */
+}
+.section-header h2 { font-size: 1.4rem; color: var(--navy); margin: 0; display: flex; align-items: center; gap: 12px; font-weight: 700; }
+.section-header h2 i { color: var(--primary); } /* Usará --verde */
+.section-badge { background: var(--primary); color: var(--white); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; } /* Usará --verde */
+
+/* (El resto de estilos de .action-card y .quick-link se mantienen) */
+/* (Se actualizarán automáticamente por las variables) */
+.action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.action-card { background: var(--gray-light); border-radius: var(--border-radius); padding: 20px; display: flex; flex-direction: column; gap: 12px; text-decoration: none; transition: var(--transition); border: 2px solid transparent; position: relative; overflow: hidden; }
+.action-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); transition: var(--transition); }
+.action-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: currentColor; }
+.action-card:hover::before { width: 100%; opacity: 0.1; }
+.action-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: var(--transition); }
+.action-card:hover .action-icon { transform: scale(1.1); }
+.action-content h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--dark); }
+.action-content p { margin: 4px 0 0 0; font-size: 0.85rem; color: var(--gray-dark); line-height: 1.4; }
+.action-arrow { align-self: flex-end; color: var(--gray-dark); transition: var(--transition); }
+.action-card:hover .action-arrow { transform: translateX(4px); }
+.action-card.primary { color: var(--primary); }
+.action-card.primary .action-icon { background: rgba(76, 185, 121, 0.1); color: var(--primary); } /* RGB de --verde */
+.action-card.success { color: var(--success); }
+.action-card.success .action-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.action-card.info { color: var(--info); }
+.action-card.info .action-icon { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+.action-card.warning { color: var(--warning); }
+.action-card.warning .action-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.action-card.danger { color: var(--danger); }
+.action-card.danger .action-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+.action-card.purple { color: var(--purple); }
+.action-card.purple .action-icon { background: rgba(139, 92, 246, 0.1); color: var(--purple); }
+.quick-access { grid-column: 1 / -1; }
+.quick-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.quick-link { background: var(--gray-light); padding: 16px; border-radius: var(--border-radius); display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--dark); font-weight: 500; transition: var(--transition); border: 2px solid transparent; }
+.quick-link:hover { background: var(--primary); color: var(--white); border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.quick-link i { font-size: 1.3rem; color: var(--primary); transition: var(--transition); }
+.quick-link:hover i { color: var(--white); }
+
+/* =========================================================
+   FOOTER - ACTUALIZADO
+   ========================================================= */
+footer {
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray-dark);
+    background: var(--white);
+    border-top: 1px solid var(--gray);
+    /* box-shadow eliminado */
+}
+
+/* =========================================================
+   ANIMACIONES Y EFECTOS ESPECIALES
+   ========================================================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   RESPONSIVE - CON COMPORTAMIENTO AUTOMÁTICO
+   ========================================================= */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    /* (Estas reglas de colapso automático se mantienen) */
+    .layout { grid-template-columns: 80px 1fr; }
+    .layout:not(.sidebar-collapsed) { grid-template-columns: 260px 1fr; }
+    .sidebar { width: 80px; padding: 0 10px; }
+    .sidebar:not(.collapsed) { width: 260px; padding: 0; }
+    .sidebar-menu a span { display: none; }
+    .sidebar:not(.collapsed) .sidebar-menu a span { display: inline; }
+    .sidebar-menu a { justify-content: center; padding: 12px; }
+    .sidebar:not(.collapsed) .sidebar-menu a { justify-content: flex-start; padding: 0.9rem 1rem; }
+    .sidebar-brand span { display: none; }
+    .sidebar:not(.collapsed) .sidebar-brand span { display: inline; }
+    .sidebar-brand { justify-content: center; padding: 1.25rem; }
+    .sidebar:not(.collapsed) .sidebar-brand { justify-content: flex-start; }
+    .sidebar-footer a span { display: none; }
+    .sidebar:not(.collapsed) .sidebar-footer a span { display: inline; }
+}
+
+@media (max-width: 860px) {
+    .btn-toggle-sidebar {
+        display: inline-flex; /* ACTUALIZADO */
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        padding: 0; /* Asegurado */
+    }
+
+    /* Regla añadida del CSS base para el sidebar abierto */
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    /* Regla añadida del CSS base para el padding */
+    .sidebar.is-open .sidebar-menu {
+        padding: 0 0.75rem;
+    }
+
+    .sidebar.is-open .sidebar-brand {
+        justify-content: flex-start;
+    }
+
+    .sidebar.is-open .sidebar-brand span {
+        display: inline;
+    }
+
+    .sidebar.is-open .sidebar-menu a {
+        justify-content: flex-start;
+    }
+
+    .sidebar.is-open .sidebar-menu a span {
+        display: inline;
+    }
+
+    .sidebar.is-open .sidebar-footer a span {
+        display: inline;
+    }
+
+
+    .main-column {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container { padding: 16px; }
+    .dashboard-header { flex-direction: column; align-items: flex-start; padding: 24px; }
+    .header-content h1 { font-size: 1.5rem; }
+    .header-stats { width: 100%; justify-content: space-between; }
+    .stat-card { flex: 1; min-width: 0; padding: 12px; }
+    .action-grid { grid-template-columns: 1fr; }
+    .quick-links { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .content, .admin-container { padding: 20px 16px; }
+    .topbar { padding: 0 16px; }
+}
+
+@media (max-width: 480px) {
+    .dashboard-header { padding: 20px; }
+    .header-stats { flex-direction: column; }
+    .stat-card { width: 100%; }
+    .quick-links { grid-template-columns: 1fr; }
+    .topbar-right a:not(.topbar-user) { display: none; }
+    .topbar-title { font-size: 1.1rem; }
+}

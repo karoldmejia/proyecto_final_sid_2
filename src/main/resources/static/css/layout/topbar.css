@@ -1,0 +1,81 @@
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+.topbar {
+    height: 64px;
+    background: var(--primary-dark);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: var(--shadow-lg);
+}
+
+.topbar-title {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    font-size: 1.25rem;
+}
+
+.btn-toggle-sidebar {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+}
+
+.btn-toggle-sidebar:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.topbar-left {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-right a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 18px;
+    opacity: 0.9;
+    transition: var(--transition);
+    padding: 6px;
+    border-radius: var(--border-radius-sm);
+}
+
+.topbar-right a:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.1);
+}
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.topbar-user:hover {
+    background: rgba(255,255,255,0.1);
+}
