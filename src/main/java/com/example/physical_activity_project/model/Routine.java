@@ -21,10 +21,10 @@ public class Routine {
     private ObjectId id;
 
     @Field("usuario_sql_id")
-    private String userSqlId;
+    private Long userSqlId;
 
     @Field("origen_publico_id")
-    private String originPublicId;
+    private ObjectId originPublicId;
 
     @Field("name")
     private String name;

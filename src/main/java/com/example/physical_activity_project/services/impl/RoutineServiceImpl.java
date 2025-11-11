@@ -48,7 +48,7 @@ public class RoutineServiceImpl implements IRoutineService {
     }
 
     @Override
-    public List<Routine> getRoutinesByUser(String userSqlId) {
+    public List<Routine> getRoutinesByUser(Long userSqlId) {
         return routineRepository.findByUserSqlId(userSqlId);
     }
 

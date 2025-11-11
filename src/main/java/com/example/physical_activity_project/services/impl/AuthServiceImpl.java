@@ -27,7 +27,7 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public TokenResponseDTO login(LoginDTO request) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         if (userDetails == null) {
             throw new RuntimeException("Usuario no encontrado");
         }

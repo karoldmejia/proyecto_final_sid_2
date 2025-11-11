@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 public class RoutineDTO {
     private ObjectId id;
-    private String userSqlId;
-    private String originPublicId;
+    private Long userSqlId;
+    private ObjectId originPublicId;
     private String name;
     private Date creationDate;
     private List<RoutineExerciseDTO> exercises;

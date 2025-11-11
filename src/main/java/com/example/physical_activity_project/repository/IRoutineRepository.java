@@ -6,8 +6,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IRoutineRepository extends MongoRepository<Routine, ObjectId> {
-    List<Routine> findByUserSqlId(String userSqlId);
+    List<Routine> findByUserSqlId(Long userSqlId);
+    Optional<Routine> findByExercises_ExerciseId(ObjectId exerciseId);
 }
