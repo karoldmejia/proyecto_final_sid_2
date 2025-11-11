@@ -24,6 +24,5 @@ public interface IExerciseProgressService {
     List<ExerciseProgress> getProgressByWeek(Long userId, LocalDate startDate);
     List<ExerciseProgress> getAllProgress();
     ExerciseProgress addRecommendation(ObjectId progressId, Long trainerId, String content);
-    ExerciseProgress updateRecommendationStatus(ObjectId progressId, int index, String newStatus);
     ExerciseProgress deleteRecommendation(ObjectId progressId, int index);
 }

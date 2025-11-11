@@ -125,17 +125,6 @@ public class ExerciseProgressController {
         return ResponseEntity.ok(list);
     }
 
-    @PutMapping("/{progressId}/recommendations/{index}/status")
-    @PreAuthorize("hasAuthority('ACTUALIZAR_ESTADO_RECOMENDACION')")
-    public ResponseEntity<ExerciseProgressDTO> updateRecommendationStatus(
-            @PathVariable ObjectId progressId,
-            @PathVariable int index,
-            @RequestParam String newStatus) {
-
-        ExerciseProgress updatedProgress = progressService.updateRecommendationStatus(progressId, index, newStatus);
-        return ResponseEntity.ok(mapper.entityToDto(updatedProgress));
-    }
-
     @DeleteMapping("/{progressId}/recommendations/{index}")
     @PreAuthorize("hasAuthority('ELIMINAR_RECOMENDACION')")
     public ResponseEntity<Void> deleteRecommendation(

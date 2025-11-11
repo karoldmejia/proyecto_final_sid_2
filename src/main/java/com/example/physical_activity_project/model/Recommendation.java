@@ -13,6 +13,5 @@ public class Recommendation {
 
     private LocalDateTime recommendationDate;
     private String content;
-    private String status;
     private Long trainerSqlId;
 }

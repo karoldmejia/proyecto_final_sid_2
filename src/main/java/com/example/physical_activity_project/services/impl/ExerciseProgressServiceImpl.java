@@ -150,23 +150,11 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         Recommendation recommendation = new Recommendation();
         recommendation.setTrainerSqlId(trainerId);
         recommendation.setContent(content);
-        recommendation.setStatus("NEW");
         recommendation.setRecommendationDate(LocalDateTime.now());
 
         Query query = new Query(Criteria.where("_id").is(progressId));
         Update update = new Update().push("recommendations", recommendation);
         mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
-        return mongoTemplate.findOne(query, ExerciseProgress.class);
-    }
-
-
-    @Override
-    public ExerciseProgress updateRecommendationStatus(ObjectId progressId, int index, String newStatus) {
-        Query query = new Query(Criteria.where("_id").is(progressId));
-        Update update = new Update().set("recommendations." + index + ".status", newStatus);
-
-        mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
-
         return mongoTemplate.findOne(query, ExerciseProgress.class);
     }
 
