@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ExerciseProgressDTO {
@@ -15,4 +16,7 @@ public class ExerciseProgressDTO {
     private Integer effortLevel;
     private Long userId;
     private ObjectId routineExerciseId;
+
+    private List<RecommendationDTO> recommendations;
+
 }

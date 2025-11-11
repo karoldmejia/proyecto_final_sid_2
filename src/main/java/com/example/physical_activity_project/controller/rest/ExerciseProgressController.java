@@ -2,8 +2,12 @@ package com.example.physical_activity_project.controller.rest;
 
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
 import com.example.physical_activity_project.dto.ProgressDTO;
+import com.example.physical_activity_project.dto.RecommendationDTO;
+import com.example.physical_activity_project.dto.RecommendationRequest;
 import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
+import com.example.physical_activity_project.mappers.RecommendationMapper;
 import com.example.physical_activity_project.model.ExerciseProgress;
+import com.example.physical_activity_project.model.Recommendation;
 import com.example.physical_activity_project.services.impl.ExerciseProgressServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -13,7 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/progress")
@@ -22,6 +28,8 @@ public class ExerciseProgressController {
 
     private final ExerciseProgressServiceImpl progressService;
     private final ExerciseProgressMapper mapper;
+    private final RecommendationMapper recommendationMapper;
+
 
     @GetMapping
     @PreAuthorize("hasAuthority('VER_TODO_PROGRESO')")
@@ -90,5 +98,40 @@ public class ExerciseProgressController {
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         ProgressDTO summary = progressService.getProgressSummary(userId, start, end);
         return ResponseEntity.ok(summary);
+    }
+
+    // Recommendations endpoints
+
+    @PostMapping("/{progressId}/trainers/{trainerId}/recommendations")
+    @PreAuthorize("hasAuthority('CREAR_RECOMENDACION')")
+    public ResponseEntity<ExerciseProgressDTO> addRecommendation(
+            @PathVariable ObjectId progressId,
+            @PathVariable Long trainerId,
+            @RequestBody RecommendationRequest request) {
+
+        ExerciseProgress updated = progressService.addRecommendation(progressId, trainerId, request.getContent());
+        return ResponseEntity.ok(mapper.entityToDto(updated));
+    }
+
+
+    @GetMapping("/{progressId}/recommendations")
+    @PreAuthorize("hasAuthority('VER_RECOMENDACIONES_PROPIAS') or hasAuthority('VER_RECOMENDACIONES_CREADAS')")
+    public ResponseEntity<List<RecommendationDTO>> getRecommendations(@PathVariable ObjectId progressId) {
+        ExerciseProgress progress = progressService.getProgressById(progressId);
+        List<RecommendationDTO> list = progress.getRecommendations()
+                .stream()
+                .map(recommendationMapper::entityToDto)
+                .toList();
+        return ResponseEntity.ok(list);
+    }
+
+    @DeleteMapping("/{progressId}/recommendations/{index}")
+    @PreAuthorize("hasAuthority('ELIMINAR_RECOMENDACION')")
+    public ResponseEntity<Void> deleteRecommendation(
+            @PathVariable ObjectId progressId,
+            @PathVariable int index) {
+
+        progressService.deleteRecommendation(progressId, index);
+        return ResponseEntity.noContent().build();
     }
 }

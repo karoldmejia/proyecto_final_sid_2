@@ -1,9 +1,7 @@
 package com.example.physical_activity_project.services.impl;
 
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
-import com.example.physical_activity_project.model.ExerciseProgress;
-import com.example.physical_activity_project.model.ProgressSnapshot;
-import com.example.physical_activity_project.model.Routine;
+import com.example.physical_activity_project.model.*;
 import com.example.physical_activity_project.repository.IExerciseProgressRepository;
 import com.example.physical_activity_project.repository.IRoutineRepository;
 import com.example.physical_activity_project.services.IExerciseProgressService;
@@ -18,10 +16,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ExerciseProgressServiceImpl implements IExerciseProgressService {
@@ -31,6 +27,9 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
 
     @Autowired
     private IRoutineRepository routineRepository;
+
+    @Autowired
+    private UserTrainerAssignmentServiceImpl assignmentService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -84,6 +83,11 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         }
     }
 
+    public ExerciseProgress getProgressById(ObjectId id) {
+        return exerciseProgressRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Progress not found with id: " + id));
+    }
+
     @Override
     public List<ExerciseProgress> getProgressByUser(Long userId) {
         return exerciseProgressRepository.findByUserId(userId);
@@ -94,7 +98,6 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         return exerciseProgressRepository.findAll();
     }
 
-    // Puedes mantener tu lógica de resumen de progreso adaptando ObjectId y Date
     @Override
     public ProgressDTO getProgressSummary(Long userId, LocalDate start, LocalDate end) {
         List<ExerciseProgress> progresses = getProgressInRange(userId, start, end);
@@ -131,6 +134,74 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
                 .map(re -> re.getExerciseId())
                 .toList();
         return exerciseProgressRepository.findByRoutineExerciseIds(routineExerciseIds);
+    }
+
+    // Métodos para recomendaciones
+
+    @Override
+    public ExerciseProgress addRecommendation(ObjectId progressId, Long trainerId, String content) {
+        ExerciseProgress progress = mongoTemplate.findById(progressId, ExerciseProgress.class);
+        if (progress == null) {
+            throw new RuntimeException("No se encontró el progreso con ID: " + progressId);
+        }
+
+        validateTrainer(trainerId, progress);
+
+        Recommendation recommendation = new Recommendation();
+        recommendation.setTrainerSqlId(trainerId);
+        recommendation.setContent(content);
+        recommendation.setRecommendationDate(LocalDateTime.now());
+
+        Query query = new Query(Criteria.where("_id").is(progressId));
+        Update update = new Update().push("recommendations", recommendation);
+        mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
+        return mongoTemplate.findOne(query, ExerciseProgress.class);
+    }
+
+
+    @Override
+    public ExerciseProgress deleteRecommendation(ObjectId progressId, int index) {
+        Query query = new Query(Criteria.where("_id").is(progressId));
+        query.fields().include("recommendations");
+
+        ExerciseProgress progress = mongoTemplate.findOne(query, ExerciseProgress.class);
+        if (progress == null || progress.getRecommendations() == null || index >= progress.getRecommendations().size()) {
+            throw new RuntimeException("Recommendation not found at index " + index);
+        }
+
+        progress.getRecommendations().remove(index);
+        Update update = new Update().set("recommendations", progress.getRecommendations());
+        mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
+
+        return mongoTemplate.findOne(new Query(Criteria.where("_id").is(progressId)), ExerciseProgress.class);
+    }
+
+    private void validateTrainer(Long trainerId, ExerciseProgress progress) {
+        ObjectId routineExerciseId = progress.getRoutineExerciseId();
+        if (routineExerciseId == null) {
+            throw new RuntimeException("El progreso no tiene un RoutineExercise asociado.");
+        }
+
+        Routine routine = mongoTemplate.findOne(
+                Query.query(Criteria.where("exercises").elemMatch(
+                        Criteria.where("_id").is(routineExerciseId)
+                )),
+                Routine.class
+        );
+
+        if (routine == null) {
+            throw new RuntimeException("No se encontró una rutina que contenga el RoutineExercise con ID: " + routineExerciseId);
+        }
+
+        Long userSqlId = routine.getUserSqlId();
+        if (userSqlId == null) {
+            throw new RuntimeException("La rutina no tiene un usuario asociado (userSqlId).");
+        }
+
+        boolean isAssigned = assignmentService.validateTrainer(trainerId, userSqlId);
+        if (!isAssigned) {
+            throw new RuntimeException("El entrenador no está asignado al usuario de este progreso.");
+        }
     }
 
 }

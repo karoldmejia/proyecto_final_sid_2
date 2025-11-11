@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentService {
@@ -60,5 +61,12 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
         UserTrainerAssignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró la asignación con id: " + assignmentId));
         assignmentRepository.deleteById(assignmentId);
+    }
+
+    public boolean validateTrainer(Long trainerId, Long userId) {
+        Optional<UserTrainerAssignment> assignment =
+                assignmentRepository.findByTrainerIdAndUserIdAndStatus(trainerId, userId, "ACTIVE");
+
+        return assignment.isPresent();
     }
 }
