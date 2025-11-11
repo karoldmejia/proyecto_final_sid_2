@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,4 +41,7 @@ public class ExerciseProgress {
 
     @Field("routine_exercise_id")
     private ObjectId routineExerciseId;
+
+    @Field("recommendations")
+    private List<Recommendation> recommendations;
 }
