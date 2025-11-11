@@ -63,6 +63,7 @@ public class RoutineServiceImpl implements IRoutineService {
                 .orElseThrow(() -> new RuntimeException("Routine not found with id: " + id));
     }
 
+
     // --- Ejercicios embebidos ---
     @Override
     public Routine addExerciseToRoutine(ObjectId routineId, RoutineExercise newExercise) {

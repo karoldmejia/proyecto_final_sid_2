@@ -1,6 +1,7 @@
 package com.example.physical_activity_project.services.impl;
 
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
+import com.example.physical_activity_project.dto.RoutineProgressDTO;
 import com.example.physical_activity_project.model.*;
 import com.example.physical_activity_project.repository.IExerciseProgressRepository;
 import com.example.physical_activity_project.repository.IRoutineRepository;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ExerciseProgressServiceImpl implements IExerciseProgressService {
@@ -136,6 +139,47 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         return exerciseProgressRepository.findByRoutineExerciseIds(routineExerciseIds);
     }
 
+    @Override
+    public List<LocalDate> getActiveDaysInMonth(Long userId, int year, int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+
+        List<ExerciseProgress> progresses = getProgressInRange(userId, start, end);
+
+        List<LocalDate> uniqueDays = progresses.stream()
+                .map(p -> p.getProgressDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate())
+                .distinct()
+                .sorted()
+                .toList();
+
+        return uniqueDays;
+    }
+
+    public RoutineProgressDTO getRoutineProgressSummary(ObjectId routineId) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new RuntimeException("Routine not found"));
+
+        List<ExerciseProgress> progresses = getProgressByRoutine(routineId);
+
+        int totalSets = progresses.stream().mapToInt(p -> p.getSetsCompleted() != null ? p.getSetsCompleted() : 0).sum();
+        int totalReps = progresses.stream().mapToInt(p -> p.getRepsCompleted() != null ? p.getRepsCompleted() : 0).sum();
+        int totalTime = progresses.stream().mapToInt(p -> p.getTimeCompleted() != null ? p.getTimeCompleted() : 0).sum();
+        double avgEffort = progresses.stream().mapToInt(p -> p.getEffortLevel() != null ? p.getEffortLevel() : 0).average().orElse(0.0);
+
+        RoutineProgressDTO dto = new RoutineProgressDTO();
+        dto.setRoutineName(routine.getName());
+        dto.setTotalExercises(progresses.size());
+        dto.setTotalSets(totalSets);
+        dto.setTotalReps(totalReps);
+        dto.setTotalTime(totalTime);
+        dto.setAvgEffort(avgEffort);
+
+        return dto;
+    }
+
+
     // Métodos para recomendaciones
 
     @Override
@@ -157,7 +201,6 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
         return mongoTemplate.findOne(query, ExerciseProgress.class);
     }
-
 
     @Override
     public ExerciseProgress deleteRecommendation(ObjectId progressId, int index) {
