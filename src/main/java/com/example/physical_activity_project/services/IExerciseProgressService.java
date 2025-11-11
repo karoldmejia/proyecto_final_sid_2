@@ -25,4 +25,6 @@ public interface IExerciseProgressService {
     List<ExerciseProgress> getAllProgress();
     ExerciseProgress addRecommendation(ObjectId progressId, Long trainerId, String content);
     ExerciseProgress deleteRecommendation(ObjectId progressId, int index);
+    List<LocalDate> getActiveDaysInMonth(Long userId, int year, int month);
+
 }

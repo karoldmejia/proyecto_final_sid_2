@@ -3,6 +3,7 @@ package com.example.physical_activity_project.services;
 import com.example.physical_activity_project.model.Exercise;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IExerciseService {

@@ -1,9 +1,6 @@
 package com.example.physical_activity_project.controller.rest;
 
-import com.example.physical_activity_project.dto.ExerciseProgressDTO;
-import com.example.physical_activity_project.dto.ProgressDTO;
-import com.example.physical_activity_project.dto.RecommendationDTO;
-import com.example.physical_activity_project.dto.RecommendationRequest;
+import com.example.physical_activity_project.dto.*;
 import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
 import com.example.physical_activity_project.mappers.RecommendationMapper;
 import com.example.physical_activity_project.model.ExerciseProgress;
@@ -100,6 +97,13 @@ public class ExerciseProgressController {
         return ResponseEntity.ok(summary);
     }
 
+    @GetMapping("/routine/{routineId}/summary")
+    @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
+    public ResponseEntity<RoutineProgressDTO> getRoutineProgressSummary(@PathVariable ObjectId routineId) {
+        RoutineProgressDTO summary = progressService.getRoutineProgressSummary(routineId);
+        return ResponseEntity.ok(summary);
+    }
+
     // Recommendations endpoints
 
     @PostMapping("/{progressId}/trainers/{trainerId}/recommendations")
@@ -134,4 +138,17 @@ public class ExerciseProgressController {
         progressService.deleteRecommendation(progressId, index);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user/{userId}/active-days")
+    @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
+    public ResponseEntity<List<LocalDate>> getActiveDays(
+            @PathVariable Long userId,
+            @RequestParam int year,
+            @RequestParam int month) {
+
+        List<LocalDate> activeDays = progressService.getActiveDaysInMonth(userId, year, month);
+
+        return ResponseEntity.ok(activeDays);
+    }
+
 }
