@@ -8,8 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = ObjectIdMapper.class)
 public interface ExerciseMapper {
 
-
-
         @Mapping(target = "id", source = "id")
         ExerciseDTO entityToDto(Exercise exercise);
 

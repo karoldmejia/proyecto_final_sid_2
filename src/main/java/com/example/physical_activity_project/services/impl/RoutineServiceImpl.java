@@ -17,11 +17,21 @@ public class RoutineServiceImpl implements IRoutineService {
     @Autowired
     private IRoutineRepository routineRepository;
 
+    @Autowired
+    private MonthlyStatisticsServiceImpl monthlyStatisticsService;
+
     // --- Rutinas ---
     @Override
     public Routine createRoutine(Routine routine) {
         routine.setCreationDate(new Date());
-        return routineRepository.save(routine);
+        Routine saved = routineRepository.save(routine);
+
+        // Actualizar estadística de rutinas iniciadas
+        if (routine.getUserSqlId() != null) {
+            monthlyStatisticsService.incrementRoutinesStarted(routine.getUserSqlId());
+        }
+
+        return saved;
     }
 
     @Override

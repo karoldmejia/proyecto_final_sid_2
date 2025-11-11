@@ -35,6 +35,9 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     private UserTrainerAssignmentServiceImpl assignmentService;
 
     @Autowired
+    private MonthlyStatisticsServiceImpl monthlyStatisticsService;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
@@ -199,6 +202,14 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         Query query = new Query(Criteria.where("_id").is(progressId));
         Update update = new Update().push("recommendations", recommendation);
         mongoTemplate.updateFirst(query, update, ExerciseProgress.class);
+
+        if (progress.getUserId() != null) {
+            monthlyStatisticsService.incrementUserRecommendations(progress.getUserId());
+        }
+        if (trainerId != null) {
+            monthlyStatisticsService.incrementTrainerRecommendations(trainerId);
+        }
+
         return mongoTemplate.findOne(query, ExerciseProgress.class);
     }
 
