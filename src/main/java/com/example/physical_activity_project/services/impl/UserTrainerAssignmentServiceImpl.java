@@ -21,6 +21,9 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
     @Autowired
     public IUserRepository userRepository;
 
+    @Autowired
+    private MonthlyStatisticsServiceImpl monthlyStatisticsService;
+
     @Override
     public UserTrainerAssignment assignTrainerToUser(Long trainerId, Long userId) {
         User trainer = userRepository.findById(trainerId)
@@ -34,7 +37,11 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
         assignment.setStatus("ACTIVE");
         assignment.setAssignmentDate(new Timestamp(System.currentTimeMillis()));
 
-        return assignmentRepository.save(assignment);
+        UserTrainerAssignment savedAssignment = assignmentRepository.save(assignment);
+
+        monthlyStatisticsService.incrementNewAssignments(trainerId);
+
+        return savedAssignment;
     }
 
     @Override
