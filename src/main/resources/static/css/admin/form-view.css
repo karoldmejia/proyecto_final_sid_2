@@ -1,0 +1,232 @@
+/* =================================================================
+   CSS COMPLETO PARA MODAL Y FORMULARIO (Estilo 'GymIcesi')
+   ================================================================= */
+
+/* --- 1. Variables de Color (Tu Paleta) --- */
+:root {
+    --verde: #4cb979;
+    --blanco: #FAFAFA;
+    --negro: #1A1A1A;
+    --gris: #DBDBDB;
+    --gris-oscuro: #888;
+    --rojo: #dc3545;
+}
+
+/* --- 2. Estilos del Contenedor del Modal --- */
+.modal-backdrop {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* Fondo oscuro semitransparente (usando tu var --negro) */
+    background-color: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(3px);
+}
+.modal-backdrop.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--blanco);
+    border-radius: 12px;
+    padding: 2.5rem;
+    color: var(--negro);
+    max-width: 500px;
+    width: 90%;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    position: relative;
+    animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    color: var(--gris-oscuro);
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: var(--negro);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: var(--negro);
+    text-align: center;
+    font-weight: 600;
+}
+
+/* --- 3. Estilos de Formulario (Etiqueta Flotante) --- */
+
+/* El contenedor para un input + label */
+.input-group {
+    position: relative;
+    margin-bottom: 1.75rem; /* Espaciado entre campos */
+}
+
+/* Estilo unificado para inputs, selects y textareas */
+.form_input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: transparent;
+    border: 1px solid var(--gris);
+    color: var(--negro);
+    font-size: 0.95rem;
+    outline: none;
+    border-radius: 0.5rem;
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.3s;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box; /* Súper importante */
+}
+
+/* El 'placeholder' debe ser invisible (la label lo reemplaza) */
+.form_input::placeholder {
+    color: transparent;
+}
+
+.form_input:hover {
+    border-color: var(--verde);
+}
+
+.form_input:focus {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(76, 185, 121, 0.2);
+}
+
+/* La etiqueta flotante */
+.form_label {
+    position: absolute;
+    left: 1rem;
+    top: 0.9rem; /* Alineado con el padding del input */
+    padding: 0 0.5rem;
+    color: var(--gris-oscuro);
+    cursor: text;
+    background-color: var(--blanco);
+    z-index: 2;
+    font-size: 0.95rem;
+    transition: top 200ms ease-in, left 200ms ease-in, font-size 200ms ease-in, color 200ms ease-in;
+}
+
+/* La magia: Animación de la etiqueta */
+.form_input:focus ~ .form_label,
+.form_input:not(:placeholder-shown) ~ .form_label {
+    top: -0.6rem;
+    font-size: 0.8rem;
+    left: 0.8rem;
+    color: var(--verde);
+    background-color: var(--blanco); /* Debe coincidir con el fondo */
+}
+
+/* --- 4. Ajustes para campos específicos --- */
+
+/* Textarea */
+textarea.form_input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Select (Dropdown) */
+select.form_input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Flecha personalizada para el Select */
+.input-group .select-arrow {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-right: 2px solid var(--gris);
+    border-bottom: 2px solid var(--gris);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+    z-index: 3;
+    transition: border-color 0.3s;
+}
+.input-group:hover .select-arrow {
+    border-color: var(--verde);
+}
+
+/* Rejilla de formulario (la que ya usabas) */
+.form-group-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+/* Quitar el margen 'bottom' extra cuando está en la rejilla */
+.form-group-grid .input-group {
+    margin-bottom: 0;
+}
+
+
+/* --- 5. Botones (Tu estilo, pero modernizado) --- */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem; /* Más espacio antes del botón */
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--verde);
+    color: var(--blanco);
+    border: none;
+    border-radius: 0.5rem; /* Redondeado moderno */
+    padding: 0.85rem 1.5rem; /* Padding moderno */
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-family: "Poppins", sans-serif;
+    width: 100%;
+}
+
+.action-button:hover {
+    background-color: #3da167; /* Verde más oscuro */
+    box-shadow: 0 4px 12px rgba(76, 185, 121, 0.2);
+}
+
+/* Botón secundario/cancelar */
+.action-button.danger-outline {
+    background-color: transparent;
+    border: 1px solid var(--rojo);
+    color: var(--rojo);
+}
+.action-button.danger-outline:hover {
+    background-color: var(--rojo);
+    color: var(--blanco);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}

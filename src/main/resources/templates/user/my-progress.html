@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layouts/baseUser :: layout}">
+
+<body>
+<div th:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+    <style>
+        /*
+ * CSS para la página "Mi Historial de Progreso"
+ * CORREGIDO con la paleta de colores correcta.
+*/
+
+        /* --- Contenedor Principal (de dashboard.css) --- */
+        .dashboard-container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* --- Cabecera de la Página (de dashboard.css) --- */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .dashboard-header .header-content h1 {
+            margin: 0;
+            color: #ffffff; /* Color de texto principal (neutral) */
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dashboard-header .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* --- ESTILO DE BOTONES (El que hemos usado) --- */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-button .fa-solid {
+            font-size: 1.1em;
+        }
+
+        .action-button.success {
+            background-color: #4cb979;  /* Verde */
+        }
+        .action-button.success:hover {
+            background-color: #4cb979;
+        }
+
+        .action-button.info {
+            background-color: #4cb979; /* Info/Teal */
+        }
+        .action-button.info:hover {
+            background-color: #4cb979;
+        }
+
+        /* --- Rejilla de Tarjetas de Progreso --- */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Tarjeta de Progreso Individual --- */
+        .progress-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            /* Borde lateral con el color Info/Teal */
+            border-left: 5px solid #4cb979;
+        }
+
+        /* --- Cabecera de la Tarjeta --- */
+        .progress-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .progress-header h3 {
+            margin: 0;
+            color: #333; /* Color de texto neutral */
+            font-size: 1.25rem;
+        }
+
+        .progress-header span {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* --- Estadísticas (Series, Reps, etc.) --- */
+        .progress-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            color: #333;
+            padding: 5px;
+        }
+
+        .stat strong {
+            color: #000;
+            margin-right: 5px;
+            display: block;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* --- Notas del Usuario --- */
+        .progress-notes {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .progress-notes p {
+            margin: 5px 0 0 0;
+        }
+
+        /* --- Sección de Recomendaciones --- */
+        .recommendations {
+            margin-top: 20px;
+            /* Borde punteado con el color Info/Teal */
+            border-top: 2px dotted #4cb979;
+            padding-top: 15px;
+        }
+
+        .recommendations h4 {
+            margin: 0 0 10px 0;
+            color: #4cb979; /* Color Info/Teal */
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Mensaje "Pendiente de revisión" */
+        .recommendations h4[style*="color: #888"] {
+            color: #888 !important;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .recommendation-item {
+            /* Fondo muy claro derivado del Info/Teal */
+            background: #f0f8fa;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            border-left: 3px solid #4cb979; /* Borde Info/Teal */
+        }
+
+        .recommendation-item p {
+            margin: 0 0 8px 0;
+        }
+
+        .recommendation-item strong {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        /* ================================================= */
+        /* === 3. CSS AÑADIDO PARA EL MODAL (NO SE TOCÓ NADA MÁS) === */
+        /* ================================================= */
+
+        .modal-backdrop {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+        }
+        .modal-backdrop.show {
+            display: flex; /* Mostrar como flex para centrar */
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 700px; /* Ancho del modal */
+            position: relative;
+        }
+        .modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .modal-content iframe {
+            width: 100%;
+            height: 60vh; /* 60% de la altura de la pantalla */
+            border: none;
+            margin-top: 15px;
+        }
+
+    </style>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1><i class="fa-solid fa-chart-line"></i> Mi Historial de Progreso</h1>
+            </div>
+            <div class="header-actions">
+                <a id="openProgressModal" th:href="@{/user/log-progress}" class="action-button success">
+                    <i class="fa-solid fa-plus"></i> Registrar Nuevo Progreso
+                </a>
+            </div>
+        </div>
+
+        <div class="progress-grid">
+            <div class="progress-card" th:each="progress : ${progressList}">
+                <div class="progress-header">
+                    <h3 th:text="${progress.exerciseName != null ? progress.exerciseName : 'Ejercicio no disponible'}">Press de Banca</h3>
+                    <span th:text="${#temporals.format(progress.progressDate, 'dd/MM/yyyy ''a las'' HH:mm')}">22/10/2023 a las 14:30</span>
+                </div>
+
+                <div class="progress-stats">
+                    <div class="stat">
+                        <strong>Series:</strong>
+                        <span th:text="${progress.setsCompleted != null ? progress.setsCompleted : 'N/A'}">3</span>
+                    </div>
+                    <div class="stat">
+                        <strong>Reps:</strong>
+                        <span th:text="${progress.repsCompleted != null ? progress.repsCompleted : 'N/A'}">10</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong>Duración:</strong>
+                        <span th:text="${progress.timeCompleted != null ? progress.timeCompleted + ' min' : 'N/A'}">15 min</span>
+                    </div>
+                    <div class="stat">
+                        <strong>Nivel de esfuerzo:</strong>
+                        <span th:text="${progress.effortLevel != null ? progress.effortLevel + '/10' : 'N/A'}">7/10</span>
+                    </div>
+                </div>
+
+                <div class="progress-notes" th:if="${progress.notes != null and !progress.notes.isEmpty()}">
+                    <strong>Mis Notas:</strong>
+                    <p th:text="${progress.notes}" style="margin: 5px 0 0 0;">...</p>
+                </div>
+
+                <div class="recommendations" th:if="${!#lists.isEmpty(progress.recommendations)}">
+                    <h4><i class="fa-solid fa-comment-dots"></i> Feedback del Entrenador</h4>
+                    <div class="recommendation-item" th:each="rec : ${progress.recommendations}">
+                        <p th:text="${rec.content}">Buen trabajo...</p>
+                        <strong style="font-size: 0.9em;" th:text="'— ' + (${rec.trainerName} != null ? ${rec.trainerName} : 'Entrenador')"></strong>
+                    </div>
+                </div>
+
+                <div class="recommendations" th:if="${#lists.isEmpty(progress.recommendations)}">
+                    <h4 style="color: #888;"><i class="fa-solid fa-clock"></i> Pendiente de revisión</h4>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(progressList)}">
+                <p>Aún no has registrado ningún progreso. <a th:href="@{/user/log-progress}">¡Registra tu primer ejercicio!</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="progressModalBackdrop" class="modal-backdrop">
+        <div class="modal-content">
+            <span id="closeProgressModal" class="modal-close">&times;</span>
+            <h2>Registrar Progreso</h2>
+            <iframe id="progressModalFrame" th:src="@{about:blank}" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleccionar los elementos
+            const modalBackdrop = document.getElementById('progressModalBackdrop');
+            const openModalBtn = document.getElementById('openProgressModal');
+            const closeModalBtn = document.getElementById('closeProgressModal');
+            const modalFrame = document.getElementById('progressModalFrame');
+
+            // Obtener la URL del botón
+            const progressUrl = openModalBtn.getAttribute('href');
+
+            // Abrir el modal
+            openModalBtn.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevenir navegación
+                modalFrame.setAttribute('src', progressUrl); // Cargar el iframe
+                modalBackdrop.classList.add('show'); // Mostrar el modal
+            });
+
+            // Cerrar con el botón 'x'
+            closeModalBtn.addEventListener('click', function() {
+                modalBackdrop.classList.remove('show');
+                modalFrame.setAttribute('src', 'about:blank'); // Limpiar iframe
+            });
+
+            // Cerrar al hacer clic fuera del contenido
+            modalBackdrop.addEventListener('click', function(event) {
+                if (event.target === modalBackdrop) {
+                    modalBackdrop.classList.remove('show');
+                    modalFrame.setAttribute('src', 'about:blank'); // Limpiar iframe
+                }
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

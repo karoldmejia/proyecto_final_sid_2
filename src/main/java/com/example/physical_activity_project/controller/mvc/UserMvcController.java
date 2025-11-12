@@ -1,9 +1,11 @@
 package com.example.physical_activity_project.controller.mvc;
 
+import com.example.physical_activity_project.services.IExerciseProgressService;
 import com.example.physical_activity_project.services.IExerciseService;
 // Importa tus otros servicios cuando los tengas
 // import com.example.physical_activity_project.services.IRoutineService;
 // import com.example.physical_activity_project.services.IProgressService;
+import com.example.physical_activity_project.services.IRoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -11,6 +13,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.physical_activity_project.model.ExerciseProgress;
+import com.example.physical_activity_project.model.User;
+import com.example.physical_activity_project.services.IUserService;
+import com.example.physical_activity_project.services.impl.ExerciseProgressServiceImpl;
+import com.example.physical_activity_project.dto.ExerciseProgressDTO;
+import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.bson.types.ObjectId;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user") // <-- Esta es la clave para tus rutas
@@ -20,8 +34,10 @@ public class UserMvcController {
 
     // Inyecta los servicios que el usuario necesita
     private final IExerciseService exerciseService;
-    // private final IRoutineService routineService;
-    // private final IProgressService progressService;
+    private final IRoutineService routineService;
+    private final IExerciseProgressService progressService;
+    private final IUserService userService;
+    private final ExerciseProgressMapper exerciseProgressMapper;
 
     /**
      * Muestra el panel principal del usuario.
@@ -81,8 +97,59 @@ public class UserMvcController {
         return "user/my-routines";
     }
 
-    // Aquí puedes añadir más métodos, como:
-    // @GetMapping("/progress/log") para mostrar el formulario de registrar progreso [cite: 11]
-    // @PostMapping("/progress/log") para guardar el progreso [cite: 11]
-    // @PostMapping("/routines/adopt/{id}") para adoptar una rutina [cite: 14]
+    /**
+     * Muestra el formulario para registrar un nuevo progreso.
+     * Implementa: POST /api/progress/user/{userId}
+     */
+    @GetMapping("/log-progress")
+    public String showLogProgressForm(Model model) {
+        model.addAttribute("progressDTO", new ExerciseProgressDTO());
+        // El formulario necesita la lista de ejercicios para un dropdown
+        model.addAttribute("allExercises", exerciseService.getAllExercises());
+        return "user/log-progress";
+    }
+
+    /**
+     * Guarda el nuevo registro de progreso.
+     */
+    @PostMapping("/log-progress")
+    public String saveProgress(@ModelAttribute("progressDTO") ExerciseProgressDTO dto,
+                               Authentication authentication) {
+
+        // 1. Obtener el ID de usuario desde la sesión
+        String username = authentication.getName();
+        User user = userService.findByUsername(username).orElseThrow();
+
+        // 2. Convertir DTO a Entidad
+        ExerciseProgress entity = exerciseProgressMapper.dtoToEntity(dto);
+
+        // 3. Guardar el progreso
+        progressService.registerProgress(user.getId(), entity);
+
+        return "redirect:/user/my-progress"; // Redirige a la lista de progreso
+    }
+
+    /**
+     * Muestra la lista del progreso personal del usuario.
+     * Implementa: GET /api/progress/user/{userId}
+     * Implementa: GET /api/progress/{progressId}/recommendations
+     */
+    @GetMapping("/my-progress")
+    public String showMyProgress(Model model, Authentication authentication) {
+        // 1. Obtener el ID de usuario
+        String username = authentication.getName();
+        User user = userService.findByUsername(username).orElseThrow();
+
+
+        // 2. Obtener su historial de progreso
+        List<ExerciseProgressDTO> progressList = progressService.getProgressByUser(user.getId())
+                .stream()
+                .map(exerciseProgressMapper::entityToDto)
+                .toList();
+
+
+        model.addAttribute("progressList", progressList);
+        return "user/my-progress";
+    }
 }
+
