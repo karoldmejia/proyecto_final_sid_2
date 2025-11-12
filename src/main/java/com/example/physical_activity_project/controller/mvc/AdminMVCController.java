@@ -18,15 +18,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/mvc/users")
+@RequestMapping("/mvc/admin")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('Admin')")
-public class UserMVCController {
+public class AdminMVCController {
 
     private final IUserService userService;
     private final IRoleService roleService;
 
-    @GetMapping("/home")
+    @GetMapping()
     public String home(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -34,7 +34,7 @@ public class UserMVCController {
         return "admin/admin-dashboard";
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public String getAll(Model model) {
 
         List<User> users = userService.getAllUsers();

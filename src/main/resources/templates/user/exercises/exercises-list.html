@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      th:replace="~{layouts/base :: layout}">
+      th:replace="~{layouts/baseUser :: layout}">
 <head>
-    <title>Lista de Ejercicios</title>
+
 </head>
 <body>
 
@@ -20,13 +20,10 @@
 
     <div class="header-actions">
         <h1 class="text-2xl font-bold">
-            Gestión de Ejercicios
+            Lista de Ejercicios
         </h1>
 
-        <button type="button" th:onclick="'openModal(\'' + @{/mvc/exercises/new} + '\')'" class="add-user-btn">
-            <span class="material-icons-round">add</span>
-            Añadir Ejercicio
-        </button>
+
     </div>
     <table>
         <thead>
@@ -35,7 +32,7 @@
             <th>Tipo</th>
             <th>Dificultad</th>
             <th>Duración</th>
-            <th style="text-align: right;">Acciones</th>
+
         </tr>
         </thead>
         <tbody>
@@ -45,27 +42,7 @@
             <td th:text="${exercise.difficulty}">Intermedio</td>
             <td th:text="|${exercise.duration} min|">10 min</td>
 
-            <td class="action-cell">
-                <button class="action-btn" onclick="toggleMenu(this)">
-                    <span class="material-icons-round">more_vert</span>
-                </button>
 
-                <div class="dropdown-menu">
-
-                    <button type="button"
-                            th:onclick="'openModal(\'' + @{/mvc/exercises/edit/{id}(id=${exercise.id})} + '\')'"
-                            class="dropdown-item">
-                        <span class="material-icons-round">edit</span>
-                        Editar
-                    </button>
-                    <form th:action="@{/mvc/exercises/delete/{id}(id=${exercise.id})}" th:method="post" style="margin: 0;">
-                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
-                            <span class="material-icons-round">delete</span>
-                            Eliminar
-                        </button>
-                    </form>
-                </div>
-            </td>
         </tr>
 
         <tr th:if="${#lists.isEmpty(exercises)}">

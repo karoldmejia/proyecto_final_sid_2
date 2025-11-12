@@ -1,0 +1,189 @@
+/* Estilos compartidos (basados en tu personas.html)
+  para todas las tarjetas.
+*/
+
+.user-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+}
+
+.user-card {
+    /* --- CAMBIO: 'aspect-ratio' eliminado para permitir que la tarjeta crezca --- */
+    /* aspect-ratio: 1 / 1; */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08);
+}
+
+.user-card h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-card p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #555;
+    margin-bottom: 0.25rem; /* Pequeño espacio entre líneas */
+}
+
+.user-card p .material-icons-round {
+    font-size: 1.2rem;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    align-items: center; /* Añadido para alinear forms y botones */
+}
+
+.card-actions form {
+    flex-grow: 1;
+}
+
+.card-actions button,
+.card-actions a {
+    flex-grow: 1;
+    text-align: center;
+    padding: 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+/* Botón Editar (Gris) */
+.card-actions button {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-color: #e5e7eb;
+}
+
+/* Botón Eliminar (Rojo) */
+.card-actions a {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+/* Botón Eliminar (Rojo) - Específico para list.html */
+.card-actions .delete-button {
+    flex-grow: 0;
+    padding: 0.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.status-dot {
+    font-size: 0.9rem;
+}
+.status-active {
+    color: #22c55e; /* Verde */
+}
+.status-inactive {
+    color: #9ca3af; /* Gris */
+}
+
+/* --- Estilos de Asignación (Ver Usuarios) --- */
+.assignment-link-container {
+    margin-top: 1rem; /* Separación del contenido de arriba */
+}
+
+.assignment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #3b82f6; /* Azul */
+    padding: 0.5rem 0.25rem;
+    border-radius: 6px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.assignment-link:hover {
+    color: #1d4ed8; /* Azul más oscuro */
+    background-color: #eff6ff; /* Azul muy claro */
+}
+
+.assignment-link .material-icons-round {
+    font-size: 1.1rem;
+}
+
+
+/* ===== MODO OSCURO ===== */
+@media (prefers-color-scheme: dark) {
+    .user-card {
+        border-color: #374151;
+        background-color: #1f2937;
+    }
+    .user-card p {
+        color: #d1d5db;
+    }
+
+    /* Acciones */
+    .card-actions button {
+        background-color: #374151;
+        color: #f9fafb;
+        border-color: #4b5563;
+    }
+    .card-actions a,
+    .card-actions .delete-button {
+        background-color: #4b5563;
+        color: #f87171;
+        border-color: #4b5563;
+    }
+
+    /* Estado */
+    .status-active {
+        color: #4ade80;
+    }
+    .status-inactive {
+        color: #6b7280;
+    }
+
+    /* Enlace Asignación */
+    .assignment-link {
+        color: #60a5fa; /* Azul claro */
+    }
+    .assignment-link:hover {
+        color: #93c5fd; /* Azul más claro */
+        background-color: #1f2937; /* Fondo de tarjeta */
+    }
+
+}

@@ -14,4 +14,6 @@ public interface IUserService {
     public User changeUserRole(Long userId, Role newRole);
     void deleteById(Long id);
     Optional<User> findByUsername(String username);
+
+    List<User> getUsersByRoleName(String trainer);
 }

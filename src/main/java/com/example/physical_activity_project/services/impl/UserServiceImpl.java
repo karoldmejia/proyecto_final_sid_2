@@ -1,8 +1,10 @@
 package com.example.physical_activity_project.services.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.physical_activity_project.repository.IRoleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final IRoleRepository roleRepository;
 
     // Crear o actualizar usuario
     public User save(User user) {
@@ -41,6 +44,7 @@ public class UserServiceImpl implements IUserService{
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+
     // Eliminar usuario
     public void deleteById(Long id) {
         if (!userRepository.existsById(id)) {
@@ -77,6 +81,24 @@ public class UserServiceImpl implements IUserService{
         return userRepository.save(user);
     }
 
+    @Override
+    public List<User> getUsersByRoleName(String roleName) {
 
+        // 1. Buscar el rol por su nombre en la base de datos.
+        Optional<Role> roleOpt = roleRepository.findByName(roleName);
+
+        // 2. Comprobar si el rol existe.
+        if (roleOpt.isEmpty()) {
+            // Si el rol (ej. "TRAINER") no está en la tabla 'roles',
+            // devolvemos una lista vacía para evitar errores.
+            System.err.println("Advertencia: El rol '" + roleName + "' no fue encontrado.");
+            return Collections.emptyList();
+        }
+
+        // 3. Si el rol existe, buscar a todos los usuarios que tengan ese rol.
+        //    Esto asume que tu UserRepository tiene un método findByRolesContains
+        //    y que tu entidad User tiene un campo como: Set<Role> roles.
+        return userRepository.findByRole(roleOpt.get());
+    }
 }
 
