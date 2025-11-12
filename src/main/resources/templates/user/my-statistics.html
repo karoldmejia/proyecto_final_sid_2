@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Estadísticas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-content h1 i {
+            color: #4cb979;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #4cb979 0%, #3da167 100%);
+            box-shadow: 0 4px 15px rgba(76, 185, 121, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 185, 121, 0.4);
+        }
+
+        /* Controles de periodo */
+        .period-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .period-controls label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .period-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .period-btn:hover {
+            border-color: #4cb979;
+            color: #4cb979;
+        }
+
+        .period-btn.active {
+            background: #4cb979;
+            color: white;
+            border-color: #4cb979;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid #4cb979;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f7fafc;
+        }
+
+        .stat-card h2 {
+            color: #2d3748;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4cb979 0%, #3da167 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .total-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4cb979;
+            text-align: right;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+
+        /* Tooltip personalizado */
+        .custom-tooltip {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .tooltip-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .tooltip-value {
+            font-size: 1.3rem;
+            color: #4cb979;
+        }
+
+        /* Tarjeta de resumen */
+        .summary-card {
+            background: linear-gradient(135deg, #4cb979 0%, #3da167 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(76, 185, 121, 0.3);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .summary-item p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>
+                <i class="fa-solid fa-chart-pie"></i>
+                Mis Estadísticas
+            </h1>
+        </div>
+        <div class="header-actions">
+            <a href="#" class="action-button">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Panel
+            </a>
+        </div>
+    </div>
+
+    <!-- Controles de periodo -->
+    <div class="period-controls">
+        <label><i class="fa-solid fa-calendar"></i> Periodo:</label>
+        <button class="period-btn" onclick="updatePeriod('3m')">3 Meses</button>
+        <button class="period-btn" onclick="updatePeriod('6m')">6 Meses</button>
+        <button class="period-btn active" onclick="updatePeriod('year')">Este Año</button>
+        <button class="period-btn" onclick="updatePeriod('all')">Todo el Tiempo</button>
+    </div>
+
+    <!-- Resumen -->
+    <div class="summary-card">
+        <div class="summary-item">
+            <h3 id="totalRoutines">45</h3>
+            <p><i class="fa-solid fa-dumbbell"></i> Rutinas Totales</p>
+        </div>
+        <div class="summary-item">
+            <h3 id="totalRecommendations">28</h3>
+            <p><i class="fa-solid fa-lightbulb"></i> Recomendaciones</p>
+        </div>
+        <div class="summary-item">
+            <h3 id="avgPerMonth">3.8</h3>
+            <p><i class="fa-solid fa-chart-line"></i> Promedio Mensual</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <!-- Gráfica de Rutinas -->
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <h2>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    Rutinas Iniciadas
+                </h2>
+                <div class="total-count" id="routinesTotal">45</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="routinesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfica de Recomendaciones -->
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <h2>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    Recomendaciones Recibidas
+                </h2>
+                <div class="total-count" id="recommendationsTotal">28</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="recommendationsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Datos de ejemplo (reemplaza con tus datos reales de Thymeleaf)
+    const fullYearData = {
+        routines: [3, 5, 4, 6, 8, 5, 7, 9, 4, 3, 5, 6],
+        recommendations: [2, 3, 2, 4, 5, 3, 4, 6, 2, 2, 3, 4]
+    };
+
+    const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+    // Configuración global
+    Chart.defaults.font.family = "'Poppins', sans-serif";
+    Chart.defaults.font.size = 13;
+    Chart.defaults.color = '#4a5568';
+
+    // Plugin de animación personalizada
+    const animationPlugin = {
+        id: 'customAnimation',
+        beforeUpdate: (chart) => {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.borderWidth = 3;
+            });
+        }
+    };
+
+    // Configuración común de tooltips
+    const tooltipConfig = {
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        titleColor: '#fff',
+        bodyColor: '#4cb979',
+        padding: 12,
+        borderColor: '#4cb979',
+        borderWidth: 2,
+        displayColors: false,
+        bodyFont: {
+            size: 16,
+            weight: 'bold'
+        },
+        callbacks: {
+            title: (context) => context[0].label,
+            label: (context) => `${context.parsed.y} ${context.dataset.label}`
+        }
+    };
+
+    // Gráfica 1: Rutinas (Barras con gradiente)
+    const ctxRoutines = document.getElementById('routinesChart').getContext('2d');
+    const gradientRoutines = ctxRoutines.createLinearGradient(0, 0, 0, 350);
+    gradientRoutines.addColorStop(0, '#4cb979');
+    gradientRoutines.addColorStop(1, '#3da167');
+
+    const routinesChart = new Chart(ctxRoutines, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'rutinas',
+                data: fullYearData.routines,
+                backgroundColor: gradientRoutines,
+                borderColor: '#4cb979',
+                borderRadius: 8,
+                borderWidth: 0,
+                hoverBackgroundColor: '#3da167',
+                hoverBorderWidth: 3,
+                hoverBorderColor: '#2a8a54'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 1500,
+                easing: 'easeInOutQuart'
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: tooltipConfig
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: { weight: '500' }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { weight: '500' }
+                    }
+                }
+            }
+        },
+        plugins: [animationPlugin]
+    });
+
+    // Gráfica 2: Recomendaciones (Línea con área)
+    const ctxRecs = document.getElementById('recommendationsChart').getContext('2d');
+    const gradientRecs = ctxRecs.createLinearGradient(0, 0, 0, 350);
+    gradientRecs.addColorStop(0, 'rgba(76, 185, 121, 0.4)');
+    gradientRecs.addColorStop(1, 'rgba(76, 185, 121, 0.01)');
+
+    const recommendationsChart = new Chart(ctxRecs, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'recomendaciones',
+                data: fullYearData.recommendations,
+                borderColor: '#4cb979',
+                backgroundColor: gradientRecs,
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointBackgroundColor: '#4cb979',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 3,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: '#3da167',
+                pointHoverBorderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 1500,
+                easing: 'easeInOutQuart'
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: tooltipConfig
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: { weight: '500' }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { weight: '500' }
+                    }
+                }
+            }
+        },
+        plugins: [animationPlugin]
+    });
+
+    // Función para actualizar periodo
+    function updatePeriod(period) {
+        // Actualizar botones activos
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Simular datos diferentes según periodo
+        let newData = { routines: [], recommendations: [] };
+        let newLabels = labels;
+
+        switch(period) {
+            case '3m':
+                newLabels = ['Sep', 'Oct', 'Nov'];
+                newData.routines = [4, 3, 5];
+                newData.recommendations = [2, 2, 3];
+                break;
+            case '6m':
+                newLabels = ['Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov'];
+                newData.routines = [5, 7, 9, 4, 3, 5];
+                newData.recommendations = [3, 4, 6, 2, 2, 3];
+                break;
+            case 'year':
+                newData = fullYearData;
+                break;
+            case 'all':
+                newLabels = ['2023', '2024', '2025'];
+                newData.routines = [35, 42, 45];
+                newData.recommendations = [20, 25, 28];
+                break;
+        }
+
+        // Actualizar gráficas con animación
+        routinesChart.data.labels = newLabels;
+        routinesChart.data.datasets[0].data = newData.routines;
+        routinesChart.update('active');
+
+        recommendationsChart.data.labels = newLabels;
+        recommendationsChart.data.datasets[0].data = newData.recommendations;
+        recommendationsChart.update('active');
+
+        // Actualizar totales
+        const totalR = newData.routines.reduce((a, b) => a + b, 0);
+        const totalRec = newData.recommendations.reduce((a, b) => a + b, 0);
+
+        animateValue('routinesTotal', parseInt(document.getElementById('routinesTotal').textContent), totalR, 800);
+        animateValue('recommendationsTotal', parseInt(document.getElementById('recommendationsTotal').textContent), totalRec, 800);
+        animateValue('totalRoutines', parseInt(document.getElementById('totalRoutines').textContent), totalR, 800);
+        animateValue('totalRecommendations', parseInt(document.getElementById('totalRecommendations').textContent), totalRec, 800);
+        animateValue('avgPerMonth', parseFloat(document.getElementById('avgPerMonth').textContent), (totalR / newData.routines.length).toFixed(1), 800);
+    }
+
+    // Animación de números
+    function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        const range = end - start;
+        const increment = range / (duration / 16);
+        let current = start;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                current = end;
+                clearInterval(timer);
+            }
+            obj.textContent = id === 'avgPerMonth' ? current.toFixed(1) : Math.round(current);
+        }, 16);
+    }
+
+    // Inicializar totales
+    window.addEventListener('load', () => {
+        animateValue('routinesTotal', 0, 45, 1000);
+        animateValue('recommendationsTotal', 0, 28, 1000);
+        animateValue('totalRoutines', 0, 45, 1000);
+        animateValue('totalRecommendations', 0, 28, 1000);
+        animateValue('avgPerMonth', 0, 3.8, 1000);
+    });
+</script>
+</body>
+</html>

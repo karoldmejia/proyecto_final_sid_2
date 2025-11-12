@@ -1,11 +1,9 @@
 package com.example.physical_activity_project.controller.mvc;
 
-import com.example.physical_activity_project.services.IExerciseProgressService;
-import com.example.physical_activity_project.services.IExerciseService;
-// Importa tus otros servicios cuando los tengas
-// import com.example.physical_activity_project.services.IRoutineService;
-// import com.example.physical_activity_project.services.IProgressService;
-import com.example.physical_activity_project.services.IRoutineService;
+import com.example.physical_activity_project.dto.MonthlyStatisticsDTO;
+import com.example.physical_activity_project.mappers.MonthlyStatisticsMapper;
+import com.example.physical_activity_project.model.MonthlyStatistics;
+import com.example.physical_activity_project.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,21 +13,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.physical_activity_project.model.ExerciseProgress;
 import com.example.physical_activity_project.model.User;
-import com.example.physical_activity_project.services.IUserService;
-import com.example.physical_activity_project.services.impl.ExerciseProgressServiceImpl;
+
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
 import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping("/user") // <-- Esta es la clave para tus rutas
+@RequestMapping("/user")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('User')") // Asegura que solo el rol 'User' entre aquí
+@PreAuthorize("hasRole('User')")
 public class UserMvcController {
 
     // Inyecta los servicios que el usuario necesita
@@ -38,6 +38,9 @@ public class UserMvcController {
     private final IExerciseProgressService progressService;
     private final IUserService userService;
     private final ExerciseProgressMapper exerciseProgressMapper;
+
+    private final IMonthlyStatisticsService monthlyStatisticsService;
+
 
     /**
      * Muestra el panel principal del usuario.
@@ -151,5 +154,45 @@ public class UserMvcController {
         model.addAttribute("progressList", progressList);
         return "user/my-progress";
     }
+
+    @GetMapping("/my-statistics")
+    public String getMyStatistics(Model model, Authentication authentication) {
+        // 1. Obtener el ID del usuario logueado
+        String username = authentication.getName();
+        User user = userService.findByUsername(username).orElseThrow();
+
+        // 2. Obtener el año actual
+        int currentYear = LocalDate.now().getYear();
+
+        // 3. Obtenemos los 12 meses para la gráfica
+        List<MonthlyStatisticsDTO> statsForYear = IntStream.rangeClosed(1, 12)
+                .mapToObj(month -> {
+
+                    // 4. Llama a cada método de tu servicio que devuelve un int
+                    int routines = monthlyStatisticsService.getUserRoutinesStarted(user.getId(), currentYear, month);
+
+                    // 5. ¡OJO! Tu interfaz no tiene "progressLoggedCount".
+                    //    Uso el método que sí tienes: getUserRecommendationsReceived
+                    int recs = monthlyStatisticsService.getUserRecommendationsReceived(user.getId(), currentYear, month);
+
+                    // 6. Construye el DTO manualmente (sin mapper)
+                    MonthlyStatisticsDTO dto = new MonthlyStatisticsDTO();
+                    dto.setYear(currentYear);
+                    dto.setMonth(month);
+                    dto.setRoutinesStarted(routines);
+
+                    // 7. ASEGÚRATE de que tu DTO tenga este campo (ver nota abajo)
+                    dto.setRecommendationsReceived(recs);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("statisticsData", statsForYear);
+        model.addAttribute("currentYear", currentYear);
+
+        return "user/my-statistics"; // La nueva plantilla
+    }
+
 }
 
