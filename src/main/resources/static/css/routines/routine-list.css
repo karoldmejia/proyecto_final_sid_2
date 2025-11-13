@@ -1,0 +1,184 @@
+/* ==========================================================
+   routine-list.css
+   ========================================================== */
+
+:root {
+    --verde: #4cb979;
+    --blanco: #FAFAFA;
+    --negro: #1A1A1A;
+    --gris: #DBDBDB;
+    --gris-claro: #F5F5F5;
+    --gris-oscuro: #B5B5B5;
+}
+
+/* ====== ENCABEZADO Y ACCIONES ====== */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.header-actions h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--negro);
+}
+
+.add-button {
+    background-color: var(--verde);
+    color: white;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.add-button:hover {
+    background-color: #3da567;
+}
+
+/* ====== TABLA DE RUTINAS ====== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--blanco);
+    border-radius: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+thead {
+    background-color: var(--gris-claro);
+}
+
+th, td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    color: var(--negro);
+}
+
+th {
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--gris);
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: var(--gris-claro);
+}
+
+/* ====== CÉLULA DE ACCIONES ====== */
+.action-cell {
+    position: relative;
+    text-align: right;
+}
+
+.action-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--gris-oscuro);
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: var(--gris);
+}
+
+.action-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: var(--blanco);
+    border: 1px solid var(--gris);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    min-width: 120px;
+    overflow: hidden;
+}
+
+.action-cell.show-menu .action-menu {
+    display: block;
+}
+
+.action-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--negro);
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.action-menu a:hover {
+    background-color: var(--gris-claro);
+}
+
+/* ====== MODAL (reutilizado) ====== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: var(--blanco);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: showModal 0.25s ease;
+}
+
+@keyframes showModal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.close-modal {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--gris-oscuro);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: var(--negro);
+}

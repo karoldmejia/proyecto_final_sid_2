@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle != null ? pageTitle : 'Panel de Usuario'}">Panel de Usuario</title>
+    <title th:text="${pageTitle != null ? pageTitle : 'Panel de Administrador'}">Panel de Administrador</title>
 
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
@@ -53,18 +53,17 @@
 
     <aside class="sidebar" role="navigation" aria-label="Menú lateral">
         <div class="sidebar-brand">
-            <a th:href="@{/user/dashboard}" aria-label="Ir al inicio">
+            <a th:href="@{/admin/dashboard}" aria-label="Ir al inicio">
                 <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Universidad Icesi" class="logo">
             </a>
         </div>
 
         <nav class="sidebar-menu">
             <ul>
-                <li><a th:href="@{/user/dashboard}" aria-current="page"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>
-                <li><a th:href="@{/user/exercises}"><i class="fa-solid fa-book"></i> <span>Ejercicios</span></a></li>
+                <li><a th:href="@{/admin/dashboard}" aria-current="page"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>
+                <li><a th:href="@{/admin/users}"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a></li>
+                <li><a th:href="@{/admin/roles}"><i class="fa-solid fa-user-shield"></i> <span>Roles & Permisos</span></a></li>
                 <li><a th:href="@{/routines}"><i class="fa-solid fa-list-check"></i> <span>Rutinas</span></a></li>
-                <li><a th:href="@{/user/my-progress}"><i class="fa-solid fa-chart-line"></i> <span>Mi Progreso</span></a></li>
-                <li><a th:href="@{/user/my-statistics}"><i class="fa-solid fa-chart-pie"></i> <span>Mis Estadísticas</span></a></li>
             </ul>
         </nav>
 

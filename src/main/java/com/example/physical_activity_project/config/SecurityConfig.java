@@ -67,7 +67,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain mvcSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/mvc/**", "/user/**") // <-- IMPORTANTE: Añade /user/** aquí
+                .securityMatcher("/mvc/**", "/user/**", "/routines/**") // <-- IMPORTANTE: Añade /user/** aquí
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
                         // Recursos públicos
@@ -78,8 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
                         .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
 
-                        // 1. <-- ¡CAMBIO IMPORTANTE! AÑADE ESTA REGLA PARA EL USUARIO
-                        .requestMatchers("/user/**").hasRole("User")
+                        .requestMatchers("/routines/my/new").authenticated()
 
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated()
@@ -100,7 +99,7 @@ public class SecurityConfig {
                                 String authorityName = authority.getAuthority();
 
                                 if (authorityName.equals("ROLE_Admin")) {
-                                    redirectUrl = "/mvc/users/";
+                                    redirectUrl = "/mvc/admin/users";
                                     break;
                                 } else if (authorityName.equals("ROLE_User")) {
                                     redirectUrl = "/user/dashboard"; // <-- El dashboard del usuario

@@ -1,6 +1,7 @@
 package com.example.physical_activity_project.controller.mvc;
 
 import com.example.physical_activity_project.dto.MonthlyStatisticsDTO;
+import com.example.physical_activity_project.dto.RoutineDTO;
 import com.example.physical_activity_project.mappers.MonthlyStatisticsMapper;
 import com.example.physical_activity_project.model.MonthlyStatistics;
 import com.example.physical_activity_project.services.*;
@@ -16,6 +17,7 @@ import com.example.physical_activity_project.model.User;
 
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
 import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
+import com.example.physical_activity_project.mappers.RoutineMapper;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,7 @@ public class UserMvcController {
     private final IExerciseProgressService progressService;
     private final IUserService userService;
     private final ExerciseProgressMapper exerciseProgressMapper;
+    private final RoutineMapper routineMapper;
 
     private final IMonthlyStatisticsService monthlyStatisticsService;
 
@@ -84,21 +87,13 @@ public class UserMvcController {
         // model.addAttribute("routines", routineService.getPredefinedRoutines());
 
         // Devuelve la plantilla para explorar rutinas
-        return "user/predefined-routines";
+        return "routines/routine-list";
     }
 
     /**
      * Muestra las rutinas que el usuario ha adoptado o creado.
      * Ruta: /user/routines/my
      */
-    @GetMapping("/routines/my")
-    public String getMyRoutines(Model model, Authentication authentication) {
-        // Carga solo las rutinas de este usuario [cite: 8, 14]
-        // model.addAttribute("myRoutines", routineService.getRoutinesForUser(authentication.getName()));
-
-        // Devuelve la plantilla para ver "Mis Rutinas"
-        return "user/my-routines";
-    }
 
     /**
      * Muestra el formulario para registrar un nuevo progreso.
@@ -193,6 +188,10 @@ public class UserMvcController {
 
         return "user/my-statistics"; // La nueva plantilla
     }
-
 }
+
+
+
+
+
 

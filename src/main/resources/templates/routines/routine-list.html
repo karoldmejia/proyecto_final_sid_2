@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:with="layout=(${layout} ?: 'layouts/baseUser')"
+      layout:decorate="~{__${layout}__}">
+<head>
+    <title>Lista de Rutinas</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
+    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/routines/routine-list.css}">
+
+    <div class="header-actions">
+        <h1 class="text-2xl font-bold">
+            Lista de Rutinas
+        </h1>
+        <a th:if="${#authorization.expression('hasAnyRole(''Trainer'', ''Admin'')')}" th:href="@{/routines/add}" class="add-button">
+            <span class="material-icons-round">add</span>
+            Crear Rutina
+        </a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th th:if="${#authorization.expression('hasAnyRole(''Trainer'', ''Admin'')')}">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="routine : ${routines}">
+            <td th:text="${routine.name}">Rutina de Lunes</td>
+            <td th:text="${routine.description}">Pecho y Triceps</td>
+            <td class="action-cell" th:if="${#authorization.expression('hasAnyRole(''Trainer'', ''Admin'')')}">
+                <button class="action-button" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+                <div class="action-menu">
+                    <a th:href="@{/routines/edit/{id}(id=${routine.id})}">Editar</a>
+                    <a th:href="@{/routines/delete/{id}(id=${routine.id})}">Eliminar</a>
+                </div>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(routines)}">
+            <td colspan="3" style="text-align: center;">No hay rutinas para mostrar.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">
+                <span class="material-icons-round">close</span>
+            </button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <script>
+        function toggleMenu(button) {
+            button.closest('.action-cell').classList.toggle('show-menu');
+        }
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.action-cell.show-menu').forEach(cell => {
+                if (!cell.contains(event.target)) {
+                    cell.classList.remove('show-menu');
+                }
+            });
+        });
+
+        async function openModal(url) {
+            const overlay = document.getElementById('modal-overlay');
+            const body = document.getElementById('modal-body');
+
+            body.innerHTML = '<p class="text-center text-gray-500">Cargando...</p>';
+            overlay.classList.remove('hidden');
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                body.innerHTML = html;
+            } catch (err) {
+                body.innerHTML = '<p class="text-center text-red-500">Error al cargar el contenido.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+            document.getElementById('modal-body').innerHTML = '';
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') closeModal();
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -13,6 +13,7 @@ public class RoutineDTO {
     private Long userSqlId;
     private ObjectId originPublicId;
     private String name;
+    private String description;
     private Date creationDate;
     private List<RoutineExerciseDTO> exercises;
 }

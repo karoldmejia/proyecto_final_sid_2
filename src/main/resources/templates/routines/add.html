@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:with="layout=(${layout} ?: 'layouts/baseUser')"
+      layout:decorate="~{__${layout}__}" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Rutina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-lg mx-auto my-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Agregar Rutina</h1>
+
+        <!-- <- Cambié la acción para que coincida con tu controller: /routines/my/new -> -->
+        <form th:action="@{/user/routines/my/new}" method="post" th:object="${routine}" class="space-y-5">
+
+            <!-- Nombre -->
+            <div class="input-group">
+                <input id="name" th:field="*{name}" type="text" maxlength="50" class="form_input" placeholder=" " required>
+                <label for="name" class="form_label">Nombre</label>
+            </div>
+
+            <!-- Descripción -->
+            <div class="input-group">
+                <textarea id="description" th:field="*{description}" class="form_input" placeholder=" " required></textarea>
+                <label for="description" class="form_label">Descripción</label>
+            </div>
+
+            <!-- Ejercicios dinámicos -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-700 mt-6 mb-3">Ejercicios para la Rutina</h3>
+                <div id="exercisesContainer" class="space-y-3">
+                    <!-- Los ejercicios se añadirán aquí dinámicamente -->
+                </div>
+                <button type="button" id="addExerciseBtn"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                    Añadir Ejercicio
+                </button>
+            </div>
+
+            <!-- Template oculto para las opciones del select -->
+            <select id="exerciseOptionsTemplate" style="display:none">
+                <option value="">Seleccione un ejercicio</option>
+                <option th:each="ex : ${allExercises}"
+                        th:value="${ex.id}"
+                        th:text="${ex.name}"></option>
+            </select>
+
+            <!-- Botones -->
+            <div class="flex justify-between pt-4">
+                <a th:href="@{/user/routines/my}" class="text-gray-600 hover:underline">Cancelar</a>
+                <button type="submit"
+                        class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Guardar Rutina
+                </button>
+            </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        </form>
+    </div>
+</div>
+
+<!-- SCRIPT ARREGLADO + LOGS PARA DEBUG -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM cargado: iniciando script de rutinas.');
+
+        const container = document.getElementById('exercisesContainer');
+        const addBtn = document.getElementById('addExerciseBtn');
+        const optionsTemplateSelect = document.getElementById('exerciseOptionsTemplate');
+
+        if (!container) console.error('No se encontró #exercisesContainer');
+        if (!addBtn) console.error('No se encontró #addExerciseBtn');
+        if (!optionsTemplateSelect) console.error('No se encontró #exerciseOptionsTemplate');
+
+        if (!container || !addBtn || !optionsTemplateSelect) {
+            console.error('Faltan elementos DOM necesarios, abortando script de ejercicios.');
+            return;
+        }
+
+        // guarda el HTML de opciones ya renderizado por Thymeleaf
+        const optionsHtml = optionsTemplateSelect.innerHTML;
+        console.log('optionsHtml length:', optionsHtml.length);
+
+        let exerciseIndex = 0;
+
+        function createSelectHtml(index) {
+            return `
+            <select name="exercises[${index}].exerciseId"
+                    class="w-full border-gray-300 border rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    required>
+                ${optionsHtml}
+            </select>
+        `;
+        }
+
+        function addExerciseField(item = {}) {
+            try {
+                const newExerciseDiv = document.createElement('div');
+                newExerciseDiv.classList.add('exercise-item', 'p-4', 'border', 'border-gray-200', 'rounded-lg', 'bg-gray-50');
+                newExerciseDiv.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ejercicio</label>
+                        ${createSelectHtml(exerciseIndex)}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Series</label>
+                        <input type="number" name="exercises[${exerciseIndex}].sets" value="${item.sets || 1}"
+                               class="w-full border-gray-300 border rounded-lg p-2" min="1" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Repeticiones</label>
+                        <input type="number" name="exercises[${exerciseIndex}].reps" value="${item.reps || 1}"
+                               class="w-full border-gray-300 border rounded-lg p-2" min="1" required>
+                    </div>
+                    <div class="flex items-center justify-end">
+                        <button type="button" class="remove-item-btn bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            `;
+
+                container.appendChild(newExerciseDiv);
+
+                // Si se pasa item.exerciseId, asignarlo
+                if (item.exerciseId) {
+                    const sel = newExerciseDiv.querySelector('select[name^="exercises"]');
+                    if (sel) sel.value = item.exerciseId;
+                }
+
+                exerciseIndex++;
+                updateExerciseIndices();
+                console.log('Añadido exerciseIndex:', exerciseIndex - 1);
+            } catch (err) {
+                console.error('Error al agregar campo de ejercicio:', err);
+            }
+        }
+
+        function updateExerciseIndices() {
+            document.querySelectorAll('#exercisesContainer .exercise-item').forEach((item, index) => {
+                item.querySelectorAll('[name^="exercises["]').forEach(input => {
+                    const name = input.getAttribute('name');
+                    input.setAttribute('name', name.replace(/exercises\[\d+\]/, `exercises[${index}]`));
+                });
+            });
+        }
+
+        // inicializa con un ejercicio por defecto
+        addExerciseField();
+
+        // listeners
+        addBtn.addEventListener('click', () => {
+            addExerciseField();
+        });
+
+        container.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-item-btn')) {
+                event.target.closest('.exercise-item').remove();
+                updateExerciseIndices();
+            }
+        });
+
+        console.log('Script de rutinas inicializado correctamente.');
+    });
+    /*]]>*/
+</script>
+
+</body>
+</html>
