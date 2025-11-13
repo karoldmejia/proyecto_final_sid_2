@@ -24,8 +24,12 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private UserServiceImpl userService;
+
+
     // --- Helpers ---
-    public MonthlyStatistics getOrCreateStatistics(Long entityId, int year, int month) {
+    public MonthlyStatistics getOrCreateStatistics(String entityId, int year, int month) {
         return statisticsRepository
                 .findByEntityIdAndYearAndMonth(entityId, year, month)
                 .orElseGet(() -> {
@@ -49,7 +53,7 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
     }
 
     // --- Incrementos ---
-    private void incrementMetric(Long entityId, String metricName) {
+    private void incrementMetric(String entityId, String metricName) {
         LocalDate now = LocalDate.now();
         MonthlyStatistics stats = getOrCreateStatistics(entityId, now.getYear(), now.getMonthValue());
         MonthlyStatisticsMetric metric = getOrCreateMetric(stats, metricName);
@@ -59,34 +63,34 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
 
     // Métodos públicos según rol
     @Override
-    public void incrementRoutinesStarted(Long userId) {
+    public void incrementRoutinesStarted(String userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        if (!user.getRole().getName().equals("User")) return; // Solo para usuarios
+        if (!userService.hasRole(userId, "User")) return;
         incrementMetric(userId, "routines_started");
     }
     @Override
-    public void incrementUserRecommendations(Long userId) {
+    public void incrementUserRecommendations(String userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        if (!user.getRole().getName().equals("User")) return;
+        if (!userService.hasRole(userId, "User")) return;
         incrementMetric(userId, "user_recommendations");
     }
 
     @Override
-    public void incrementTrainerRecommendations(Long trainerId) {
+    public void incrementTrainerRecommendations(String trainerId) {
         User trainer = userRepository.findById(trainerId).orElseThrow();
-        if (!trainer.getRole().getName().equals("Trainer")) return;
+        if (!userService.hasRole(trainerId, "Trainer")) return;
         incrementMetric(trainerId, "trainer_followups");
     }
 
     @Override
-    public void incrementNewAssignments(Long trainerId) {
+    public void incrementNewAssignments(String trainerId) {
         User trainer = userRepository.findById(trainerId).orElseThrow();
-        if (!trainer.getRole().getName().equals("Trainer")) return;
+        if (!userService.hasRole(trainerId, "Trainer")) return;
         incrementMetric(trainerId, "new_assignments");
     }
 
     // --- Consultas ---
-    private int getMetric(Long entityId, String metricName, int year, int month) {
+    private int getMetric(String entityId, String metricName, int year, int month) {
         MonthlyStatistics stats = statisticsRepository
                 .findByEntityIdAndYearAndMonth(entityId, year, month)
                 .orElse(null);
@@ -99,22 +103,22 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
     }
 
     @Override
-    public int getUserRoutinesStarted(Long userId, int year, int month) {
+    public int getUserRoutinesStarted(String userId, int year, int month) {
         return getMetric(userId, "routines_started", year, month);
     }
 
     @Override
-    public int getUserRecommendationsReceived(Long userId, int year, int month) {
+    public int getUserRecommendationsReceived(String userId, int year, int month) {
         return getMetric(userId, "user_recommendations", year, month);
     }
 
     @Override
-    public int getTrainerNewAssignments(Long trainerId, int year, int month) {
+    public int getTrainerNewAssignments(String trainerId, int year, int month) {
         return getMetric(trainerId, "new_assignments", year, month);
     }
 
     @Override
-    public int getTrainerRecommendationsGiven(Long trainerId, int year, int month) {
+    public int getTrainerRecommendationsGiven(String trainerId, int year, int month) {
         return getMetric(trainerId, "trainer_followups", year, month);
     }
 }

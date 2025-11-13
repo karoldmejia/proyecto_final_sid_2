@@ -21,7 +21,7 @@ public class Routine {
     private ObjectId id;
 
     @Field("usuario_sql_id")
-    private Long userSqlId;
+    private String userSqlId;
 
     @Field("origen_publico_id")
     private ObjectId originPublicId;

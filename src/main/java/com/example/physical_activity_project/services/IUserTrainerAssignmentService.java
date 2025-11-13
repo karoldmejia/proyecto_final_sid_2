@@ -5,9 +5,9 @@ import com.example.physical_activity_project.model.UserTrainerAssignment;
 import java.util.List;
 
 public interface IUserTrainerAssignmentService {
-    UserTrainerAssignment assignTrainerToUser(Long trainerId, Long userId);
+        UserTrainerAssignment assignTrainerToUser(String trainerId, String userId);
     UserTrainerAssignment updateAssignmentStatus(Long assignmentId, String newStatus);
-    List<UserTrainerAssignment> getAssignmentsByTrainer(Long trainerId);
-    List<UserTrainerAssignment> getAssignmentsByUser(Long userId);
+    List<UserTrainerAssignment> getAssignmentsByTrainer(String trainerId);
+    List<UserTrainerAssignment> getAssignmentsByUser(String userId);
     void deleteAssignment(Long assignmentId);
 }

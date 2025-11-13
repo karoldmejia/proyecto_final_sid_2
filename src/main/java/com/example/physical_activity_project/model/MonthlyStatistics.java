@@ -20,7 +20,7 @@ public class MonthlyStatistics {
     private Long id;
 
     @Column(name = "entity_id", nullable = false)
-    private Long entityId;
+    private String entityId;
 
     @Column(nullable = false)
     private Integer year;

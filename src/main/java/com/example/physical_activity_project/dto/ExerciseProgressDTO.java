@@ -14,7 +14,7 @@ public class ExerciseProgressDTO {
     private Integer repsCompleted;
     private Integer timeCompleted;
     private Integer effortLevel;
-    private Long userId;
+    private String userId;
     private ObjectId routineExerciseId;
 
     private List<RecommendationDTO> recommendations;

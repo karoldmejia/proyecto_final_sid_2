@@ -9,9 +9,10 @@ import com.example.physical_activity_project.model.Role;
 public interface IUserService {
     public User save(User user);
     public List<User> getAllUsers();
-    public Optional<User> getUserById(Long id);
+    public Optional<User> getUserById(String id);
     public void initializedUsers();
-    public User changeUserRole(Long userId, Role newRole);
-    void deleteById(Long id);
+    void deleteById(String id);
     Optional<User> findByUsername(String username);
+    public List<User> getUsersByRoleName(String roleName);
+
 }

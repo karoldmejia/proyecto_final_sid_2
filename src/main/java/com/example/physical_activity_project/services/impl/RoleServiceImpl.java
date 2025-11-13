@@ -1,12 +1,10 @@
 package com.example.physical_activity_project.services.impl;
 
-import com.example.physical_activity_project.model.Permission;
-import com.example.physical_activity_project.model.Role;
-import com.example.physical_activity_project.model.RolePermission;
-import com.example.physical_activity_project.model.User;
+import com.example.physical_activity_project.model.*;
 import com.example.physical_activity_project.repository.IRolePermissionRepository;
 import com.example.physical_activity_project.repository.IRoleRepository;
 import com.example.physical_activity_project.repository.IUserRepository;
+import com.example.physical_activity_project.repository.IUserRoleRepository;
 import com.example.physical_activity_project.services.IRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ public class RoleServiceImpl implements IRoleService {
     private final IRoleRepository roleRepository;
     private final IRolePermissionRepository rolePermissionRepository;
     private final IUserRepository userRepository;
+    private final IUserRoleRepository userRoleRepository;
 
     @Transactional(readOnly = true)
     public List<Permission> getPermissions(Long roleId) {
@@ -73,17 +72,24 @@ public class RoleServiceImpl implements IRoleService {
     public void deleteById(Long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
         if ("User".equalsIgnoreCase(role.getName())) {
-            throw new RuntimeException("¡El rol user no puede ser eliminado!");
+            throw new RuntimeException("¡El rol User no puede ser eliminado!");
         }
+
         Role userRole = roleRepository.findByName("User")
-                .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
-        if (role.getUsers() != null) {
-            for (User user : role.getUsers()) {
-                user.setRole(userRole);
-                userRepository.save(user);
-            }
+                .orElseThrow(() -> new RuntimeException("Rol 'User' no encontrado"));
+
+        List<UserRole> affectedUserRoles = userRoleRepository.findByRole(role);
+        for (UserRole ur : affectedUserRoles) {
+            userRoleRepository.delete(ur);
+
+            UserRole newUserRole = new UserRole();
+            newUserRole.setUser(ur.getUser());
+            newUserRole.setRole(userRole);
+            userRoleRepository.save(newUserRole);
         }
+
         rolePermissionRepository.deleteAllByRole(role);
         roleRepository.delete(role);
     }
@@ -123,6 +129,5 @@ public class RoleServiceImpl implements IRoleService {
         rolePermissionRepository.delete(rp);
         return role;
     }
-
 
 }

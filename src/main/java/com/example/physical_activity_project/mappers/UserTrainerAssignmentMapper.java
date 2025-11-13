@@ -9,9 +9,7 @@ import org.mapstruct.*;
 public interface UserTrainerAssignmentMapper {
 
     // Entity -> DTO
-    @Mapping(source = "trainer.id", target = "trainerId")
     @Mapping(source = "trainer.username", target = "trainerName")
-    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.username", target = "userName")
     UserTrainerAssignmentDTO entityToDto(UserTrainerAssignment assignment);
 
@@ -20,10 +18,10 @@ public interface UserTrainerAssignmentMapper {
     @Mapping(target = "user", expression = "java(mapUser(dto.getUserId()))")
     UserTrainerAssignment dtoToEntity(UserTrainerAssignmentDTO dto);
 
-    default User mapUser(Long id) {
+    default User mapUser(String id) {
         if (id == null) return null;
         User user = new User();
-        user.setId(id);
+        user.setUsername(id);
         return user;
     }
 }

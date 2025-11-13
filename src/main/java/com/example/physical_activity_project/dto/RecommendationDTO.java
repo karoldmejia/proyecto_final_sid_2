@@ -12,5 +12,5 @@ import java.time.LocalDateTime;
 public class RecommendationDTO {
     private LocalDateTime recommendationDate;
     private String content;
-    private Long trainerSqlId;
+    private String trainerSqlId;
 }

@@ -39,14 +39,12 @@ public class SignUpMVCController {
             }
 
             // Asignar rol por defecto (User)
-            Role userRole = roleService.getRoleByName("Admin")
-                    .orElseThrow(() -> new RuntimeException("Rol 'User' no encontrado"));
-
-            user.setRole(userRole);
+            user.setRole("STUDENT"); // aquí usamos el String que indica el tipo de usuario
             user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
             userService.save(user);
             return "redirect:/mvc/login";
+
         } catch (Exception e) {
             model.addAttribute("error", "Error al crear la cuenta: " + e.getMessage());
             model.addAttribute("user", user);

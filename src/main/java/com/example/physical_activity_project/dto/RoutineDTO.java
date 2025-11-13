@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class RoutineDTO {
     private ObjectId id;
-    private Long userSqlId;
+    private String userSqlId;
     private ObjectId originPublicId;
     private String name;
     private Date creationDate;

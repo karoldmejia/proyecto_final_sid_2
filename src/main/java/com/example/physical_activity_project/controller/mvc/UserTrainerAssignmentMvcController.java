@@ -28,7 +28,7 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/trainer/{trainerId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public String getByTrainer(@PathVariable Long trainerId, Model model) {
+    public String getByTrainer(@PathVariable String trainerId, Model model) {
 
         List<UserTrainerAssignment> assignments = assignmentService.getAssignmentsByTrainer(trainerId);
 
@@ -48,7 +48,7 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public String getByUser(@PathVariable Long userId, Model model) {
+    public String getByUser(@PathVariable String userId, Model model) {
 
         List<UserTrainerAssignment> assignments = assignmentService.getAssignmentsByUser(userId);
 
@@ -66,19 +66,18 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/new")
     @PreAuthorize("hasAuthority('CREAR_ASIGNACION')")
-    public String showAssignForm(@RequestParam("userId") Long userId, Model model) {
+    public String showAssignForm(@RequestParam("userId") String userId, Model model) {
 
         // Buscamos al usuario para mostrar su nombre
         User user = userService.getUserById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
 
         // Buscamos a todos los entrenadores para ponerlos en un <select>
-        List<User> trainers = userService.getUsersByRoleName("TRAINER"); // Asumiendo que tienes un método así
+        List<User> trainers = userService.getUsersByRoleName("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("trainers", trainers);
 
-        // Pasamos un objeto vacío para el data-binding del formulario
         model.addAttribute("assignmentForm", new AssignmentForm(userId, null));
 
         return "assignments/assign-form"; // -> Llama a resources/templates/assignments/assign-form.html
@@ -156,7 +155,7 @@ public class UserTrainerAssignmentMvcController {
     @lombok.AllArgsConstructor
     @lombok.NoArgsConstructor
     static class AssignmentForm {
-        private Long userId;
-        private Long trainerId;
+        private String userId;
+        private String trainerId;
     }
 }

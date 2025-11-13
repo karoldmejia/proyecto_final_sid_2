@@ -22,8 +22,8 @@ public class UserTrainerAssignmentController {
     @PostMapping("/trainer/{trainerId}/user/{userId}")
     @PreAuthorize("hasAuthority('CREAR_ASIGNACION')")
     public ResponseEntity<UserTrainerAssignmentDTO> assignTrainer(
-            @PathVariable Long trainerId,
-            @PathVariable Long userId) {
+            @PathVariable String trainerId,
+            @PathVariable String userId) {
 
         UserTrainerAssignment saved = assignmentService.assignTrainerToUser(trainerId, userId);
         return ResponseEntity.ok(mapper.entityToDto(saved));
@@ -41,7 +41,7 @@ public class UserTrainerAssignmentController {
 
     @GetMapping("/trainer/{trainerId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public ResponseEntity<List<UserTrainerAssignmentDTO>> getByTrainer(@PathVariable Long trainerId) {
+    public ResponseEntity<List<UserTrainerAssignmentDTO>> getByTrainer(@PathVariable String trainerId) {
         List<UserTrainerAssignmentDTO> list = assignmentService.getAssignmentsByTrainer(trainerId)
                 .stream()
                 .map(mapper::entityToDto)
@@ -51,7 +51,7 @@ public class UserTrainerAssignmentController {
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public ResponseEntity<List<UserTrainerAssignmentDTO>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<UserTrainerAssignmentDTO>> getByUser(@PathVariable String userId) {
         List<UserTrainerAssignmentDTO> list = assignmentService.getAssignmentsByUser(userId)
                 .stream()
                 .map(mapper::entityToDto)

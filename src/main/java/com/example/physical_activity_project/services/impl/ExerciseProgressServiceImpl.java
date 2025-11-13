@@ -41,7 +41,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public ExerciseProgress registerProgress(Long userId, ExerciseProgress progress) {
+    public ExerciseProgress registerProgress(String userId, ExerciseProgress progress) {
         progress.setUserId(userId);
         ExerciseProgress saved = exerciseProgressRepository.save(progress);
 
@@ -95,7 +95,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     }
 
     @Override
-    public List<ExerciseProgress> getProgressByUser(Long userId) {
+    public List<ExerciseProgress> getProgressByUser(String userId) {
         return exerciseProgressRepository.findByUserId(userId);
     }
 
@@ -105,7 +105,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     }
 
     @Override
-    public ProgressDTO getProgressSummary(Long userId, LocalDate start, LocalDate end) {
+    public ProgressDTO getProgressSummary(String userId, LocalDate start, LocalDate end) {
         List<ExerciseProgress> progresses = getProgressInRange(userId, start, end);
 
         long totalExercises = progresses.size();
@@ -118,12 +118,12 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     }
 
     @Override
-    public List<ExerciseProgress> getProgressByWeek(Long userId, LocalDate startDate) {
+    public List<ExerciseProgress> getProgressByWeek(String userId, LocalDate startDate) {
         LocalDate endDate = startDate.plusDays(6);
         return getProgressInRange(userId, startDate, endDate);
     }
 
-    private List<ExerciseProgress> getProgressInRange(Long userId, LocalDate start, LocalDate end) {
+    private List<ExerciseProgress> getProgressInRange(String userId, LocalDate start, LocalDate end) {
         Date startDate = java.sql.Date.valueOf(start);
         Date endDate = java.sql.Date.valueOf(end.plusDays(1)); // incluir último día
         return exerciseProgressRepository.findByUserIdAndProgressDateBetween(userId, startDate, endDate);
@@ -143,7 +143,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     }
 
     @Override
-    public List<LocalDate> getActiveDaysInMonth(Long userId, int year, int month) {
+    public List<LocalDate> getActiveDaysInMonth(String userId, int year, int month) {
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
 
@@ -186,7 +186,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
     // Métodos para recomendaciones
 
     @Override
-    public ExerciseProgress addRecommendation(ObjectId progressId, Long trainerId, String content) {
+    public ExerciseProgress addRecommendation(ObjectId progressId, String trainerId, String content) {
         ExerciseProgress progress = mongoTemplate.findById(progressId, ExerciseProgress.class);
         if (progress == null) {
             throw new RuntimeException("No se encontró el progreso con ID: " + progressId);
@@ -230,7 +230,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
         return mongoTemplate.findOne(new Query(Criteria.where("_id").is(progressId)), ExerciseProgress.class);
     }
 
-    private void validateTrainer(Long trainerId, ExerciseProgress progress) {
+    private void validateTrainer(String trainerId, ExerciseProgress progress) {
         ObjectId routineExerciseId = progress.getRoutineExerciseId();
         if (routineExerciseId == null) {
             throw new RuntimeException("El progreso no tiene un RoutineExercise asociado.");
@@ -247,7 +247,7 @@ public class ExerciseProgressServiceImpl implements IExerciseProgressService {
             throw new RuntimeException("No se encontró una rutina que contenga el RoutineExercise con ID: " + routineExerciseId);
         }
 
-        Long userSqlId = routine.getUserSqlId();
+        String userSqlId = routine.getUserSqlId();
         if (userSqlId == null) {
             throw new RuntimeException("La rutina no tiene un usuario asociado (userSqlId).");
         }

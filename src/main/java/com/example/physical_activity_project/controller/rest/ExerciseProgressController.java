@@ -40,7 +40,7 @@ public class ExerciseProgressController {
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
-    public ResponseEntity<List<ExerciseProgressDTO>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<ExerciseProgressDTO>> getByUser(@PathVariable String userId) {
         List<ExerciseProgressDTO> list = progressService.getProgressByUser(userId)
                 .stream()
                 .map(mapper::entityToDto)
@@ -51,7 +51,7 @@ public class ExerciseProgressController {
     @PostMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('REGISTRAR_PROGRESO_PROPIO')")
     public ResponseEntity<ExerciseProgressDTO> registerProgress(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestBody ExerciseProgressDTO dto) {
         ExerciseProgress entity = mapper.dtoToEntity(dto);
         ExerciseProgress saved = progressService.registerProgress(userId, entity);
@@ -78,7 +78,7 @@ public class ExerciseProgressController {
     @GetMapping("/user/{userId}/week")
     @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
     public ResponseEntity<List<ExerciseProgressDTO>> getWeeklyProgress(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
         List<ExerciseProgressDTO> list = progressService.getProgressByWeek(userId, startDate)
                 .stream()
@@ -90,7 +90,7 @@ public class ExerciseProgressController {
     @GetMapping("/user/{userId}/summary")
     @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
     public ResponseEntity<ProgressDTO> getSummary(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         ProgressDTO summary = progressService.getProgressSummary(userId, start, end);
@@ -110,7 +110,7 @@ public class ExerciseProgressController {
     @PreAuthorize("hasAuthority('CREAR_RECOMENDACION')")
     public ResponseEntity<ExerciseProgressDTO> addRecommendation(
             @PathVariable ObjectId progressId,
-            @PathVariable Long trainerId,
+            @PathVariable String trainerId,
             @RequestBody RecommendationRequest request) {
 
         ExerciseProgress updated = progressService.addRecommendation(progressId, trainerId, request.getContent());
@@ -142,7 +142,7 @@ public class ExerciseProgressController {
     @GetMapping("/user/{userId}/active-days")
     @PreAuthorize("hasAuthority('VER_PROGRESO_PROPIO') or hasAuthority('VER_PROGRESO_USUARIOS_ASIGNADOS') or hasAuthority('VER_TODO_PROGRESO')")
     public ResponseEntity<List<LocalDate>> getActiveDays(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestParam int year,
             @RequestParam int month) {
 

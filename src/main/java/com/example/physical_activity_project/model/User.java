@@ -17,9 +17,6 @@ import java.util.List;
 @Table(name="users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false, unique = true, length = 30)
     private String username;
 
@@ -32,15 +29,8 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
-    @Column(name = "student_id")
-    private String studentId; // referencia a STUDENTS.id
-
-    @Column(name = "employee_id")
-    private String employeeId; // referencia a EMPLOYEES.id
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

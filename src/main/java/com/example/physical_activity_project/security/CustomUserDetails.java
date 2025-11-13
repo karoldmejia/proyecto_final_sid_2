@@ -1,7 +1,10 @@
 package com.example.physical_activity_project.security;
 
+import com.example.physical_activity_project.model.Role;
 import com.example.physical_activity_project.model.RolePermission;
 import com.example.physical_activity_project.model.User;
+import com.example.physical_activity_project.model.UserRole;
+import com.example.physical_activity_project.repository.IUserRoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,24 +18,28 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
+    private final IUserRoleRepository userRoleRepository;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // Agregamos el rol principal con prefijo ROLE_ (para MVC y hasRole)
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
+        // Obtenemos todos los roles del usuario
+        List<UserRole> userRoles = userRoleRepository.findByUser(user);
 
-        // Agregamos los permisos específicos del rol (para control fino)
-        if (user.getRole().getRolePermissions() != null) {
-            for (RolePermission rp : user.getRole().getRolePermissions()) {
-                authorities.add(new SimpleGrantedAuthority(rp.getPermission().getName()));
+        for (UserRole ur : userRoles) {
+            Role role = ur.getRole();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+
+            // Agregamos los permisos específicos del rol
+            if (role.getRolePermissions() != null) {
+                for (RolePermission rp : role.getRolePermissions()) {
+                    authorities.add(new SimpleGrantedAuthority(rp.getPermission().getName()));
+                }
             }
         }
-
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return user.getPassword();

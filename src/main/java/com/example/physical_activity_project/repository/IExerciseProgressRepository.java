@@ -11,7 +11,7 @@ import java.util.List;
 public interface IExerciseProgressRepository extends MongoRepository<ExerciseProgress, ObjectId> {
 
     // Obtener todos los progresos de un usuario
-    List<ExerciseProgress> findByUserId(Long userId);
+    List<ExerciseProgress> findByUserId(String userId);
 
     // Obtener todos los progresos de un ejercicio específico dentro de una rutina
     List<ExerciseProgress> findByRoutineExerciseId(ObjectId routineExerciseId);
@@ -19,5 +19,5 @@ public interface IExerciseProgressRepository extends MongoRepository<ExercisePro
     List<ExerciseProgress> findByRoutineExerciseIds(List<ObjectId> routineExerciseIds);
 
     // Obtener progresos de un usuario en un rango de fechas
-    List<ExerciseProgress> findByUserIdAndProgressDateBetween(Long userId, Date start, Date end);
+    List<ExerciseProgress> findByUserIdAndProgressDateBetween(String userId, Date start, Date end);
 }

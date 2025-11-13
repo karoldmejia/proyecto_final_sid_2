@@ -8,7 +8,7 @@ import java.util.Optional;
 
 
 public interface IUserTrainerAssignmentRepository extends JpaRepository<UserTrainerAssignment, Long>{
-    List<UserTrainerAssignment> findByTrainerId(Long trainerId);
-    List<UserTrainerAssignment> findByUserId(Long userId);
-    Optional<UserTrainerAssignment> findByTrainerIdAndUserIdAndStatus(Long trainerId, Long userId, String status);
+    List<UserTrainerAssignment> findByTrainerUsername(String username);
+    List<UserTrainerAssignment> findByUserUsername(String username);
+    Optional<UserTrainerAssignment> findByTrainerUsernameAndUserUsernameAndStatus(String trainerId, String userId, String status);
 }
