@@ -14,7 +14,9 @@
         }
 
         .user-card {
-            aspect-ratio: 1 / 1;
+            /* --- CAMBIO: 'aspect-ratio' eliminado para permitir que la tarjeta crezca --- */
+            /* aspect-ratio: 1 / 1; */
+
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -87,19 +89,43 @@
             border-color: #fecaca;
         }
 
-        /* ===== INICIO: NUEVOS ESTILOS DE ESTADO ===== */
         .status-dot {
-            font-size: 0.9rem; /* Un poco más pequeño que el texto */
+            font-size: 0.9rem;
         }
-
         .status-active {
             color: #22c55e; /* Verde */
         }
-
         .status-inactive {
             color: #9ca3af; /* Gris */
         }
-        /* ===== FIN: NUEVOS ESTILOS DE ESTADO ===== */
+
+        /* ===== INICIO: NUEVOS ESTILOS DE ASIGNACIÓN ===== */
+        .assignment-link-container {
+            margin-top: 1rem; /* Separación del contenido de arriba */
+        }
+
+        .assignment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3b82f6; /* Azul */
+            padding: 0.5rem 0.25rem;
+            border-radius: 6px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .assignment-link:hover {
+            color: #1d4ed8; /* Azul más oscuro */
+            background-color: #eff6ff; /* Azul muy claro */
+        }
+
+        .assignment-link .material-icons-round {
+            font-size: 1.1rem;
+        }
+        /* ===== FIN: NUEVOS ESTILOS DE ASIGNACIÓN ===== */
 
 
         @media (prefers-color-scheme: dark) {
@@ -116,12 +142,20 @@
                 border-color: #4b5563;
             }
 
-            /* --- Ajuste de estado para modo oscuro --- */
             .status-active {
-                color: #4ade80; /* Verde más brillante */
+                color: #4ade80;
             }
             .status-inactive {
-                color: #6b7280; /* Gris más oscuro */
+                color: #6b7280;
+            }
+
+            /* --- Modo oscuro para el enlace --- */
+            .assignment-link {
+                color: #60a5fa; /* Azul claro */
+            }
+            .assignment-link:hover {
+                color: #93c5fd; /* Azul más claro */
+                background-color: #1f2937; /* Fondo de tarjeta */
             }
         }
     </style>
@@ -142,7 +176,9 @@
 
     <div class="header-actions">
         <div class="search-box">
-
+            <!-- (El input de búsqueda estaba vacío, lo he re-añadido) -->
+            <span class="material-icons-round">search</span>
+            <input type="text" placeholder="Buscar usuario...">
         </div>
 
         <button type="button" th:onclick="'openModal(\'' + @{/mvc/users/add} + '\')'" class="add-user-btn">
@@ -154,23 +190,47 @@
     <div th:if="${not #lists.isEmpty(users)}" class="user-grid-container">
 
         <div th:each="user : ${users}" class="user-card">
-            <div th:with="isActive=${user.isActive}">
-                <h2 th:text="${user.username}">John Doe</h2>
-                <p>
-                    <span class="material-icons-round">badge</span>
-                    <span th:text="${user.role?.name}">User</span>
-                </p>
+            <!-- Contenido principal (con espacio para el enlace de asignación) -->
+            <div>
+                <div th:with="isActive=${user.isActive}">
+                    <h2 th:text="${user.username}">John Doe</h2>
+                    <p>
+                        <span class="material-icons-round">badge</span>
+                        <span th:text="${user.role?.name}">User</span>
+                    </p>
 
-                <p>
-                    <span class="material-icons-round status-dot"
-                          th:classappend="${isActive ? 'status-active' : 'status-inactive'}">
-                        fiber_manual_record
-                    </span>
-                    <span th:text="${isActive ? 'Activo' : 'Inactivo'}">Activo</span>
-                </p>
+                    <p>
+                        <span class="material-icons-round status-dot"
+                              th:classappend="${isActive ? 'status-active' : 'status-inactive'}">
+                            fiber_manual_record
+                        </span>
+                        <span th:text="${isActive ? 'Activo' : 'Inactivo'}">Activo</span>
+                    </p>
+                </div>
 
+                <!-- ===== INICIO: NUEVO BLOQUE DE ASIGNACIONES ===== -->
+                <div class="assignment-link-container" th:with="roleName=${user.role?.name}">
+
+                    <!-- Si es Entrenador, mostrar enlace a sus usuarios -->
+                    <!-- CAMBIO: Se usa #strings.equalsIgnoreCase para ignorar mayúsculas/minúsculas -->
+                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'TRAINER')}"
+                       th:href="@{/mvc/assignments/trainer/{id}(id=${user.id})}"
+                       class="assignment-link">
+                        <span class="material-icons-round">group</span>
+                        Ver Usuarios
+                    </a>
+
+                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'USER')}"
+                       th:href="@{/mvc/assignments/user/{id}(id=${user.id})}"
+                       class="assignment-link">
+                        <span class="material-icons-round">person</span>
+                        Ver Entrenador
+                    </a>
+                </div>
+                <!-- ===== FIN: NUEVO BLOQUE DE ASIGNACIONES ===== -->
             </div>
 
+            <!-- Acciones (Editar/Eliminar) -->
             <div class="card-actions">
                 <button th:onclick="'openModal(\'' + @{/mvc/users/edit(id=${user.id})} + '\')'">
                     <span class="material-icons-round">edit</span> Editar
@@ -189,6 +249,7 @@
     </div>
 
 
+    <!-- Modal y Script (Sin cambios) -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal()">

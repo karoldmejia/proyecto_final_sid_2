@@ -16,4 +16,5 @@ public class MonthlyStatisticsDTO {
     private Integer userRecommendations;
     private Integer newAssignments;
     private Integer trainerFollowups;
+    private int recommendationsReceived;
 }

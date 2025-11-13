@@ -21,14 +21,18 @@
             <div class="input-group">
                 <input id="name" name="name" type="text" maxlength="50"
                        class="form_input" placeholder=" " required>
-                <label for="name" class="form_label">Nombre</label>
+                <label for="name" class="form_label">
+                    Nombre
+                </label>
             </div>
 
             <!-- Descripción -->
             <div class="input-group">
                 <textarea id="description" name="description" maxlength="500"
                           class="form_input" placeholder=" "></textarea>
-                <label for="description" class="form_label">Descripción</label>
+                <label for="description" class="form_label">
+                    Descripción
+                </label>
             </div>
 
             <!-- Permisos -->
@@ -49,10 +53,13 @@
             <!-- Botones -->
             <div class="form-actions">
                 <a th:href="@{/mvc/roles}" class="form-btn btn-secondary">Cancelar</a>
-                <button type="submit" class="form-btn">Crear</button>
+                <button type="submit" class="form-btn">
+                    Crear
+                </button>
             </div>
         </form>
     </div>
 </div>
+
 </body>
 </html>

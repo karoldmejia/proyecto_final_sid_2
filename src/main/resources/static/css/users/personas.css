@@ -210,3 +210,46 @@
     color: #666;
     font-size: 0.95rem;
 }
+.add-assignment-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--verde);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--gris);
+    background-color: var(--blanco);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.add-assignment-btn:hover {
+    color: var(--blanco);
+    background-color: var(--verde);
+    border-color: var(--verde);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(76, 185, 121, 0.2);
+}
+
+.add-assignment-btn .material-icons-round {
+    font-size: 1.1rem;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .add-assignment-btn {
+        color: var(--verde);
+        background-color: var(--negro);
+        border-color: var(--gris-oscuro);
+    }
+
+    .add-assignment-btn:hover {
+        color: var(--negro);
+        background-color: var(--verde);
+        border-color: var(--verde);
+    }
+}
