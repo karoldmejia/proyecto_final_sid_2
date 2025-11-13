@@ -65,20 +65,25 @@ public class AdminMVCController {
 
     @GetMapping("/edit")
     public String editUserForm(@RequestParam String id, Model model) {
-        Optional<User> userOpt = userService.getUserById(id);
+        // CORRECCIÓN: Usamos 'findByUsername' porque tu entidad usa el username como ID
+        // y ese es el método disponible en tu IUserService.
+        Optional<User> userOpt = userService.findByUsername(id);
+
         if (userOpt.isPresent()) {
             model.addAttribute("actualUser", userOpt.get());
+
             model.addAttribute("roles", roleService.getAllRoles());
             return "admin/users/edit";
         } else {
-            model.addAttribute("actualUser", null);
-            return "admin/users/edit";
+            // SUGERENCIA: Es mejor redirigir si el usuario no existe,
+            // o pasar un usuario vacío (new User()) para evitar errores en el formulario HTML.
+            return "redirect:/admin/users";
         }
     }
 
     @PostMapping("/edit")
     public String editUser(@ModelAttribute("actualUser") User user, @RequestParam("role") String roleType) {
-        Optional<User> existingUserOpt = userService.getUserById(user.getUsername());
+        Optional<User> existingUserOpt = userService.findByUsername(user.getUsername());
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
 

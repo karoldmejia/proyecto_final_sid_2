@@ -168,20 +168,17 @@
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
     <link rel="stylesheet" th:href="@{/css/users/personas.css}">
-
-
     <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mb-4 rounded">
         <p th:text="${error}"></p>
     </div>
 
     <div class="header-actions">
         <div class="search-box">
-            <!-- (El input de búsqueda estaba vacío, lo he re-añadido) -->
             <span class="material-icons-round">search</span>
             <input type="text" placeholder="Buscar usuario...">
         </div>
 
-        <button type="button" th:onclick="'openModal(\'' + @{/mvc/users/add} + '\')'" class="add-user-btn">
+        <button type="button" th:onclick="'openModal(\'' + @{/mvc/admin/add} + '\')'" class="add-user-btn">
             <span class="material-icons-round">add</span>
             Agregar usuario
         </button>
@@ -190,13 +187,12 @@
     <div th:if="${not #lists.isEmpty(users)}" class="user-grid-container">
 
         <div th:each="user : ${users}" class="user-card">
-            <!-- Contenido principal (con espacio para el enlace de asignación) -->
             <div>
                 <div th:with="isActive=${user.isActive}">
                     <h2 th:text="${user.username}">John Doe</h2>
                     <p>
                         <span class="material-icons-round">badge</span>
-                        <span th:text="${user.role?.name}">User</span>
+                        <span th:text="${user.role}">User</span>
                     </p>
 
                     <p>
@@ -208,34 +204,29 @@
                     </p>
                 </div>
 
-                <!-- ===== INICIO: NUEVO BLOQUE DE ASIGNACIONES ===== -->
-                <div class="assignment-link-container" th:with="roleName=${user.role?.name}">
+                <div class="assignment-link-container" th:with="roleName=${user.role}">
 
-                    <!-- Si es Entrenador, mostrar enlace a sus usuarios -->
-                    <!-- CAMBIO: Se usa #strings.equalsIgnoreCase para ignorar mayúsculas/minúsculas -->
                     <a th:if="${#strings.equalsIgnoreCase(roleName, 'TRAINER')}"
-                       th:href="@{/mvc/assignments/trainer/{id}(id=${user.id})}"
+                       th:href="@{/mvc/admin/assignments/trainer/{id}(id=${user.username})}"
                        class="assignment-link">
                         <span class="material-icons-round">group</span>
                         Ver Usuarios
                     </a>
 
-                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'USER')}"
-                       th:href="@{/mvc/assignments/user/{id}(id=${user.id})}"
+                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'STUDENT') or #strings.equalsIgnoreCase(roleName, 'USER')}"
+                       th:href="@{/mvc/admin/assignments/user/{id}(id=${user.username})}"
                        class="assignment-link">
                         <span class="material-icons-round">person</span>
                         Ver Entrenador
                     </a>
                 </div>
-                <!-- ===== FIN: NUEVO BLOQUE DE ASIGNACIONES ===== -->
             </div>
 
-            <!-- Acciones (Editar/Eliminar) -->
             <div class="card-actions">
-                <button th:onclick="'openModal(\'' + @{/mvc/users/edit(id=${user.id})} + '\')'">
+                <button th:onclick="'openModal(\'' + @{/mvc/admin/edit(id=${user.username})} + '\')'">
                     <span class="material-icons-round">edit</span> Editar
                 </button>
-                <a th:href="@{/mvc/users/delete(id=${user.id})}"
+                <a th:href="@{/mvc/admin/delete(id=${user.username})}"
                    onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
                     <span class="material-icons-round">delete</span> Eliminar
                 </a>
@@ -249,7 +240,6 @@
     </div>
 
 
-    <!-- Modal y Script (Sin cambios) -->
     <div id="modal-overlay" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal()">
@@ -270,9 +260,13 @@
 
             try {
                 const response = await fetch(url);
+                if (!response.ok) { // Añadido para manejar errores HTTP
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
                 const html = await response.text();
                 body.innerHTML = html;
             } catch (err) {
+                console.error("Error al cargar el modal:", err); // Para depuración
                 body.innerHTML = '<p class="text-center text-red-500">Error al cargar el contenido.</p>';
             }
         }
