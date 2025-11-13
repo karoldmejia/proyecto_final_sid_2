@@ -1,4 +1,4 @@
-<body>
+ <body>
 <div th:fragment="content">
     <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/admin/form-view.css}">
@@ -9,7 +9,7 @@
             <option value="" disabled selected hidden></option>
             <option th:each="ex : ${allExercises}"
                     th:value="${ex.id}"
-                    th:text="${ex.name}">
+                    th:text="${ex.name + ' (' + ex.type + ')'}">
             </option>
         </select>
         <label for="exerciseId" class="form_label">Ejercicio Realizado</label>

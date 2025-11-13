@@ -1,53 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      th:replace="~{layouts/baseUser :: layout}">
+      layout:decorate="~{layouts/baseUser}">
 <head>
-
+    <title>Lista de Ejercicios</title>
+    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
+    <style>
+        /* Estilos rápidos para el modal si faltan en tu CSS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 20px; border-radius: 8px;
+            width: 90%; max-width: 500px; position: relative;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .hidden { display: none !important; }
+        .close-modal {
+            position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<div th:fragment="content">
+<div layout:fragment="content">
 
-    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
-    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/main.css}">
-    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
-    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
-    <link rel="stylesheet" th:href="@{/styles.css}">
+    <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="text-2xl font-bold">Lista de Ejercicios</h1>
 
-    <div class="header-actions">
-        <h1 class="text-2xl font-bold">
-            Lista de Ejercicios
-        </h1>
-
-
+        <button type="button"
+                th:onclick="'openModal(\'' + @{/user/exercises/new} + '\')'"
+                class="add-user-btn"
+                style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+            <span class="material-icons-round">add</span>
+            Añadir Ejercicio
+        </button>
     </div>
-    <table>
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Dificultad</th>
-            <th>Duración</th>
 
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr style="background: #f4f4f4; text-align: left;">
+            <th style="padding: 10px;">Nombre</th>
+            <th style="padding: 10px;">Tipo</th>
+            <th style="padding: 10px;">Dificultad</th>
+            <th style="padding: 10px;">Duración</th>
+            <th style="padding: 10px; text-align: right;">Acciones</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="exercise : ${exercises}">
-            <td th:text="${exercise.name}">Press de Banca</td>
-            <td th:text="${exercise.type}">Fuerza</td>
-            <td th:text="${exercise.difficulty}">Intermedio</td>
-            <td th:text="|${exercise.duration} min|">10 min</td>
 
+        <tr th:each="exercise : ${exercises}" style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px;" th:text="${exercise.name}">Nombre</td>
+            <td style="padding: 10px;" th:text="${exercise.type}">Tipo</td>
+            <td style="padding: 10px;" th:text="${exercise.difficulty}">Dificultad</td>
+            <td style="padding: 10px;" th:text="|${exercise.duration} min|">10 min</td>
 
+            <td class="action-cell" style="padding: 10px; text-align: right; position: relative;">
+                <button class="action-btn" onclick="toggleMenu(this)" style="border: none; background: none; cursor: pointer;">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+
+                    <button type="button"
+                            th:onclick="'openModal(\'' + @{/user/exercises/edit/{id}(id=${exercise.id})} + '\')'"
+                            class="dropdown-item"
+                            style="display: flex; align-items: center; gap: 5px; padding: 10px; width: 100%; border: none; background: none; cursor: pointer; text-align: left;">
+                        <span class="material-icons-round" style="font-size: 18px;">edit</span>
+                        Editar
+                    </button>
+
+                    <form th:action="@{/user/exercises/delete/{id}(id=${exercise.id})}" method="post" style="margin: 0;">
+                        <button type="submit" class="dropdown-item"
+                                onclick="return confirm('¿Estás seguro de eliminar este ejercicio?')"
+                                style="display: flex; align-items: center; gap: 5px; padding: 10px; width: 100%; border: none; background: none; cursor: pointer; text-align: left; color: #dc3545;">
+                            <span class="material-icons-round" style="font-size: 18px;">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
         </tr>
 
-        <tr th:if="${#lists.isEmpty(exercises)}">
-            <td colspan="5" style="text-align: center;">No hay ejercicios para mostrar.</td>
+        <tr th:if="${exercises.isEmpty()}">
+            <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                No hay ejercicios registrados.
+            </td>
         </tr>
+
         </tbody>
     </table>
 
@@ -56,36 +98,53 @@
             <button class="close-modal" onclick="closeModal()">
                 <span class="material-icons-round">close</span>
             </button>
-            <div id="modal-body"></div>
+            <div id="modal-body">
+            </div>
         </div>
     </div>
-    <script>
-        // (Script del menú desplegable sin cambios)
+
+    <script th:inline="javascript">
+        // Función para abrir el menú desplegable de acciones
         function toggleMenu(button) {
-            button.closest('.action-cell').classList.toggle('show-menu');
-        }
-        document.addEventListener('click', function(event) {
-            document.querySelectorAll('.action-cell.show-menu').forEach(cell => {
-                if (!cell.contains(event.target)) {
-                    cell.classList.remove('show-menu');
+            // Cierra otros menús abiertos
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu !== button.nextElementSibling) {
+                    menu.style.display = 'none';
                 }
             });
+
+            const menu = button.nextElementSibling;
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.action-cell')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
         });
 
-        // ===== CAMBIO 4: Script del Modal añadido =====
+        // Lógica del Modal (AJAX)
         async function openModal(url) {
             const overlay = document.getElementById('modal-overlay');
             const body = document.getElementById('modal-body');
 
-            body.innerHTML = '<p class="text-center text-gray-500">Cargando...</p>';
+            body.innerHTML = '<div style="text-align:center; padding:20px;">Cargando...</div>';
             overlay.classList.remove('hidden');
 
             try {
                 const response = await fetch(url);
-                const html = await response.text();
-                body.innerHTML = html;
+                if (response.ok) {
+                    const html = await response.text();
+                    body.innerHTML = html;
+                } else {
+                    body.innerHTML = '<p style="color:red; text-align:center;">Error al cargar el formulario.</p>';
+                }
             } catch (err) {
-                body.innerHTML = '<p class="text-center text-red-500">Error al cargar el contenido.</p>';
+                console.error(err);
+                body.innerHTML = '<p style="color:red; text-align:center;">Error de conexión.</p>';
             }
         }
 
@@ -94,12 +153,12 @@
             document.getElementById('modal-body').innerHTML = '';
         }
 
-        // Cerrar modal si se hace clic fuera del contenido
-        document.addEventListener('click', (e) => {
+        // Cerrar modal al hacer clic en el fondo oscuro
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
             if (e.target.id === 'modal-overlay') closeModal();
         });
-        // =============================================
     </script>
+
 </div>
 </body>
 </html>

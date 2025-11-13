@@ -20,6 +20,8 @@ public class Routine {
     @Id
     private ObjectId id;
 
+    private Long userId;
+
     @Field("usuario_sql_id")
     private String userSqlId;
 
@@ -29,8 +31,18 @@ public class Routine {
     @Field("name")
     private String name;
 
+    @Field("description")
+    private String description;
+
+    @Field("duration")
+    private Integer duration;
+
+    @Field("difficulty")
+    private String difficulty;
+
     @Field("creation_date")
     private Date creationDate;
 
     private List<RoutineExercise> exercises;
+
 }

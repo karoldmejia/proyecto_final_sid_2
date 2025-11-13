@@ -13,6 +13,9 @@ public class RoutineDTO {
     private String userSqlId;
     private ObjectId originPublicId;
     private String name;
+    private String description;
+    private Integer duration;
+    private String difficulty;
     private Date creationDate;
     private List<RoutineExerciseDTO> exercises;
 }

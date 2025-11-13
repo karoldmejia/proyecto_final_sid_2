@@ -67,7 +67,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain mvcSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/mvc/**", "/user/**")
+                .securityMatcher("/mvc/**", "/user/**", "/routines/**")
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/mvc/login", "/mvc/signup/form", "/css/**", "/js/**", "/images/**").permitAll()
@@ -75,7 +75,9 @@ public class SecurityConfig {
                         .requestMatchers("/mvc/users/add", "/mvc/users/edit/**", "/mvc/users/delete/**").hasRole("Admin")
                         .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
                         .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
-                        .requestMatchers("/user/**").permitAll()  // ✅ Todos los roles pueden acceder a /user/**
+                        .requestMatchers("/mvc/exercises/**").hasAnyRole("Admin", "Trainer") // NUEVO: proteger ejercicios MVC
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/routines/**").authenticated() // NUEVO: proteger rutas de rutinas
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

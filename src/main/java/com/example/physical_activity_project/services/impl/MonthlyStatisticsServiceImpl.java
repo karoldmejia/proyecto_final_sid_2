@@ -7,10 +7,14 @@ import com.example.physical_activity_project.repository.IMonthlyStatisticsMetric
 import com.example.physical_activity_project.repository.IMonthlyStatisticsRepository;
 import com.example.physical_activity_project.repository.IUserRepository;
 import com.example.physical_activity_project.services.IMonthlyStatisticsService;
+import com.example.physical_activity_project.mappers.MonthlyStatisticsMapper;
+import com.example.physical_activity_project.dto.MonthlyStatisticsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
@@ -26,6 +30,9 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private MonthlyStatisticsMapper monthlyStatisticsMapper;
 
 
     // --- Helpers ---
@@ -120,5 +127,13 @@ public class MonthlyStatisticsServiceImpl implements IMonthlyStatisticsService {
     @Override
     public int getTrainerRecommendationsGiven(String trainerId, int year, int month) {
         return getMetric(trainerId, "trainer_followups", year, month);
+    }
+
+    @Override
+    public List<MonthlyStatisticsDTO> getMonthlyStatisticsForUser(String userId) {
+        return statisticsRepository.findByEntityId(userId)
+                .stream()
+                .map(monthlyStatisticsMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

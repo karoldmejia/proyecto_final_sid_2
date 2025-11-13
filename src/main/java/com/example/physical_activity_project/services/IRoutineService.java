@@ -17,4 +17,10 @@ public interface IRoutineService {
     Routine updateExerciseInRoutine(ObjectId routineId, ObjectId exerciseId, RoutineExercise updated);
     Routine addExerciseToRoutine(ObjectId routineId, RoutineExercise newExercise);
 
+    Routine adoptRoutine(String userId, ObjectId predefinedRoutineId);
+
+    List<ObjectId> getAdoptedRoutineOriginIdsByUser(String userId);
+
+    List<Routine> getPredefinedRoutines();
+
 }

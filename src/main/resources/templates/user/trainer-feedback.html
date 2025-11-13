@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}">
+<head>
+    <title>Feedback de mi Entrenador</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin-dashboard.css}">
+    <style>
+        .feedback-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .feedback-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .feedback-card h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .feedback-card p {
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        .feedback-card .trainer-info {
+            font-size: 0.9rem;
+            color: var(--gray-dark);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <h1>Feedback de mi Entrenador</h1>
+
+    <div th:if="${trainerFeedback == null or trainerFeedback.isEmpty()}">
+        <p>Aún no has recibido feedback de tu entrenador.</p>
+    </div>
+
+    <div th:unless="${trainerFeedback.isEmpty()}" class="feedback-container">
+        <div th:each="feedback : ${trainerFeedback}" class="feedback-card">
+            <h3>Recomendación</h3>
+            <!-- Usar los campos correctos de RecommendationDTO -->
+            <p th:text="${feedback.content} ?: 'Sin contenido'">Este es un comentario de ejemplo del entrenador.</p>
+            <div class="trainer-info">
+                <span th:text="${feedback.trainerSqlId} ?: 'Entrenador'">Nombre del Entrenador</span> -
+                <span th:text="${#temporals.format(feedback.recommendationDate, 'dd/MM/yyyy HH:mm')} ?: 'Fecha no disponible'">Fecha</span>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

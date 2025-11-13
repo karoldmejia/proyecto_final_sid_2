@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}">
+<head>
+    <title>Rutinas Prediseñadas</title>
+    <link rel="stylesheet" th:href="@{/css/routines/routine-list.css}">
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="header-actions">
+        <h1 class="text-2xl font-bold">
+            Rutinas Prediseñadas
+        </h1>
+    </div>
+
+    <div th:if="${predefinedRoutines.isEmpty()}">
+        <p style="text-align: center;">No hay rutinas prediseñadas disponibles en este momento.</p>
+    </div>
+
+    <table th:unless="${predefinedRoutines.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Duración</th>
+            <th>Dificultad</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="routine : ${predefinedRoutines}">
+            <td th:text="${routine.name}"></td>
+            <td th:text="${routine.description}"></td>
+            <td th:text="${routine.duration} + ' minutos'"></td>
+            <td th:text="${routine.difficulty}"></td>
+            <td class="action-cell">
+                <a th:href="@{/user/adopt-routine/{id}(id=${routine.id})}" class="add-button">
+                    Adoptar Rutina
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+</body>
+</html>

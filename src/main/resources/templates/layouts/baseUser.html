@@ -1,65 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es" th:fragment="layout">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="es"
+      th:fragment="layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle != null ? pageTitle : 'Panel de Administración'}">Panel de Administración</title>
+    <title th:text="${pageTitle != null ? pageTitle : 'Panel de Usuario'}">Panel de Usuario</title>
 
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/main.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" th:href="@{/css/layout/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/layout/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin-dashboard.css}">
-    <link rel="stylesheet" th:href="@{/main.css}">
-    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
 
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.querySelector('.sidebar');
             const layout = document.querySelector('.layout');
 
-            sidebar.classList.add('collapsed');
-            layout.classList.add('sidebar-collapsed');
+            if(sidebar && layout) {
+                // Inicia colapsado
+                sidebar.classList.add('collapsed');
+                layout.classList.add('sidebar-collapsed');
 
-            sidebar.addEventListener('mouseenter', function() {
-                if (window.innerWidth > 1100) {
-                    sidebar.classList.remove('collapsed');
-                    layout.classList.remove('sidebar-collapsed');
-                }
-            });
-
-            sidebar.addEventListener('mouseleave', function() {
-                if (window.innerWidth > 1100) {
-                    sidebar.classList.add('collapsed');
-                    layout.classList.add('sidebar-collapsed');
-                }
-            });
-
-            const toggleBtn = document.querySelector('.btn-toggle-sidebar');
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('is-open');
+                sidebar.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 1100) {
+                        sidebar.classList.remove('collapsed');
+                        layout.classList.remove('sidebar-collapsed');
+                    }
+                });
+                sidebar.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 1100) {
+                        sidebar.classList.add('collapsed');
+                        layout.classList.add('sidebar-collapsed');
+                    }
                 });
             }
         });
     </script>
 </head>
 <body>
-<div class="layout">
 
-    <aside class="sidebar" role="navigation" aria-label="Menú lateral">
+<div class="layout">
+    <aside class="sidebar">
         <div class="sidebar-brand">
-            <a th:href="@{/user/dashboard}" aria-label="Ir al inicio">
-                <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Universidad Icesi" class="logo">
+            <a th:href="@{/user/dashboard}">
+                <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Icesi" class="logo">
             </a>
         </div>
 
@@ -78,25 +71,20 @@
                 </li>
 
                 <li>
-                    <a th:href="@{/user/routines/my}">
-                        <i class="fa-solid fa-list-check"></i> <span>Mis Rutinas</span>
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/user/routines/predefined}">
-                        <i class="fa-solid fa-compass"></i> <span>Explorar Rutinas</span>
+                    <a th:href="@{/user/routines}">
+                        <i class="fa-solid fa-list-check"></i> <span>Rutinas</span>
                     </a>
                 </li>
 
                 <li>
-                    <a th:href="@{/user/log-activity}">
+                    <a th:href="@{/user/log-progress}">
                         <i class="fa-solid fa-pen-to-square"></i> <span>Registrar Actividad</span>
                     </a>
                 </li>
 
                 <li>
                     <a th:href="@{/user/my-progress}">
-                        <i class="fa-solid fa-chart-line"></i> <span>Historial Progreso</span>
+                        <i class="fa-solid fa-chart-line"></i> <span>Historial</span>
                     </a>
                 </li>
 
@@ -105,30 +93,26 @@
                         <i class="fa-solid fa-chart-pie"></i> <span>Estadísticas</span>
                     </a>
                 </li>
-
             </ul>
         </nav>
 
         <div class="sidebar-footer">
-            <a href="/logout">
+            <a th:href="@{/logout}">
                 <i class="fa-solid fa-right-from-bracket"></i><span>Salir</span>
             </a>
         </div>
     </aside>
+
     <div class="main-column">
-
-
-
-
-            <main class="admin-container">
-
-                <th:block th:replace="this :: content" />
-            </main>
+        <main class="admin-container">
+            <th:block layout:fragment="content" />
+        </main>
 
         <footer>
-            © 2025 Universidad Icesi | Ctrl Alt Elite
+            © 2025 Universidad Icesi | GymIcesi
         </footer>
     </div>
 </div>
+<th:block layout:fragment="scripts" />
 </body>
 </html>

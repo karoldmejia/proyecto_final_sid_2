@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es"
-      th:replace="~{layouts/baseUser :: layout}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}"
+      lang="es">
+
+<head>
+    <title>Mi Panel de Actividad</title>
+</head>
 
 <body>
-<div th:fragment="content">
-    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
-
+<th:block layout:fragment="content">
     <div class="dashboard-container">
 
-        <!-- HEADER -->
         <div class="dashboard-header">
             <div class="header-content">
                 <h1>
@@ -16,7 +19,6 @@
                     Mi Panel de Actividad
                 </h1>
             </div>
-
             <div class="header-stats">
                 <div class="stat-card">
                     <i class="fa-solid fa-clipboard-list"></i>
@@ -42,10 +44,8 @@
             </div>
         </div>
 
-        <!-- MAIN GRID -->
         <div class="dashboard-grid">
 
-            <!-- SECCIÓN: Mi Actividad -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
@@ -65,7 +65,7 @@
                         <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
 
-                    <a th:href="@{/user/log-activity}" class="action-card success">
+                    <a th:href="@{/user/log-progress}" class="action-card success">
                         <div class="action-icon"><i class="fa-solid fa-plus"></i></div>
                         <div class="action-content">
                             <h3>Registro Rápido</h3>
@@ -74,7 +74,7 @@
                         <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
 
-                    <a th:href="@{/user/routines/new}" class="action-card info">
+                    <a th:href="@{/user/routines/my/new}" class="action-card info">
                         <div class="action-icon"><i class="fa-solid fa-pen-to-square"></i></div>
                         <div class="action-content">
                             <h3>Crear Rutina Personalizada</h3>
@@ -85,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN: Explorar -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
@@ -96,7 +95,7 @@
                 </div>
 
                 <div class="action-grid">
-                    <a th:href="@{/user/routines/predefined}" class="action-card purple">
+                    <a th:href="@{/user/predefined-routines}" class="action-card purple">
                         <div class="action-icon"><i class="fa-solid fa-star"></i></div>
                         <div class="action-content">
                             <h3>Rutinas Prediseñadas</h3>
@@ -116,7 +115,6 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN: Mis Informes -->
             <div class="dashboard-section quick-access">
                 <div class="section-header">
                     <h2>
@@ -125,23 +123,30 @@
                     </h2>
                 </div>
                 <div class="quick-links">
-                    <a th:href="@{/user/my-statistics}" class="quick-link">
+                    <a th:href="@{/user/my-progress}" class="quick-link">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>Mi Progreso Mensual</span>
                     </a>
-                    <a th:href="@{/user/my-progress}" class="quick-link">
-                        <i class="fa-solid fa-dumbbell"></i>
-                        <span>Historial de Ejercicios</span>
+
+                    <a th:href="@{/user/muscle-groups}" class="quick-link">
+                        <i class="fa-solid fa-chart-bar"></i>
+                        <span>Grupos Musculares</span>
                     </a>
+
                     <a th:href="@{/user/trainer-feedback}" class="quick-link">
                         <i class="fa-solid fa-comment-dots"></i>
                         <span>Feedback de mi Entrenador</span>
                     </a>
+
+                    <a th:href="@{/user/my-statistics}" class="quick-link">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Mis Estadísticas</span>
+                    </a>
                 </div>
             </div>
 
-        </div> <!-- END dashboard-grid -->
-    </div> <!-- END dashboard-container -->
-</div>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

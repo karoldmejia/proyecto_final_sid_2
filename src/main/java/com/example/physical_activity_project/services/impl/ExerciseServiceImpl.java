@@ -1,5 +1,7 @@
 package com.example.physical_activity_project.services.impl;
 
+import com.example.physical_activity_project.dto.ExerciseDTO;
+import com.example.physical_activity_project.mappers.ExerciseMapper;
 import com.example.physical_activity_project.model.Exercise;
 import com.example.physical_activity_project.repository.IExerciseRepository;
 import com.example.physical_activity_project.services.IExerciseService;
@@ -15,6 +17,9 @@ public class ExerciseServiceImpl implements IExerciseService {
 
     @Autowired
     private IExerciseRepository exerciseRepository;
+
+    @Autowired
+    private ExerciseMapper exerciseMapper;
 
     @Override
     public Exercise createExercise(Exercise exercise) {
@@ -67,5 +72,12 @@ public class ExerciseServiceImpl implements IExerciseService {
     @Override
     public List<Exercise> getExercisesByDifficulty(String difficulty) {
         return exerciseRepository.findByDifficulty(difficulty);
+    }
+
+    @Override
+    public Exercise createExercise(String userId, ExerciseDTO exerciseDTO) {
+        Exercise exercise = exerciseMapper.dtoToEntity(exerciseDTO);
+        exercise.setUserSqlId(userId);
+        return exerciseRepository.save(exercise);
     }
 }

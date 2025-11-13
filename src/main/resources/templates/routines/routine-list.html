@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}">
+<head>
+    <title>Mis Rutinas</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Mis Rutinas</h1>
+        <a th:href="@{/user/routines/my/new}" class="btn-primary" style="background-color: #008f39; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+            <i class="fa-solid fa-plus"></i> Nueva Rutina
+        </a>
+    </div>
+
+    <div th:if="${routines == null or routines.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa;">
+        <p>No tienes rutinas creadas todavía.</p>
+    </div>
+
+    <table th:unless="${routines.isEmpty()}" style="width: 100%; border-collapse: collapse;">
+        <thead>
+        <tr style="background: #eee; text-align: left;">
+            <th style="padding: 10px;">Nombre</th>
+            <th style="padding: 10px;">Descripción</th>
+            <th style="padding: 10px;">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="routine : ${routines}" style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 10px;" th:text="${routine.name}">Nombre</td>
+            <td style="padding: 10px;" th:text="${routine.description}">Desc</td>
+
+            <td style="padding: 10px;">
+                <div style="display: flex; gap: 10px;">
+
+                    <a th:href="@{/user/routines/edit/{id}(id=${routine.id})}"
+                       style="color: #008f39; cursor: pointer;"
+                       title="Editar">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+
+                    <form th:action="@{/user/routines/delete/{id}(id=${routine.id})}" method="post">
+                        <button type="submit"
+                                onclick="return confirm('¿Estás seguro de eliminar esta rutina?');"
+                                style="border: none; background: none; color: red; cursor: pointer;"
+                                title="Eliminar">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</th:block>
+</body>
+</html>

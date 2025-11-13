@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:with="layout=(${layout} ?: 'layouts/baseUser')"
+      layout:decorate="~{__${layout}__}">
+<head>
+    <title>Editar Rutina</title>
+    <link rel="stylesheet" th:href="@{/css/users/forms.css}">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="form-wrapper">
+        <div class="form-container">
+            <h2 class="text-2xl font-bold mb-4">Editar Rutina</h2>
+
+            <form th:action="@{/user/routines/edit/{id}(id=${routine.id})}" th:object="${routine}" method="post">
+
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{userSqlId}" />
+
+                <div class="input-group">
+                    <input id="name" name="name" type="text" maxlength="50" class="form_input" placeholder=" " required th:field="*{name}">
+                    <label for="name" class="form_label">Nombre</label>
+                </div>
+
+                <div class="input-group">
+                    <textarea id="description" name="description" class="form_input" placeholder=" " required th:field="*{description}"></textarea>
+                    <label for="description" class="form_label">Descripción</label>
+                </div>
+
+                <div class="input-group">
+                    <input id="duration" type="number" class="form_input" placeholder=" " required th:field="*{duration}">
+                    <label for="duration" class="form_label">Duración (min)</label>
+                </div>
+
+                <div class="input-group">
+                    <select id="difficulty" class="form_input" th:field="*{difficulty}">
+                        <option value="Principiante">Principiante</option>
+                        <option value="Intermedio">Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
+                    </select>
+                    <label for="difficulty" class="form_label">Dificultad</label>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/user/routines/my}" class="form-btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="form-btn">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

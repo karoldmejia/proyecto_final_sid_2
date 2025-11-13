@@ -1,82 +1,47 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<div class="form-container" style="padding: 20px;">
+    <h2 th:text="${pageTitle}" style="margin-bottom: 20px; text-align: center;">Añadir/Editar Ejercicio</h2>
 
+    <form th:action="@{/user/exercises/save}" th:object="${exercise}" method="post" id="exerciseForm">
 
-<head>
-    <title th:text="${pageTitle}">Formulario de Ejercicio</title>
-</head>
-<body>
+        <input type="hidden" th:field="*{id}" />
 
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="name" style="display: block; margin-bottom: 5px;">Nombre:</label>
+            <input type="text" id="name" th:field="*{name}" required
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
-    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="type" style="display: block; margin-bottom: 5px;">Tipo:</label>
+            <input type="text" id="type" th:field="*{type}" required
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
 
-    <!-- Fuentes e íconos -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="difficulty" style="display: block; margin-bottom: 5px;">Dificultad:</label>
+            <select id="difficulty" th:field="*{difficulty}" required
+                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="Principiante">Principiante</option>
+                <option value="Intermedio">Intermedio</option>
+                <option value="Avanzado">Avanzado</option>
+            </select>
+        </div>
 
-    <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/main.css}">
-    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
-    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
-    <link rel="stylesheet" th:href="@{/styles.css}">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="duration" style="display: block; margin-bottom: 5px;">Duración (minutos):</label>
+            <input type="number" id="duration" th:field="*{duration}" required min="1"
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
 
-    <div class="form-container">
-        <h2 th:text="${pageTitle}">Formulario de Ejercicio</h2>
-
-        <form th:action="@{/mvc/exercises/save}" th:object="${exercise}" method="post">
-
-            <input type="hidden" th:field="*{id}" />
-
-            <div class="input-group">
-                <input type="text" th:field="*{name}" class="form_input" placeholder=" " required />
-                <label class="form_label">Nombre del Ejercicio</label>
-            </div>
-
-            <div class="input-group">
-                <input type="text" th:field="*{type}" class="form_input" placeholder=" " required />
-                <label class="form_label">Tipo (Ej. Fuerza, Cardio)</label>
-            </div>
-
-            <div class="input-group">
-                <select th:field="*{difficulty}" class="form_input" required>
-                    <option value="" disabled selected hidden></option>
-                    <option value="Principiante">Principiante</option>
-                    <option value="Intermedio">Intermedio</option>
-                    <option value="Avanzado">Avanzado</option>
-                </select>
-                <label class="form_label form_label_static">Dificultad</label>
-            </div>
-
-            <div class="input-group">
-                <input type="number" th:field="*{duration}" class="form_input" placeholder=" " required />
-                <label class="form_label">Duración (minutos)</label>
-            </div>
-
-            <div class="input-group">
-                <textarea th:field="*{description}" class="form_input" rows="3" placeholder=" "></textarea>
-                <label class="form_label">Descripción</label>
-            </div>
-
-            <div class="input-group">
-                <input type="text" th:field="*{videoUrl}" class="form_input" placeholder=" " />
-                <label class="form_label">URL del Video (Opcional)</label>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="form-btn">
-                    <span class="material-icons-round">save</span>
-                    Guardar
-                </button>
-                <a th:href="@{/mvc/exercises}" class="form-btn btn-secondary">
-                    Cancelar
-                </a>
-            </div>
-        </form>
-    </div>
+        <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn-secondary" onclick="closeModal()"
+                    style="padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-primary"
+                    style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Guardar
+            </button>
+        </div>
+    </form>
 </div>
-
-</body>
-</html>
