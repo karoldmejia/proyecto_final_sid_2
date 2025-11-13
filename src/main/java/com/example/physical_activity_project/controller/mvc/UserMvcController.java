@@ -3,24 +3,20 @@ package com.example.physical_activity_project.controller.mvc;
 import com.example.physical_activity_project.dto.MonthlyStatisticsDTO;
 import com.example.physical_activity_project.dto.RoutineDTO;
 import com.example.physical_activity_project.mappers.MonthlyStatisticsMapper;
-import com.example.physical_activity_project.model.MonthlyStatistics;
+import com.example.physical_activity_project.model.*;
 import com.example.physical_activity_project.services.*;
+import com.example.physical_activity_project.dto.RecommendationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.example.physical_activity_project.model.ExerciseProgress;
-import com.example.physical_activity_project.model.User;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.physical_activity_project.dto.ExerciseProgressDTO;
 import com.example.physical_activity_project.mappers.ExerciseProgressMapper;
 import com.example.physical_activity_project.mappers.RoutineMapper;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
@@ -60,6 +56,10 @@ public class UserMvcController {
 
         model.addAttribute("username", username);
 
+        // Obtener el conteo de rutinas activas del usuario
+        int activeRoutinesCount = routineService.getRoutinesByUser(username).size();
+        model.addAttribute("myActiveRoutines", activeRoutinesCount);
+
         // Devuelve la plantilla Thymeleaf del dashboard de usuario
         return "user/dashboard";
     }
@@ -79,10 +79,6 @@ public class UserMvcController {
         return "routines/routine-list";
     }
 
-    /**
-     * Muestra las rutinas que el usuario ha adoptado o creado.
-     * Ruta: /user/routines/my
-     */
 
     /**
      * Muestra el formulario para registrar un nuevo progreso.
@@ -127,15 +123,10 @@ public class UserMvcController {
         String username = authentication.getName();
         User user = userService.findByUsername(username).orElseThrow();
 
+        // 2. Obtener las estadísticas mensuales del usuario
+        List<MonthlyStatisticsDTO> monthlyStats = monthlyStatisticsService.getMonthlyStatisticsForUser(user.getUsername());
+        model.addAttribute("monthlyStats", monthlyStats);
 
-        // 2. Obtener su historial de progreso
-        List<ExerciseProgressDTO> progressList = progressService.getProgressByUser(user.getUsername())
-                .stream()
-                .map(exerciseProgressMapper::entityToDto)
-                .toList();
-
-
-        model.addAttribute("progressList", progressList);
         return "user/my-progress";
     }
 
@@ -176,6 +167,38 @@ public class UserMvcController {
         model.addAttribute("currentYear", currentYear);
 
         return "user/my-statistics"; // La nueva plantilla
+    }
+
+    @GetMapping("/muscle-groups")
+    public String showMuscleGroups(Model model) {
+        // Asumiendo que IExerciseService puede devolver tipos de ejercicios distintos
+        List<String> muscleGroups = exerciseService.getAllExercises().stream()
+                                    .map(Exercise::getType)
+                                    .distinct()
+                                    .collect(Collectors.toList());
+        model.addAttribute("muscleGroups", muscleGroups);
+        return "user/muscle-groups";
+    }
+
+    @GetMapping("/trainer-feedback")
+    public String showTrainerFeedback(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username).orElseThrow();
+
+        // Obtener todo el progreso de ejercicios del usuario
+        List<ExerciseProgressDTO> allProgress = progressService.getProgressByUser(user.getUsername())
+                .stream()
+                .map(exerciseProgressMapper::entityToDto)
+                .collect(Collectors.toList());
+
+        // Recopilar todas las recomendaciones de todos los progresos
+        List<RecommendationDTO> trainerFeedback = allProgress.stream()
+                .flatMap(progress -> progress.getRecommendations().stream())
+                .collect(Collectors.toList());
+
+        model.addAttribute("trainerFeedback", trainerFeedback);
+
+        return "user/trainer-feedback";
     }
 }
 

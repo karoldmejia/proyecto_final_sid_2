@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}">
+<head>
+    <title>Mis Rutinas</title>
+    <link rel="stylesheet" th:href="@{/css/routines/routine-list.css}">
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="header-actions">
+        <h1 class="text-2xl font-bold">
+            Mis Rutinas
+        </h1>
+    </div>
+
+    <div th:if="${myRoutines.isEmpty()}">
+        <p style="text-align: center;">No tienes rutinas activas en este momento.</p>
+    </div>
+
+    <table th:unless="${myRoutines.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Duración</th>
+            <th>Dificultad</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="routine : ${myRoutines}">
+            <td th:text="${routine.name}"></td>
+            <td th:text="${routine.description}"></td>
+            <td th:text="${routine.duration} + ' minutos'"></td>
+            <td th:text="${routine.difficulty}"></td>
+            <td class="action-cell">
+                <button class="action-button" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+                <div class="action-menu">
+                    <a th:href="@{/user/routines/edit/{id}(id=${routine.id})}" class="action-menu-item">Editar</a>
+                    <form th:action="@{/user/routines/delete/{id}(id=${routine.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="action-menu-item" onclick="return confirm('¿Estás seguro de que quieres eliminar esta rutina?')">Eliminar</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Script para el menú de acciones (copiado de routine-list.html) -->
+    <script>
+        function toggleMenu(button) {
+            button.closest('.action-cell').classList.toggle('show-menu');
+        }
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.action-cell.show-menu').forEach(cell => {
+                if (!cell.contains(event.target)) {
+                    cell.classList.remove('show-menu');
+                }
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>

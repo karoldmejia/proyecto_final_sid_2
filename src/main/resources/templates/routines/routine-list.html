@@ -34,20 +34,20 @@
         <tr>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th th:if="${#authorization.expression('hasAnyRole(''Trainer'', ''Admin'')')}">Acciones</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="routine : ${routines}">
             <td th:text="${routine.name}">Rutina de Lunes</td>
             <td th:text="${routine.description}">Pecho y Triceps</td>
-            <td class="action-cell" th:if="${#authorization.expression('hasAnyRole(''Trainer'', ''Admin'')')}">
+            <td class="action-cell">
                 <button class="action-button" onclick="toggleMenu(this)">
                     <span class="material-icons-round">more_vert</span>
                 </button>
                 <div class="action-menu">
-                    <a th:href="@{/routines/edit/{id}(id=${routine.id})}">Editar</a>
-                    <a th:href="@{/routines/delete/{id}(id=${routine.id})}">Eliminar</a>
+                    <a th:href="@{/user/routines/edit/{id}(id=${routine.id})}">Editar</a>
+                    <a th:href="@{/user/routines/delete/{id}(id=${routine.id})}">Eliminar</a>
                 </div>
             </td>
         </tr>

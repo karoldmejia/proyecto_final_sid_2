@@ -34,4 +34,7 @@ public class Exercise {
 
     @Field("video_url")
     private String videoUrl;
+
+    @Field("usuario_sql_id")
+    private String userSqlId;
 }

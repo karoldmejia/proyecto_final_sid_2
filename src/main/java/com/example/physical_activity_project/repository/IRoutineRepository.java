@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface IRoutineRepository extends MongoRepository<Routine, ObjectId> {
     List<Routine> findByUserSqlId(String userSqlId);
     Optional<Routine> findByExercises_ExerciseId(ObjectId exerciseId);
+    List<Routine> findByUserSqlIdAndOriginPublicIdNotNull(String userSqlId);
+    List<Routine> findByUserSqlIdInAndOriginPublicIdIsNull(List<String> userSqlIds);
 }

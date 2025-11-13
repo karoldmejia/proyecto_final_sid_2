@@ -2,14 +2,17 @@ package com.example.physical_activity_project.services.impl;
 
 import com.example.physical_activity_project.model.Routine;
 import com.example.physical_activity_project.model.RoutineExercise;
+import com.example.physical_activity_project.model.User;
 import com.example.physical_activity_project.repository.IRoutineRepository;
 import com.example.physical_activity_project.services.IRoutineService;
+import com.example.physical_activity_project.services.IUserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoutineServiceImpl implements IRoutineService {
@@ -19,6 +22,9 @@ public class RoutineServiceImpl implements IRoutineService {
 
     @Autowired
     private MonthlyStatisticsServiceImpl monthlyStatisticsService;
+
+    @Autowired
+    private IUserService userService;
 
     // --- Rutinas ---
     @Override
@@ -104,5 +110,48 @@ public class RoutineServiceImpl implements IRoutineService {
         Routine routine = getRoutineById(routineId);
         routine.getExercises().removeIf(e -> e.getExerciseId().equals(exerciseId));
         return routineRepository.save(routine);
+    }
+
+    @Override
+    public Routine adoptRoutine(String userId, ObjectId predefinedRoutineId) {
+        Routine predefinedRoutine = routineRepository.findById(predefinedRoutineId)
+                .orElseThrow(() -> new RuntimeException("Predefined routine not found with id: " + predefinedRoutineId));
+
+        // Crear una nueva rutina basada en la predefinida
+        Routine adoptedRoutine = new Routine();
+        adoptedRoutine.setUserSqlId(userId); // Asignar al usuario que la adopta
+        adoptedRoutine.setOriginPublicId(predefinedRoutine.getId()); // Referencia a la rutina original
+        adoptedRoutine.setName(predefinedRoutine.getName() + " (Adoptada)"); // Opcional: añadir un sufijo
+        adoptedRoutine.setDescription(predefinedRoutine.getDescription());
+        adoptedRoutine.setDuration(predefinedRoutine.getDuration());
+        adoptedRoutine.setDifficulty(predefinedRoutine.getDifficulty());
+        adoptedRoutine.setCreationDate(new Date());
+        // Copiar los ejercicios de la rutina predefinida
+        adoptedRoutine.setExercises(predefinedRoutine.getExercises());
+
+        return routineRepository.save(adoptedRoutine);
+    }
+
+    @Override
+    public List<ObjectId> getAdoptedRoutineOriginIdsByUser(String userId) {
+        return routineRepository.findByUserSqlIdAndOriginPublicIdNotNull(userId)
+                .stream()
+                .map(Routine::getOriginPublicId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Routine> getPredefinedRoutines() {
+        // Obtener usuarios con rol "Trainer" o "Admin"
+        List<User> trainers = userService.getUsersByRoleName("Trainer");
+        List<User> admins = userService.getUsersByRoleName("Admin");
+
+        // Combinar los IDs de usuario de trainers y admins
+        List<String> creatorUserIds = new java.util.ArrayList<>();
+        trainers.forEach(user -> creatorUserIds.add(user.getUsername()));
+        admins.forEach(user -> creatorUserIds.add(user.getUsername()));
+
+        // Buscar rutinas creadas por estos usuarios y que no sean copias (originPublicId es null)
+        return routineRepository.findByUserSqlIdInAndOriginPublicIdIsNull(creatorUserIds);
     }
 }

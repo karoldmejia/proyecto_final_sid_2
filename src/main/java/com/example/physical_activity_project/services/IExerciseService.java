@@ -1,5 +1,6 @@
 package com.example.physical_activity_project.services;
 
+import com.example.physical_activity_project.dto.ExerciseDTO;
 import com.example.physical_activity_project.model.Exercise;
 import org.bson.types.ObjectId;
 
@@ -14,4 +15,7 @@ public interface IExerciseService {
     List<Exercise> getAllExercises();
     List<Exercise> getExercisesByType(String type);
     List<Exercise> getExercisesByDifficulty(String difficulty);
+
+    Exercise createExercise(String userId, ExerciseDTO exerciseDTO);
+
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseUser}">
+<head>
+    <title>Grupos Musculares</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin-dashboard.css}">
+    <style>
+        .muscle-group-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .muscle-group-list li {
+            background-color: var(--white);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+        .muscle-group-list li:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <h1>Grupos Musculares</h1>
+
+    <div class="header-actions">
+        <h1 class="text-2xl font-bold">
+            Grupos Musculares
+        </h1>
+    </div>
+
+    <div th:if="${muscleGroups.isEmpty()}">
+        <p>No hay grupos musculares disponibles en este momento.</p>
+    </div>
+
+    <ul th:unless="${muscleGroups.isEmpty()}" class="muscle-group-list">
+        <li th:each="group : ${muscleGroups}" th:text="${group}"></li>
+    </ul>
+</th:block>
+</body>
+</html>
