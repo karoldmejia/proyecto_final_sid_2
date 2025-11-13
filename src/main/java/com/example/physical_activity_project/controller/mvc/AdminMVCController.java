@@ -114,14 +114,14 @@ public class AdminMVCController {
             // save() se encarga de mapear a Role real y crear/actualizar UserRole
             userService.save(existingUser);
         }
-        return "redirect:/mvc/users";
+        return "redirect:/mvc/admin/users";
     }
 
     @GetMapping("/delete")
     public String deleteUser(@RequestParam String id, Model model) {
         try {
             userService.deleteById(id);
-            return "redirect:/mvc/users";
+            return "redirect:/mvc/admin/users";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("users", userService.getAllUsers());

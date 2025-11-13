@@ -206,15 +206,15 @@
 
                 <div class="assignment-link-container" th:with="roleName=${user.role}">
 
-                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'TRAINER')}"
-                       th:href="@{/mvc/admin/assignments/trainer/{id}(id=${user.username})}"
+                    <a th:if="${#strings.equalsIgnoreCase(roleName, 'TRAINER') or #strings.equalsIgnoreCase(roleName, 'EMPLOYEE')}"
+                       th:href="@{/mvc/assignments/trainer/{id}(id=${user.username})}"
                        class="assignment-link">
                         <span class="material-icons-round">group</span>
                         Ver Usuarios
                     </a>
 
                     <a th:if="${#strings.equalsIgnoreCase(roleName, 'STUDENT') or #strings.equalsIgnoreCase(roleName, 'USER')}"
-                       th:href="@{/mvc/admin/assignments/user/{id}(id=${user.username})}"
+                       th:href="@{/mvc/assignments/user/{id}(id=${user.username})}"
                        class="assignment-link">
                         <span class="material-icons-round">person</span>
                         Ver Entrenador

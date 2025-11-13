@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Editar usuario</title>
     <meta charset="UTF-8">
+    <title>Editar usuario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
@@ -11,44 +11,87 @@
 </head>
 <body>
 <div class="form-wrapper">
-<div class="form-container">
-    <h2 class="text-2xl font-bold mb-4">Editar usuario</h2>
+    <div class="form-container">
+        <h2 class="text-2xl font-bold mb-4">Editar usuario</h2>
 
-    <!-- Mensaje de error si el usuario no existe -->
-    <div th:if="${actualUser == null}" class="form-error">
-        <strong>Usuario no encontrado.</strong>
-        <a th:href="@{/mvc/users}" class="underline text-red-700">Volver</a>
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="error-message"
+             style="background-color: #fee2e2; color: #991b1b; padding: 0.75rem; margin-bottom: 1rem; border-radius: 0.375rem; border: 1px solid #fecaca;">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- Formulario de edición -->
+        <form th:action="@{/mvc/admin/edit}" method="post" th:if="${actualUser != null}" th:object="${actualUser}">
+            <input type="hidden" name="id" th:value="*{username}">
+
+            <div class="input-group" style="margin-bottom: 1.25rem;">
+                <input id="username" name="username" type="text" class="form_input"
+                       th:value="*{username}" readonly
+                       style="background-color: #f3f4f6; color: #6b7280; cursor: not-allowed;">
+                <label for="username" class="form_label">Usuario</label>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.25rem;">
+                <input id="password" name="password" type="password" maxlength="100" minlength="6"
+                       class="form_input" placeholder=" ">
+                <label for="password" class="form_label">Nueva Contraseña (Opcional)</label>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.25rem;">
+                <select id="role" name="role" class="form_input" required>
+                    <option value="" disabled>Selecciona un rol</option>
+                    <option value="User"
+                            th:selected="${#strings.toString(actualUser.role) == 'User' or #strings.toString(actualUser.role) == 'STUDENT'}">
+                        Usuario (Estudiante)
+                    </option>
+                    <option value="Trainer" th:selected="${#strings.toString(actualUser.role) == 'Trainer'}">
+                        Entrenador
+                    </option>
+                    <option value="Admin" th:selected="${#strings.toString(actualUser.role) == 'Admin'}">
+                        Administrador
+                    </option>
+                </select>
+                <label for="role" class="form_label">Rol</label>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.5rem;">
+                <select id="isActive" name="isActive" class="form_input" required>
+                    <option value="true" th:selected="${actualUser.isActive == true}">Activo</option>
+                    <option value="false" th:selected="${actualUser.isActive == false}">Inactivo</option>
+                </select>
+                <label for="isActive" class="form_label">Estado</label>
+            </div>
+
+            <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button type="button" onclick="window.location.href='/compu2-class/mvc/admin/users'"
+                        class="form-btn btn-secondary"
+                        style="background-color: #fff; color: #374151; border: 1px solid #d1d5db;">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="form-btn" style="background-color: #000; color: #fff;">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+
+        <div th:if="${actualUser == null}" class="text-center text-red-500 py-4">
+            <p>Error: No se pudo cargar la información del usuario.</p>
+            <button type="button" onclick="window.location.href='/compu2-class/mvc/admin/users'"
+                    class="underline">Cerrar</button>
+        </div>
+
     </div>
-
-    <!-- Formulario principal -->
-    <form th:if="${actualUser != null}" th:action="@{/mvc/users/edit}" method="post">
-        <input type="hidden" name="id" th:value="${actualUser.username}">
-
-        <!-- Rol -->
-        <div class="input-group">
-            <select id="role" name="role" class="form_input" required>
-                <option value="" disabled>Selecciona un rol</option>
-                <option th:each="role : ${roles}"
-                        th:value="${role.id}"
-                        th:text="${role.name}"
-                        th:selected="${actualUser.role != null && role.id == actualUser.role.id}">
-                </option>
-            </select>
-            <label for="role" class="form_label">
-                Rol
-            </label>
-        </div>
-
-        <!-- Botones -->
-        <div class="form-actions">
-            <a th:href="@{/mvc/users}" class="form-btn btn-secondary">Cancelar</a>
-            <button type="submit" class="form-btn">
-                Guardar
-            </button>
-        </div>
-    </form>
-</div>
 </div>
 
+<!-- Redirección al guardar -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const success = /*[[${success}]]*/ false;
+    if (success) {
+        window.location.href = '/compu2-class/mvc/admin/users';
+    }
+    /*]]>*/
+</script>
 </body>
 </html>
