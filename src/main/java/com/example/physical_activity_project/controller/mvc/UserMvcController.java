@@ -156,6 +156,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/my-statistics")
+
     public String getMyStatistics(Model model, Authentication authentication) {
         // 1. Obtener el ID del usuario logueado
         String username = authentication.getName();

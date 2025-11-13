@@ -14,22 +14,17 @@
     <div class="form-container">
         <h2 class="text-2xl font-bold mb-4">Agregar usuario</h2>
 
-        <form th:action="@{/mvc/users/add}" method="post">
-            <!-- Nombre -->
-            <div class="input-group">
-                <input id="name" name="name" type="text" maxlength="50" class="form_input" placeholder=" " required>
-                <label for="name" class="form_label">Nombre</label>
-            </div>
+        <form th:action="@{/mvc/admin/add}" method="post">
 
-            <!-- Email -->
+        <!-- Username -->
             <div class="input-group">
-                <input id="institutionalEmail" name="institutionalEmail" type="email" maxlength="100" class="form_input" placeholder=" " required>
-                <label for="institutionalEmail" class="form_label">Email</label>
+                <input id="username" name="username" type="text" maxlength="30" class="form_input" placeholder=" " required>
+                <label for="username" class="form_label">Nombre de usuario</label>
             </div>
 
             <!-- Contraseña -->
             <div class="input-group">
-                <input id="password" name="password" type="password" maxlength="255" minlength="6" class="form_input" placeholder=" " required>
+                <input id="password" name="password" type="password" maxlength="100" minlength="6" class="form_input" placeholder=" " required>
                 <label for="password" class="form_label">Contraseña</label>
             </div>
 
@@ -37,9 +32,24 @@
             <div class="input-group">
                 <select id="role" name="role" class="form_input" required>
                     <option value="" disabled selected>Selecciona un rol</option>
-                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                    <option th:each="role : ${roles}" th:value="${role.name}" th:text="${role.name}"></option>
                 </select>
                 <label for="role" class="form_label">Rol</label>
+            </div>
+
+            <!-- Estado (Activo/Inactivo) -->
+            <div class="input-group">
+                <select id="isActive" name="isActive" class="form_input" required>
+                    <option value="true" selected>Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+                <label for="isActive" class="form_label">Estado</label>
+            </div>
+
+            <!-- Fecha de creación (solo lectura) -->
+            <div class="input-group">
+                <input id="createdAt" name="createdAt" type="text" class="form_input" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                <label for="createdAt" class="form_label">Fecha de creación</label>
             </div>
 
             <!-- Botones -->

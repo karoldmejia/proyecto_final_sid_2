@@ -67,53 +67,41 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain mvcSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/mvc/**", "/user/**") // <-- IMPORTANTE: Añade /user/** aquí
+                .securityMatcher("/mvc/**", "/user/**")
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
-                        // Recursos públicos
                         .requestMatchers("/mvc/login", "/mvc/signup/form", "/css/**", "/js/**", "/images/**").permitAll()
-                        // Endpoints por roles
                         .requestMatchers("/mvc/users/").hasRole("Admin")
                         .requestMatchers("/mvc/users/add", "/mvc/users/edit/**", "/mvc/users/delete/**").hasRole("Admin")
                         .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
                         .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
-
-                        // 1. <-- ¡CAMBIO IMPORTANTE! AÑADE ESTA REGLA PARA EL USUARIO
                         .requestMatchers("/user/**").hasRole("User")
-
-                        // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/mvc/login")
-                        .loginProcessingUrl("/mvc/authenticate") // Debe coincidir con el action del form
-
-                        // 2. <-- ¡REEMPLAZA ESTO!
-                        // .defaultSuccessUrl("/mvc/users", true) // <-- ELIMINA ESTA LÍNEA
-
-                        // ... Y AÑADE ESTE BLOQUE COMPLETO:
+                        .loginProcessingUrl("/mvc/authenticate")
                         .successHandler((request, response, authentication) -> {
-                            String redirectUrl = "/mvc/login?error"; // Fallback por si acaso
+                            String redirectUrl = "/mvc/login?error";
                             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
                             for (GrantedAuthority authority : authorities) {
                                 String authorityName = authority.getAuthority();
 
                                 if (authorityName.equals("ROLE_Admin")) {
-                                    redirectUrl = "/mvc/users/";
+                                    // 🔹 CAMBIO HECHO AQUÍ 🔹
+                                    redirectUrl = "/mvc/admin";
                                     break;
                                 } else if (authorityName.equals("ROLE_User")) {
-                                    redirectUrl = "/user/dashboard"; // <-- El dashboard del usuario
+                                    redirectUrl = "/user/dashboard";
                                     break;
                                 } else if (authorityName.equals("ROLE_Trainer")) {
-                                    redirectUrl = "/mvc/trainer/dashboard"; // (Ajusta si es otra URL)
+                                    redirectUrl = "/mvc/trainer/dashboard";
                                     break;
                                 }
                             }
                             response.sendRedirect(request.getContextPath() + redirectUrl);
                         })
-                        // FIN DEL BLOQUE NUEVO
-
                         .failureUrl("/mvc/login?error=true")
                         .usernameParameter("username")
                         .passwordParameter("password")
@@ -150,9 +138,6 @@ public class SecurityConfig {
                 .build();
     }
 
-    // ========================================
-    // Configuración CORS para REST
-    // ========================================
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
