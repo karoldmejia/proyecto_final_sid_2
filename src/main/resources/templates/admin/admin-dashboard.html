@@ -17,26 +17,10 @@
             </div>
             <div class="header-stats">
                 <div class="stat-card">
-                    <i class="fa-solid fa-user-graduate"></i>
+                    <i class="fa-solid fa-users"></i>
                     <div class="stat-info">
                         <span class="stat-value" th:text="${#lists.size(users)}">0</span>
-                        <span class="stat-label">Usuarios Activos</span>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <i class="fa-solid fa-chalkboard-user"></i>
-                    <div class="stat-info">
-                        <span class="stat-value" th:text="${#lists.size(users)}">0</span>
-
-                        <span class="stat-value" th:text="${totalEntrenadores ?: '0'}">12</span>
-                        <span class="stat-label">Entrenadores</span>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <i class="fa-solid fa-dumbbell"></i>
-                    <div class="stat-info">
-                        <span class="stat-value" th:text="${totalEjercicios ?: '0'}">45</span>
-                        <span class="stat-label">Ejercicios</span>
+                        <span class="stat-label">Usuarios</span>
                     </div>
                 </div>
             </div>
@@ -44,137 +28,123 @@
 
         <div class="dashboard-grid">
 
+            <!-- Gestión de Usuarios -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
-                        <i class="fa-solid fa-user-plus"></i>
-                        Gestión de Asignaciones
+                        <i class="fa-solid fa-user-gear"></i>
+                        Gestión de Usuarios
                     </h2>
                     <span class="section-badge">3 acciones</span>
                 </div>
 
                 <div class="action-grid">
-                    <a th:href="@{/mvc/assignments/new}" class="action-card primary">
-                        <div class="action-icon">
-                            <i class="fa-solid fa-link"></i>
-                        </div>
-                        <div class="action-content">
-                            <h3>Asignar Entrenador</h3>
-                            <p>Asignar un entrenador a un usuario</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right action-arrow"></i>
-                    </a>
-
-                    <a th:href="@{/admin/assignments/modify}" class="action-card info">
-                        <div class="action-icon">
-                            <i class="fa-solid fa-edit"></i>
-                        </div>
-                        <div class="action-content">
-                            <h3>Modificar Asignación</h3>
-                            <p>Cambiar el entrenador de un usuario</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right action-arrow"></i>
-                    </a>
-
-                    <a th:href="@{/mvc/users}" class="action-card purple">
+                    <a th:href="@{/mvc/admin/users}" class="action-card info">
                         <div class="action-icon">
                             <i class="fa-solid fa-list-ul"></i>
                         </div>
                         <div class="action-content">
-                            <h3>Ver Asignaciones</h3>
-                            <p>Listar todos los usuarios y sus entrenadores</p>
+                            <h3>Ver Usuarios</h3>
+                            <p>Listado general de usuarios registrados</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
+                    </a>
+
+                    <a th:href="@{/mvc/admin/add}" class="action-card success">
+                        <div class="action-icon">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Agregar Usuario</h3>
+                            <p>Registrar un nuevo usuario en el sistema</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
+                    </a>
+
+                    <a th:href="@{/mvc/admin/edit}" class="action-card warning">
+                        <div class="action-icon">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Editar Usuario</h3>
+                            <p>Modificar información o rol de un usuario</p>
                         </div>
                         <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
                 </div>
             </div>
 
+            <!-- Ejercicios -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
                         <i class="fa-solid fa-dumbbell"></i>
-                        Ejercicios y Rutinas
+                        Ejercicios
                     </h2>
-                    <span class="section-badge">4 acciones</span>
+                    <span class="section-badge">1 acción</span>
                 </div>
 
                 <div class="action-grid">
-                    <a th:href="@{/mvc/exercises}" class="action-card primary">
+                    <a th:href="@{/mvc/admin/exercises}" class="action-card primary">
                         <div class="action-icon">
                             <i class="fa-solid fa-list-check"></i>
                         </div>
                         <div class="action-content">
                             <h3>Ver Ejercicios</h3>
-                            <p>Listado de ejercicios predefinidos</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right action-arrow"></i>
-                    </a>
-
-                    <a th:href="@{/mvc/exercises/new}" class="action-card success">
-                        <div class="action-icon">
-                            <i class="fa-solid fa-plus-circle"></i>
-                        </div>
-                        <div class="action-content">
-                            <h3>Registrar Ejercicio</h3>
-                            <p>Añadir un nuevo ejercicio al sistema</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right action-arrow"></i>
-                    </a>
-
-                    <a th:href="@{/admin/routines}" class="action-card info">
-                        <div class="action-icon">
-                            <i class="fa-solid fa-clipboard-list"></i>
-                        </div>
-                        <div class="action-content">
-                            <h3>Rutinas Prediseñadas</h3>
-                            <p>Gestionar rutinas de entrenadores</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right action-arrow"></i>
-                    </a>
-
-                    <a th:href="@{/admin/exercises/delete}" class="action-card danger">
-                        <div class="action-icon">
-                            <i class="fa-solid fa-trash"></i>
-                        </div>
-                        <div class="action-content">
-                            <h3>Gestionar Ejercicios</h3>
-                            <p>Editar o eliminar ejercicios existentes</p>
+                            <p>Consultar la biblioteca de ejercicios</p>
                         </div>
                         <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="dashboard-section quick-access">
+            <!-- Progreso y Estadísticas -->
+            <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
                         <i class="fa-solid fa-chart-pie"></i>
-                        Reportes y Estadísticas
+                        Progreso y Estadísticas
                     </h2>
+                    <span class="section-badge">3 acciones</span>
                 </div>
 
-                <div class="quick-links">
-                    <a th:href="@{/admin/reports/users}" class="quick-link">
-                        <i class="fa-solid fa-chart-bar"></i>
-                        <span>Actividad de Usuarios</span>
+                <div class="action-grid">
+                    <a th:href="@{/mvc/admin/log-progress}" class="action-card success">
+                        <div class="action-icon">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Registrar Progreso</h3>
+                            <p>Guardar avance en ejercicios realizados</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
-                    <a th:href="@{/admin/reports/trainers}" class="quick-link">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>Actividad de Instructores</span>
+
+                    <a th:href="@{/mvc/admin/my-progress}" class="action-card info">
+                        <div class="action-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Ver Mi Progreso</h3>
+                            <p>Historial de ejercicios completados</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
-                    <a th:href="@{/admin/reports/progress}" class="quick-link">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        <span>Informes (Innovadores)</span>
-                    </a>
-                    <a th:href="@{/admin/reports/global}" class="quick-link">
-                        <i class="fa-solid fa-globe"></i>
-                        <span>Estadísticas Globales</span>
+
+                    <a th:href="@{/mvc/admin/my-statistics}" class="action-card purple">
+                        <div class="action-icon">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>Mis Estadísticas</h3>
+                            <p>Ver estadísticas mensuales de rendimiento</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
                 </div>
             </div>
 
         </div>
-
     </div>
 </div>
 </body>

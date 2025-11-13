@@ -14,6 +14,6 @@ public interface IUserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
     User save(User user);
     void deleteById(String id);
-    List<User> findByRole(Role role);
+    List<User> findByRole(String role);
 }
 

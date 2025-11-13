@@ -16,11 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/layout/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
     <link rel="stylesheet" th:href="@{/css/admin/admin-dashboard.css}">
-    <link rel="stylesheet" th:href="@{/main.css}">
-    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
 
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
@@ -53,26 +49,55 @@
         });
     </script>
 </head>
+
 <body>
 <div class="layout">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar" role="navigation" aria-label="Menú lateral">
         <div class="sidebar-brand">
-            <a th:href="@{/admin/dashboard}" aria-label="Ir al inicio">
+            <a th:href="@{/mvc/admin}" aria-label="Ir al inicio">
                 <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Universidad Icesi" class="logo">
             </a>
         </div>
 
         <nav class="sidebar-menu">
             <ul>
-                <li><a th:href="@{/mvc/admin}" aria-current="page"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>
-                <li><a th:href="@{/mvc/admin/users}"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a></li>
-                <li><a th:href="@{/mvc/roles}"><i class="fa-solid fa-user-shield"></i> <span>Roles & Permisos</span></a></li>
-                <li><a th:href="@{/mvc/exercises}"><i class="fa-solid fa-dumbbell"></i> <span>Ejercicios</span></a></li>
-                <li><a th:href="@{/mvc/routines}"><i class="fa-solid fa-dumbbell"></i> <span>Ejercicios</span></a></li>
-                <li><a th:href="@{/user/my-statistics}"><i class="fa-solid fa-chart-line"></i> <span>Reportes</span></a></li>
+                <li>
+                    <a th:href="@{/mvc/admin}" aria-current="page">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/mvc/admin/users}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/mvc/admin/exercises}">
+                        <i class="fa-solid fa-dumbbell"></i>
+                        <span>Ejercicios</span>
+                    </a>
+                </li>
 
 
+                <li>
+                    <a th:href="@{/mvc/admin/my-progress}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Mi Progreso</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/mvc/admin/my-statistics}">
+                        <i class="fa-solid fa-chart-column"></i>
+                        <span>Estadísticas</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
@@ -83,15 +108,13 @@
         </div>
     </aside>
 
+    <!-- MAIN -->
     <div class="main-column">
         <div th:replace="admin/headers/header_user_mngmt :: userHeader('personas')"></div>
 
-
-
-            <main class="admin-container">
-
-                <th:block th:replace="this :: content" />
-            </main>
+        <main class="admin-container">
+            <th:block th:replace="this :: content" />
+        </main>
 
         <footer>
             © 2025 Universidad Icesi | Ctrl Alt Elite

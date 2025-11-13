@@ -58,28 +58,63 @@
 
     <aside class="sidebar" role="navigation" aria-label="Menú lateral">
         <div class="sidebar-brand">
-            <a th:href="@{/admin/dashboard}" aria-label="Ir al inicio">
+            <a th:href="@{/user/dashboard}" aria-label="Ir al inicio">
                 <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Universidad Icesi" class="logo">
             </a>
         </div>
 
         <nav class="sidebar-menu">
             <ul>
-                <li><a th:href="@{/admin/dashboard}" aria-current="page"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>span></a></li>
-                <li><a><i class="fa-solid fa-book"></i> <span>Ejercicios</span></a></li>
-                <li><a><i class="fa-solid fa-list-check"></i> <span>Rutinas</span></a></li>
-                <li><a><i class="fa-solid fa-chart-line"></i> <span>Entrenador</span></a></li>
+                <li>
+                    <a th:href="@{/user/dashboard}">
+                        <i class="fa-solid fa-house"></i> <span>Inicio</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/exercises}">
+                        <i class="fa-solid fa-dumbbell"></i> <span>Ejercicios</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/routines/my}">
+                        <i class="fa-solid fa-list-check"></i> <span>Mis Rutinas</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/user/routines/predefined}">
+                        <i class="fa-solid fa-compass"></i> <span>Explorar Rutinas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/log-activity}">
+                        <i class="fa-solid fa-pen-to-square"></i> <span>Registrar Actividad</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/my-progress}">
+                        <i class="fa-solid fa-chart-line"></i> <span>Historial Progreso</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/my-statistics}">
+                        <i class="fa-solid fa-chart-pie"></i> <span>Estadísticas</span>
+                    </a>
+                </li>
 
             </ul>
         </nav>
 
         <div class="sidebar-footer">
-            <a href="/logout">
+            <a th:href="@{/logout}">
                 <i class="fa-solid fa-right-from-bracket"></i><span>Salir</span>
             </a>
         </div>
     </aside>
-
     <div class="main-column">
 
 

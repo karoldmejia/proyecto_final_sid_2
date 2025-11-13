@@ -61,39 +61,29 @@ public class AdminMVCController {
         model.addAttribute("user", user);
         model.addAttribute("roles", roleService.getAllRoles());
         return "admin/users/add";
-
     }
 
     @PostMapping("/add")
-    public String addUser(@ModelAttribute User user, @RequestParam("role") String roleType) {
-        // Asignar fecha de creación y activar el usuario por defecto
+    public String addUser(@ModelAttribute User user, @RequestParam("role") String roleName, Model model) {
+        // Asignar fecha de creación y estado activo
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setIsActive(true);
 
-        // Normalizar el rol según lo que acepte tu BD
-        switch (roleType.toUpperCase()) {
-            case "STUDENT":
-                user.setRole("STUDENT");
-                break;
-            case "EMPLOYEE":
-                user.setRole("EMPLOYEE");
-                break;
-            case "ADMIN":
-                user.setRole("ADMIN");
-                break;
-            default:
-                user.setRole("STUDENT"); // valor por defecto
-                break;
+        // Usar el valor directamente sin conversión: User, Trainer, Admin
+        user.setRole(roleName);
+
+        try {
+            // Guardar usuario
+            userService.save(user);
+            return "redirect:/mvc/admin/users";
+        } catch (Exception e) {
+            // Log del error para debugging
+            System.err.println("Error al guardar usuario: " + e.getMessage());
+            model.addAttribute("error", "Error al crear el usuario. Verifica que el rol sea válido.");
+            model.addAttribute("user", user);
+            return "admin/users/add";
         }
-
-        // Guardar usuario
-        userService.save(user);
-
-        // Redirigir correctamente al listado de usuarios
-        return "redirect:/mvc/admin/users";
     }
-
-
 
     @GetMapping("/edit")
     public String editUserForm(@RequestParam String id, Model model) {
@@ -145,19 +135,7 @@ public class AdminMVCController {
         return "exercises/exercises-list";
     }
 
-    /** Rutinas prediseñadas */
-    @GetMapping("/routines/explore")
-    public String explorePredefinedRoutines(Model model) {
-        // model.addAttribute("routines", routineService.getPredefinedRoutines());
-        return "admin/predefined-routines";
-    }
 
-    /** Mis rutinas (como admin) */
-    @GetMapping("/routines/my")
-    public String getMyRoutines(Model model, Authentication authentication) {
-        // model.addAttribute("myRoutines", routineService.getRoutinesForUser(authentication.getName()));
-        return "admin/my-routines";
-    }
 
     /** Registrar progreso */
     @GetMapping("/log-progress")

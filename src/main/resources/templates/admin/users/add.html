@@ -14,9 +14,14 @@
     <div class="form-container">
         <h2 class="text-2xl font-bold mb-4">Agregar usuario</h2>
 
+        <!-- Mostrar mensaje de error si existe -->
+        <div th:if="${error}" class="error-message" style="background-color: #fee; color: #c33; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #fcc;">
+            <p th:text="${error}"></p>
+        </div>
+
         <form th:action="@{/mvc/admin/add}" method="post">
 
-        <!-- Username -->
+            <!-- Username -->
             <div class="input-group">
                 <input id="username" name="username" type="text" maxlength="30" class="form_input" placeholder=" " required>
                 <label for="username" class="form_label">Nombre de usuario</label>
@@ -32,7 +37,9 @@
             <div class="input-group">
                 <select id="role" name="role" class="form_input" required>
                     <option value="" disabled selected>Selecciona un rol</option>
-                    <option th:each="role : ${roles}" th:value="${role.name}" th:text="${role.name}"></option>
+                    <option value="User">Usuario (Estudiante)</option>
+                    <option value="Trainer">Entrenador</option>
+                    <option value="Admin">Administrador</option>
                 </select>
                 <label for="role" class="form_label">Rol</label>
             </div>
@@ -54,7 +61,7 @@
 
             <!-- Botones -->
             <div class="form-actions">
-                <a th:href="@{/mvc/users}" class="form-btn btn-secondary">Cancelar</a>
+                <a th:href="@{/mvc/admin/users}" class="form-btn btn-secondary">Cancelar</a>
                 <button type="submit" class="form-btn">Agregar</button>
             </div>
         </form>

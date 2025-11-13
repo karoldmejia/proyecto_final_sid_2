@@ -32,11 +32,11 @@ public class User {
     @Column(name = "role", nullable = false, length = 20)
     private String role;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<UserTrainerAssignment> trainerAssignments = new ArrayList<>();
+    //@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonIgnore
+    //private List<UserTrainerAssignment> trainerAssignments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<UserTrainerAssignment> userAssignments = new ArrayList<>();
+    //@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonIgnore
+    //private List<UserTrainerAssignment> userAssignments = new ArrayList<>();
 }

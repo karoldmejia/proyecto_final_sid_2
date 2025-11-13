@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .requestMatchers("/mvc/users/add", "/mvc/users/edit/**", "/mvc/users/delete/**").hasRole("Admin")
                         .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
                         .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
-                        .requestMatchers("/user/**").hasRole("User")
+                        .requestMatchers("/user/**").permitAll()  // ✅ Todos los roles pueden acceder a /user/**
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -85,21 +85,31 @@ public class SecurityConfig {
                             String redirectUrl = "/mvc/login?error";
                             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
+                            boolean roleMatched = false;
                             for (GrantedAuthority authority : authorities) {
                                 String authorityName = authority.getAuthority();
+                                System.out.println("DEBUG - Authority: " + authorityName); // Para depuración
 
                                 if (authorityName.equals("ROLE_Admin")) {
-                                    // 🔹 CAMBIO HECHO AQUÍ 🔹
                                     redirectUrl = "/mvc/admin";
+                                    roleMatched = true;
                                     break;
                                 } else if (authorityName.equals("ROLE_User")) {
                                     redirectUrl = "/user/dashboard";
+                                    roleMatched = true;
                                     break;
                                 } else if (authorityName.equals("ROLE_Trainer")) {
                                     redirectUrl = "/mvc/trainer/dashboard";
+                                    roleMatched = true;
                                     break;
                                 }
                             }
+
+                            // ✅ CASO POR DEFECTO: Si no coincide ningún rol, va a /user/dashboard
+                            if (!roleMatched) {
+                                redirectUrl = "/user/dashboard";
+                            }
+
                             response.sendRedirect(request.getContextPath() + redirectUrl);
                         })
                         .failureUrl("/mvc/login?error=true")

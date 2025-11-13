@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es"
-      th:replace="~{layouts/base :: layout}">
+      th:replace="~{layouts/baseUser :: layout}">
 
 <body>
 <div th:fragment="content">
@@ -8,6 +8,7 @@
 
     <div class="dashboard-container">
 
+        <!-- HEADER -->
         <div class="dashboard-header">
             <div class="header-content">
                 <h1>
@@ -15,6 +16,7 @@
                     Mi Panel de Actividad
                 </h1>
             </div>
+
             <div class="header-stats">
                 <div class="stat-card">
                     <i class="fa-solid fa-clipboard-list"></i>
@@ -40,8 +42,10 @@
             </div>
         </div>
 
+        <!-- MAIN GRID -->
         <div class="dashboard-grid">
 
+            <!-- SECCIÓN: Mi Actividad -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
@@ -52,7 +56,7 @@
                 </div>
 
                 <div class="action-grid">
-                    <a th:href="@{/user/my-routines}" class="action-card primary">
+                    <a th:href="@{/user/routines/my}" class="action-card primary">
                         <div class="action-icon"><i class="fa-solid fa-layer-group"></i></div>
                         <div class="action-content">
                             <h3>Mis Rutinas</h3>
@@ -70,7 +74,7 @@
                         <i class="fa-solid fa-arrow-right action-arrow"></i>
                     </a>
 
-                    <a th:href="@{/user/my-routines/new}" class="action-card info">
+                    <a th:href="@{/user/routines/new}" class="action-card info">
                         <div class="action-icon"><i class="fa-solid fa-pen-to-square"></i></div>
                         <div class="action-content">
                             <h3>Crear Rutina Personalizada</h3>
@@ -81,6 +85,7 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN: Explorar -->
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>
@@ -91,7 +96,7 @@
                 </div>
 
                 <div class="action-grid">
-                    <a th:href="@{/user/predefined-routines}" class="action-card purple">
+                    <a th:href="@{/user/routines/predefined}" class="action-card purple">
                         <div class="action-icon"><i class="fa-solid fa-star"></i></div>
                         <div class="action-content">
                             <h3>Rutinas Prediseñadas</h3>
@@ -111,6 +116,7 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN: Mis Informes -->
             <div class="dashboard-section quick-access">
                 <div class="section-header">
                     <h2>
@@ -119,13 +125,13 @@
                     </h2>
                 </div>
                 <div class="quick-links">
-                    <a th:href="@{/user/reports/progress}" class="quick-link">
+                    <a th:href="@{/user/my-statistics}" class="quick-link">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>Mi Progreso Mensual</span>
                     </a>
-                    <a th:href="@{/user/reports/muscle-groups}" class="quick-link">
-                        <i class="fa-solid fa-chart-bar"></i>
-                        <span>Grupos Musculares</span>
+                    <a th:href="@{/user/my-progress}" class="quick-link">
+                        <i class="fa-solid fa-dumbbell"></i>
+                        <span>Historial de Ejercicios</span>
                     </a>
                     <a th:href="@{/user/trainer-feedback}" class="quick-link">
                         <i class="fa-solid fa-comment-dots"></i>
@@ -134,8 +140,8 @@
                 </div>
             </div>
 
-        </div>
-    </div>
+        </div> <!-- END dashboard-grid -->
+    </div> <!-- END dashboard-container -->
 </div>
 </body>
 </html>
