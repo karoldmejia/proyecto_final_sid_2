@@ -13,4 +13,5 @@ public interface IUserService {
     void deleteById(String id);
     Optional<User> findByUsername(String username);
     public List<User> getUsersByRoleName(String roleName);
+    Optional<User> getUserById(String id);
 }

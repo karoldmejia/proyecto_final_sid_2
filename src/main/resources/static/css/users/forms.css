@@ -83,7 +83,7 @@ textarea:focus {
     position: relative;
     margin-bottom: 20px;
     width: 100%;
-    max-width: 350px;
+    /* max-width: 600px; -- Removed to allow full width expansion */
     align-self: center;
 }
 

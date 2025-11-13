@@ -7,6 +7,7 @@ import com.example.physical_activity_project.model.User;
 import com.example.physical_activity_project.security.CustomUserDetails;
 import com.example.physical_activity_project.services.IRoutineService;
 import com.example.physical_activity_project.services.IUserService;
+import com.example.physical_activity_project.services.IExerciseService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +27,7 @@ public class RoutineMVCController {
     private final IRoutineService routineService;
     private final RoutineMapper routineMapper;
     private final IUserService userService;
+    private final IExerciseService exerciseService;
 
     // =====================================================
     // LISTAR TODAS LAS RUTINAS DEL USUARIO ACTUAL
@@ -34,10 +36,10 @@ public class RoutineMVCController {
     @PreAuthorize("hasAnyRole('User', 'Trainer', 'Admin')")
     public String getAllRoutines(Model model, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userSqlId = userDetails.getUser().getId();
+        String username = userDetails.getUser().getUsername();
 
         // 🔹 Traer solo las rutinas del usuario logueado
-        model.addAttribute("routines", routineService.getRoutinesByUser(userSqlId));
+        model.addAttribute("routines", routineService.getRoutinesByUser(username));
 
         String layout = getLayout(authentication);
         model.addAttribute("layout", layout);
@@ -51,6 +53,7 @@ public class RoutineMVCController {
     @PreAuthorize("hasAnyRole('Trainer', 'Admin')")
     public String showAddRoutineForm(Model model, Authentication authentication) {
         model.addAttribute("routine", new RoutineDTO());
+        model.addAttribute("allExercises", exerciseService.getAllExercises());
         String layout = getLayout(authentication);
         model.addAttribute("layout", layout);
         return "routines/add";
@@ -67,7 +70,7 @@ public class RoutineMVCController {
         // ✅ Asociar correctamente el usuario que crea la rutina
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User creator = userDetails.getUser();
-        routine.setUserSqlId(creator.getId());
+        routine.setUserSqlId(creator.getUsername());
 
         routineService.createRoutine(routine);
         return "redirect:/user/routines";
@@ -95,7 +98,7 @@ public class RoutineMVCController {
         // ✅ Mantener asociación con el usuario que edita
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User editor = userDetails.getUser();
-        routine.setUserSqlId(editor.getId());
+        routine.setUserSqlId(editor.getUsername());
 
         routineService.updateRoutine(id, routine);
         return "redirect:/user/routines";
@@ -112,26 +115,21 @@ public class RoutineMVCController {
     }
 
     // =====================================================
-    // CREAR RUTINA DESDE PERFIL DE USUARIO NORMAL
+    // FORMULARIO PARA CREAR RUTINA COMO USUARIO NORMAL
     // =====================================================
-// =====================================================
-// FORMULARIO PARA CREAR RUTINA DESDE PERFIL DE USUARIO
-// =====================================================
-    // =====================================================
-// FORMULARIO PARA CREAR RUTINA COMO USUARIO NORMAL
-// =====================================================
     @GetMapping("/my/new")
     @PreAuthorize("hasRole('User')")
     public String showUserCreateRoutineForm(Model model, Authentication authentication) {
         model.addAttribute("routine", new RoutineDTO());
+        model.addAttribute("allExercises", exerciseService.getAllExercises());
         String layout = getLayout(authentication);
         model.addAttribute("layout", layout);
-        return "routines/add"; // 👈 esta es la plantilla que se debe mostrar
+        return "routines/add";
     }
 
     // =====================================================
-// GUARDAR LA NUEVA RUTINA CREADA POR EL USUARIO NORMAL
-// =====================================================
+    // GUARDAR LA NUEVA RUTINA CREADA POR EL USUARIO NORMAL
+    // =====================================================
     @PostMapping("/my/new")
     @PreAuthorize("hasRole('User')")
     public String createUserRoutine(@ModelAttribute("routine") RoutineDTO routineDTO,
@@ -139,12 +137,28 @@ public class RoutineMVCController {
         Routine routine = routineMapper.dtoToEntity(routineDTO);
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User currentUser = userDetails.getUser();
-        routine.setUserSqlId(currentUser.getId());
+        routine.setUserSqlId(currentUser.getUsername());
 
         routineService.createRoutine(routine);
-        return "redirect:/user/routines/my"; // 👈 redirige correctamente a "Mis rutinas"
+        return "redirect:/user/routines/my";
     }
 
+    // =====================================================
+    // LISTAR LAS RUTINAS DEL USUARIO LOGUEADO
+    // =====================================================
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('User')")
+    public String getUserRoutines(Model model, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String username = userDetails.getUser().getUsername();
+
+        // 🔹 Obtener solo las rutinas del usuario actual
+        model.addAttribute("routines", routineService.getRoutinesByUser(username));
+
+        String layout = getLayout(authentication);
+        model.addAttribute("layout", layout);
+        return "routines/routine-list";
+    }
 
     // =====================================================
     // SELECCIONAR LAYOUT SEGÚN ROL
@@ -158,22 +172,4 @@ public class RoutineMVCController {
         }
         return "layouts/baseUser";
     }
-
-    // =====================================================
-// LISTAR LAS RUTINAS DEL USUARIO LOGUEADO
-// =====================================================
-    @GetMapping("/my")
-    @PreAuthorize("hasRole('User')")
-    public String getUserRoutines(Model model, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userSqlId = userDetails.getUser().getId();
-
-        // 🔹 Obtener solo las rutinas del usuario actual
-        model.addAttribute("routines", routineService.getRoutinesByUser(userSqlId));
-
-        String layout = getLayout(authentication);
-        model.addAttribute("layout", layout);
-        return "routines/routine-list";
-    }
-
 }

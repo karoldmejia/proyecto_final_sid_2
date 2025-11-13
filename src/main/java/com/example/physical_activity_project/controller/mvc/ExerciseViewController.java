@@ -18,7 +18,7 @@
     import java.util.stream.Collectors;
 
     @Controller
-    @RequestMapping("/mvc/exercises")
+    @RequestMapping("/user/exercises")
     public class ExerciseViewController {
 
         @Autowired

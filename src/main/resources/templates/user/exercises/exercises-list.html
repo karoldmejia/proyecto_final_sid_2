@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      th:replace="~{layouts/baseUser :: layout}">
-<head>
-
-</head>
-<body>
-
+      layout:decorate="~{layouts/baseUser}">
 <div th:fragment="content">
 
     <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
@@ -23,7 +18,10 @@
             Lista de Ejercicios
         </h1>
 
-
+        <button type="button" onclick="openModal(&#39;/compu2-class/user/exercises/new&#39;)" class="add-user-btn">
+            <span class="material-icons-round">add</span>
+            Añadir Ejercicio
+        </button>
     </div>
     <table>
         <thead>
@@ -32,7 +30,7 @@
             <th>Tipo</th>
             <th>Dificultad</th>
             <th>Duración</th>
-
+            <th style="text-align: right;">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -42,12 +40,142 @@
             <td th:text="${exercise.difficulty}">Intermedio</td>
             <td th:text="|${exercise.duration} min|">10 min</td>
 
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
 
+                <div class="dropdown-menu">
+
+                    <button type="button"
+                            onclick="openModal(&#39;/compu2-class/user/exercises/edit/69127dae6675127bf50cfe1a&#39;)"
+                            class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </button>
+                    <form action="/compu2-class/user/exercises/delete/69127dae6675127bf50cfe1a" method="post" style="margin: 0;"><input type="hidden" name="_csrf" value="D_fMvJboYnjfrmnwQWknWG9H4Tug4ARxuDMNn46uwKjEb2aOPs-ui6HZUBzyy1mTJUQTbVh-zAKQ0DZc3Atup7_M8J3yWwTv"/>
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Jumping Jacks</td>
+            <td>Cardio</td>
+            <td>Easy</td>
+            <td>8.0 min</td>
+
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu">
+
+                    <button type="button"
+                            onclick="openModal(&#39;/compu2-class/user/exercises/edit/69127dae6675127bf50cfe1b&#39;)"
+                            class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </button>
+                    <form action="/compu2-class/user/exercises/delete/69127dae6675127bf50cfe1b" method="post" style="margin: 0;"><input type="hidden" name="_csrf" value="D_fMvJboYnjfrmnwQWknWG9H4Tug4ARxuDMNn46uwKjEb2aOPs-ui6HZUBzyy1mTJUQTbVh-zAKQ0DZc3Atup7_M8J3yWwTv"/>
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Squats</td>
+            <td>Strength</td>
+            <td>Medium</td>
+            <td>12.0 min</td>
+
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu">
+
+                    <button type="button"
+                            onclick="openModal(&#39;/compu2-class/user/exercises/edit/69127dae6675127bf50cfe19&#39;)"
+                            class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </button>
+                    <form action="/compu2-class/user/exercises/delete/69127dae6675127bf50cfe19" method="post" style="margin: 0;"><input type="hidden" name="_csrf" value="D_fMvJboYnjfrmnwQWknWG9H4Tug4ARxuDMNn46uwKjEb2aOPs-ui6HZUBzyy1mTJUQTbVh-zAKQ0DZc3Atup7_M8J3yWwTv"/>
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Push-ups</td>
+            <td>Strength</td>
+            <td>Principiante</td>
+            <td>10.0 min</td>
+
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu">
+
+                    <button type="button"
+                            onclick="openModal(&#39;/compu2-class/user/exercises/edit/69127dae6675127bf50cfe18&#39;)"
+                            class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </button>
+                    <form action="/compu2-class/user/exercises/delete/69127dae6675127bf50cfe18" method="post" style="margin: 0;"><input type="hidden" name="_csrf" value="D_fMvJboYnjfrmnwQWknWG9H4Tug4ARxuDMNn46uwKjEb2aOPs-ui6HZUBzyy1mTJUQTbVh-zAKQ0DZc3Atup7_M8J3yWwTv"/>
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Lunges</td>
+            <td>Strength</td>
+            <td>Medium</td>
+            <td>10.0 min</td>
+
+            <td class="action-cell">
+                <button class="action-btn" onclick="toggleMenu(this)">
+                    <span class="material-icons-round">more_vert</span>
+                </button>
+
+                <div class="dropdown-menu">
+
+                    <button type="button"
+                            onclick="openModal(&#39;/compu2-class/user/exercises/edit/69127dae6675127bf50cfe1c&#39;)"
+                            class="dropdown-item">
+                        <span class="material-icons-round">edit</span>
+                        Editar
+                    </button>
+                    <form action="/compu2-class/user/exercises/delete/69127dae6675127bf50cfe1c" method="post" style="margin: 0;"><input type="hidden" name="_csrf" value="D_fMvJboYnjfrmnwQWknWG9H4Tug4ARxuDMNn46uwKjEb2aOPs-ui6HZUBzyy1mTJUQTbVh-zAKQ0DZc3Atup7_M8J3yWwTv"/>
+                        <button type="submit" class="dropdown-item" onclick="return confirm('¿Estás seguro?')">
+                            <span class="material-icons-round">delete</span>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </td>
         </tr>
 
-        <tr th:if="${#lists.isEmpty(exercises)}">
-            <td colspan="5" style="text-align: center;">No hay ejercicios para mostrar.</td>
-        </tr>
+        
         </tbody>
     </table>
 
@@ -101,5 +229,4 @@
         // =============================================
     </script>
 </div>
-</body>
 </html>

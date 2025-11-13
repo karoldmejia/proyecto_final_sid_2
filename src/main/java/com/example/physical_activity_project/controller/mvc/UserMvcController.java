@@ -64,18 +64,7 @@ public class UserMvcController {
         return "user/dashboard";
     }
 
-    /**
-     * Muestra la biblioteca de ejercicios que el usuario puede consultar.
-     * Ruta: /user/exercises
-     */
-    @GetMapping("/exercises")
-    public String getExerciseLibrary(Model model) {
-        // El usuario puede ver todos los ejercicios predefinidos [cite: 9]
-        model.addAttribute("exercises", exerciseService.getAllExercises());
 
-        // Devuelve la plantilla de la biblioteca de ejercicios
-        return "user/exercises/exercises-list";
-    }
 
     /**
      * Muestra las rutinas prediseñadas por los entrenadores.
