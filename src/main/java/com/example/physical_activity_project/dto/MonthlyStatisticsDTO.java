@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MonthlyStatisticsDTO {
-    private Long entityId;
+    private String entityId;
     private Integer year;
     private Integer month;
 

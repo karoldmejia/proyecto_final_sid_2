@@ -10,7 +10,7 @@ public interface IRoutineService {
     Routine createRoutine(Routine routine);
     Routine updateRoutine(ObjectId id, Routine updatedRoutine);
     void deleteRoutine(ObjectId id);
-    List<Routine> getRoutinesByUser(Long userId);
+    List<Routine> getRoutinesByUser(String userId);
     List<Routine> getAllRoutines();
     Routine getRoutineById(ObjectId id);
     Routine removeExerciseFromRoutine(ObjectId routineId, ObjectId exerciseId);

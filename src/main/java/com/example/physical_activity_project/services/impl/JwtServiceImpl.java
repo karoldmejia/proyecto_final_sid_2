@@ -38,7 +38,7 @@ public class JwtServiceImpl implements IJwtService {
     @Override
     public String generateToken(User user, Authentication auth) {
         return Jwts.builder()
-                .id(user.getId().toString())
+                .id(user.getUsername().toString())
                 .claims(Map.of(
                         "email", user.getUsername(),
                         "authorities", auth != null && auth.getAuthorities() != null ? auth.getAuthorities().stream()

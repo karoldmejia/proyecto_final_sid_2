@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface IRoutineRepository extends MongoRepository<Routine, ObjectId> {
-    List<Routine> findByUserSqlId(Long userSqlId);
+    List<Routine> findByUserSqlId(String userSqlId);
     Optional<Routine> findByExercises_ExerciseId(ObjectId exerciseId);
 }

@@ -16,7 +16,7 @@ public class MonthlyStatisticsController {
 
     @GetMapping("/user/{userId}")
     public MonthlyStatisticsDTO getUserStatistics(
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestParam int year,
             @RequestParam int month) {
 
@@ -26,7 +26,7 @@ public class MonthlyStatisticsController {
 
     @GetMapping("/trainer/{trainerId}")
     public MonthlyStatisticsDTO getTrainerStatistics(
-            @PathVariable Long trainerId,
+            @PathVariable String trainerId,
             @RequestParam int year,
             @RequestParam int month) {
 

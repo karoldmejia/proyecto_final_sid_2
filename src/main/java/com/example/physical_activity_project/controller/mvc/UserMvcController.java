@@ -122,7 +122,7 @@ public class UserMvcController {
         ExerciseProgress entity = exerciseProgressMapper.dtoToEntity(dto);
 
         // 3. Guardar el progreso
-        progressService.registerProgress(user.getId(), entity);
+        progressService.registerProgress(user.getUsername(), entity);
 
         return "redirect:/user/my-progress"; // Redirige a la lista de progreso
     }
@@ -140,7 +140,7 @@ public class UserMvcController {
 
 
         // 2. Obtener su historial de progreso
-        List<ExerciseProgressDTO> progressList = progressService.getProgressByUser(user.getId())
+        List<ExerciseProgressDTO> progressList = progressService.getProgressByUser(user.getUsername())
                 .stream()
                 .map(exerciseProgressMapper::entityToDto)
                 .toList();
@@ -164,11 +164,11 @@ public class UserMvcController {
                 .mapToObj(month -> {
 
                     // 4. Llama a cada método de tu servicio que devuelve un int
-                    int routines = monthlyStatisticsService.getUserRoutinesStarted(user.getId(), currentYear, month);
+                    int routines = monthlyStatisticsService.getUserRoutinesStarted(user.getUsername(), currentYear, month);
 
                     // 5. ¡OJO! Tu interfaz no tiene "progressLoggedCount".
                     //    Uso el método que sí tienes: getUserRecommendationsReceived
-                    int recs = monthlyStatisticsService.getUserRecommendationsReceived(user.getId(), currentYear, month);
+                    int recs = monthlyStatisticsService.getUserRecommendationsReceived(user.getUsername(), currentYear, month);
 
                     // 6. Construye el DTO manualmente (sin mapper)
                     MonthlyStatisticsDTO dto = new MonthlyStatisticsDTO();

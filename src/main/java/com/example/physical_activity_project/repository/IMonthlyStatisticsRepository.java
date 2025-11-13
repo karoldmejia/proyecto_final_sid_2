@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface IMonthlyStatisticsRepository extends JpaRepository<MonthlyStatistics, Long> {
 
     Optional<MonthlyStatistics> findByEntityIdAndYearAndMonth(
-            Long entityId, Integer year, Integer month
+            String entityId, Integer year, Integer month
     );
 
 }

@@ -2,6 +2,7 @@ package com.example.physical_activity_project.services;
 
 import com.example.physical_activity_project.model.Permission;
 import com.example.physical_activity_project.model.Role;
+import com.example.physical_activity_project.model.User;
 
 import java.util.List;
 import java.util.Optional;

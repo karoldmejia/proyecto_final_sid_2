@@ -37,7 +37,7 @@ public class ExerciseProgress {
 
     // Solo referencia al usuario
     @Field("user_id")
-    private Long userId;
+    private String userId;
 
     @Field("routine_exercise_id")
     private ObjectId routineExerciseId;

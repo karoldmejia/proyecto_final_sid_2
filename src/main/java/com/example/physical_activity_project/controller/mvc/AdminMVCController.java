@@ -54,16 +54,17 @@ public class AdminMVCController {
     }
 
     @PostMapping("/add")
-    public String addUser(@ModelAttribute User user, @RequestParam("role") Long roleId) {
+    public String addUser(@ModelAttribute User user, @RequestParam("role") String roleType) {
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        Role role = roleService.getRoleById(roleId).orElse(null);
-        user.setRole(role);
-        userService.save(user);
+        // roleType puede ser "STUDENT", "EMPLOYEE", "ADMIN"
+        user.setRole(roleType); // asignamos el tipo de usuario
+        userService.save(user); // se encargará de mapear al Role real y crear UserRole
         return "redirect:/mvc/users";
     }
 
+
     @GetMapping("/edit")
-    public String editUserForm(@RequestParam Long id, Model model) {
+    public String editUserForm(@RequestParam String id, Model model) {
         Optional<User> userOpt = userService.getUserById(id);
         if (userOpt.isPresent()) {
             model.addAttribute("actualUser", userOpt.get());
@@ -76,25 +77,24 @@ public class AdminMVCController {
     }
 
     @PostMapping("/edit")
-    public String editUser(@ModelAttribute("actualUser") User user, @RequestParam("role") Long roleId) {
-        Optional<User> existingUserOpt = userService.getUserById(user.getId());
+    public String editUser(@ModelAttribute("actualUser") User user, @RequestParam("role") String roleType) {
+        Optional<User> existingUserOpt = userService.getUserById(user.getUsername());
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
 
             // Actualizar campos básicos
             existingUser.setUsername(user.getUsername());
-            // Actualizar rol
-            Role role = roleService.getRoleById(roleId).orElse(null);
-            existingUser.setRole(role);
 
+            // Actualizar tipo de rol (STUDENT, EMPLOYEE, ADMIN)
+            existingUser.setRole(roleType);
+            // save() se encarga de mapear a Role real y crear/actualizar UserRole
             userService.save(existingUser);
         }
-
         return "redirect:/mvc/users";
     }
 
     @GetMapping("/delete")
-    public String deleteUser(@RequestParam Long id, Model model) {
+    public String deleteUser(@RequestParam String id, Model model) {
         try {
             userService.deleteById(id);
             return "redirect:/mvc/users";

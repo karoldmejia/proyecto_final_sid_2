@@ -26,8 +26,7 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/trainer/{trainerId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public String getByTrainer(@PathVariable Long trainerId, Model model) {
-        // ... (sin cambios)
+    public String getByTrainer(@PathVariable String trainerId, Model model) {
         List<UserTrainerAssignment> assignments = assignmentService.getAssignmentsByTrainer(trainerId);
         model.addAttribute("assignments", assignments);
         model.addAttribute("contextTrainerId", trainerId);
@@ -41,8 +40,7 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('VER_ASIGNACIONES_PROPIAS')")
-    public String getByUser(@PathVariable Long userId, Model model) {
-        // ... (sin cambios)
+    public String getByUser(@PathVariable String userId, Model model) {
         List<UserTrainerAssignment> assignments = assignmentService.getAssignmentsByUser(userId);
         model.addAttribute("assignments", assignments);
         model.addAttribute("contextUserId", userId);
@@ -57,11 +55,11 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/create/user/{userId}")
     @PreAuthorize("hasAuthority('CREAR_ASIGNACION')")
-    public String showAssignFormForUser(@PathVariable Long userId, Model model) {
-
+    public String showAssignForm(@RequestParam("userId") String userId, Model model) {
         User user = userService.getUserById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
-        List<User> trainers = userService.getUsersByRoleName("Trainer");
+        // Buscamos a todos los entrenadores para ponerlos en un <select>
+        List<User> trainers = userService.getUsersByRoleName("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("trainers", trainers);
@@ -77,7 +75,7 @@ public class UserTrainerAssignmentMvcController {
      */
     @GetMapping("/create/trainer/{trainerId}")
     @PreAuthorize("hasAuthority('CREAR_ASIGNACION')")
-    public String showAssignFormForTrainer(@PathVariable Long trainerId, Model model) {
+    public String showAssignFormForTrainer(@PathVariable String trainerId, Model model) {
 
         User trainer = userService.getUserById(trainerId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trainer Id:" + trainerId));
@@ -162,7 +160,7 @@ public class UserTrainerAssignmentMvcController {
     @lombok.AllArgsConstructor
     @lombok.NoArgsConstructor
     static class AssignmentForm {
-        private Long userId;
-        private Long trainerId;
+        private String userId;
+        private String trainerId;
     }
 }

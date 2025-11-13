@@ -25,7 +25,7 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
     private MonthlyStatisticsServiceImpl monthlyStatisticsService;
 
     @Override
-    public UserTrainerAssignment assignTrainerToUser(Long trainerId, Long userId) {
+    public UserTrainerAssignment assignTrainerToUser(String trainerId, String userId) {
         User trainer = userRepository.findById(trainerId)
                 .orElseThrow(() -> new RuntimeException("Trainer not found"));
         User user = userRepository.findById(userId)
@@ -54,13 +54,13 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
     }
 
     @Override
-    public List<UserTrainerAssignment> getAssignmentsByTrainer(Long trainerId) {
-        return assignmentRepository.findByTrainerId(trainerId);
+    public List<UserTrainerAssignment> getAssignmentsByTrainer(String trainerId) {
+        return assignmentRepository.findByTrainerUsername(trainerId);
     }
 
     @Override
-    public List<UserTrainerAssignment> getAssignmentsByUser(Long userId) {
-        return assignmentRepository.findByUserId(userId);
+    public List<UserTrainerAssignment> getAssignmentsByUser(String userId) {
+        return assignmentRepository.findByUserUsername(userId);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class UserTrainerAssignmentServiceImpl implements IUserTrainerAssignmentS
         assignmentRepository.deleteById(assignmentId);
     }
 
-    public boolean validateTrainer(Long trainerId, Long userId) {
+    public boolean validateTrainer(String trainerId, String userId) {
         Optional<UserTrainerAssignment> assignment =
-                assignmentRepository.findByTrainerIdAndUserIdAndStatus(trainerId, userId, "ACTIVE");
+                assignmentRepository.findByTrainerUsernameAndUserUsernameAndStatus(trainerId, userId, "ACTIVE");
 
         return assignment.isPresent();
     }

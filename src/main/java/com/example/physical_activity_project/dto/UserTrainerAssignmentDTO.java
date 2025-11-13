@@ -10,8 +10,8 @@ public class UserTrainerAssignmentDTO {
     private Timestamp assignmentDate;
     private String status;
 
-    private Long trainerId;
-    private Long userId;
+    private String trainerId;
+    private String userId;
 
     private String trainerName;
     private String userName;
