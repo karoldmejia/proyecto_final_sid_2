@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layouts/base :: layout(title='Asignaciones de ' + ${contextName})}">
+
+<body>
+<div th:fragment="content">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components/header_user_mngmt.css}">
+    <link rel="stylesheet" th:href="@{/css/users/personas.css}">
+
+    <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 mb-4 rounded">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mb-4 rounded">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <div class="header-actions">
+        <h1 class="text-2xl font-bold">
+            Asignaciones de <span th:text="${contextName}">[Nombre]</span>
+        </h1>
+
+        <button th:if="${viewType == 'user'}"
+                type="button"
+                th:onclick="'openModal(\'' + @{/mvc/assignments/create/user/{id}(id=${contextUserId})} + '\')'"
+                class="add-user-btn">
+            <span class="material-icons-round">person_add</span>
+            Asignar Otro Entrenador
+        </button>
+
+        <button th:if="${viewType == 'trainer'}"
+                type="button"
+                th:onclick="'openModal(\'' + @{/mvc/assignments/create/trainer/{id}(id=${contextTrainerId})} + '\')'"
+                class="add-user-btn">
+            <span class="material-icons-round">group_add</span>
+            Asignar Usuario
+        </button>
+    </div>
+
+    <div th:with="redirectUrl=${viewType == 'user'} ?
+              '/mvc/assignments/user/' + ${contextUserId} :
+              '/mvc/assignments/trainer/' + ${contextTrainerId}">
+
+        <div th:if="${#lists.isEmpty(assignments)}" class="text-center text-gray-500 py-8">
+            <p>No hay asignaciones para mostrar.</p>
+        </div>
+
+        <div class="user-grid-container" th:if="${not #lists.isEmpty(assignments)}">
+
+            <div th:each="asig : ${assignments}" class="user-card" style="aspect-ratio: auto; padding: 1rem;">
+                <div>
+                    <h2 th:if="${viewType == 'user'}" th:text="'Entrenador: ' + ${asig.trainer.username}">Entrenador</h2>
+                    <h2 th:if="${viewType == 'trainer'}" th:text="'Usuario: ' + ${asig.user.username}">Usuario</h2>
+                    <p>
+                        <span class="material-icons-round" style="font-size: 1.1rem;">calendar_today</span>
+                        <span th:text="${#dates.format(asig.assignmentDate, 'dd/MM/yyyy')}">11/11/2025</span>
+                    </p>
+                    <p>
+                        <span class="material-icons-round" style="font-size: 1.1rem;">bookmark</span>
+                        <span>Estado: <span th:text="${asig.status}">PENDING</span></span>
+                    </p>
+                </div>
+
+                <div class="card-actions">
+                    <form th:action="@{/mvc/assignments/update-status}" method="POST" class="flex-grow">
+                        <!-- Agregar campos ocultos para assignmentId y redirectUrl -->
+                        <input type="hidden" name="assignmentId" th:value="${asig.id}">
+                        <input type="hidden" name="redirectUrl" th:value="${redirectUrl}">
+
+                        <select name="newStatus" onchange="this.form.submit()" class="p-2 rounded border w-full">
+                            <option value="PENDING" th:selected="${asig.status == 'PENDING'}">Pendiente</option>
+                            <option value="ACTIVE" th:selected="${asig.status == 'ACTIVE'}">Activa</option>
+                            <option value="COMPLETED" th:selected="${asig.status == 'COMPLETED'}">Completada</option>
+                        </select>
+                    </form>
+                    <form th:action="@{/mvc/assignments/delete}" method="POST" onsubmit="return confirm('¿Eliminar asignación?')">
+                        <!-- También agregar assignmentId para el formulario de eliminar -->
+                        <input type="hidden" name="assignmentId" th:value="${asig.id}">
+                        <input type="hidden" name="redirectUrl" th:value="${redirectUrl}">
+                        <button type="submit" class="delete-button">
+                            <span class="material-icons-round">delete</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">
+                <span class="material-icons-round">close</span>
+            </button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <script>
+        // Mostrar modal y cargar contenido dinámico
+        async function openModal(url) {
+            const overlay = document.getElementById('modal-overlay');
+            const body = document.getElementById('modal-body');
+
+            body.innerHTML = '<p class="text-center text-gray-500">Cargando...</p>';
+            overlay.classList.remove('hidden');
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                body.innerHTML = html;
+            } catch (err) {
+                body.innerHTML = '<p class="text-center text-red-500">Error al cargar el contenido.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+            document.getElementById('modal-body').innerHTML = '';
+        }
+
+        // Cerrar modal si se hace clic fuera del contenido
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') closeModal();
+        });
+    </script>
+</div>
+</body>
+</html>

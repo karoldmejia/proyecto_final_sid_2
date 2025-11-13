@@ -1,16 +1,16 @@
 /* ==================================================================
    VARIABLES GLOBALES Y ESTILOS DE BODY
-   ================================================================== */
-:root {
-    --verde: #4cb979;
-    --blanco: #FAFAFA;
-    --negro: #1A1A1A;
-    --gris: #DBDBDB;
-    --gris-claro: #F5F5F5;
-    --gris-oscuro: #B5B5B5;
-    --header-height: 60px;
-    --label-padding: 8px 16px;
-}
+       ================================================================== */
+    :root {
+        --verde: #4cb979;
+        --blanco: #FAFAFA;
+        --negro: #1A1A1A;
+        --gris: #DBDBDB;
+        --gris-claro: #F5F5F5;
+        --gris-oscuro: #B5B5B5;
+        --header-height: 60px;
+        --label-padding: 8px 16px;
+    }
 
 body {
     font-family: 'Poppins', sans-serif;

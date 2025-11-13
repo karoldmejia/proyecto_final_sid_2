@@ -1,11 +1,13 @@
 package com.example.physical_activity_project.services.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import com.example.physical_activity_project.model.UserRole;
 import com.example.physical_activity_project.repository.IRoleRepository;
 import com.example.physical_activity_project.repository.IUserRoleRepository;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
     private final IUserRoleRepository userRoleRepository;
@@ -55,6 +57,7 @@ public class UserServiceImpl implements IUserService{
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
+
     // Eliminar usuario
     public void deleteById(String id) {
         if (!userRepository.existsById(id)) {
@@ -125,7 +128,5 @@ public class UserServiceImpl implements IUserService{
                 .map(UserRole::getUser)
                 .toList();
     }
-
-
 }
 

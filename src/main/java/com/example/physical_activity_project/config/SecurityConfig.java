@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Collection;
 import java.util.List;
 
 @Configuration
@@ -65,7 +67,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain mvcSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/mvc/**")
+                .securityMatcher("/mvc/**", "/user/**") // <-- IMPORTANTE: Añade /user/** aquí
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
                         // Recursos públicos
@@ -75,13 +77,43 @@ public class SecurityConfig {
                         .requestMatchers("/mvc/users/add", "/mvc/users/edit/**", "/mvc/users/delete/**").hasRole("Admin")
                         .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
                         .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
+
+                        // 1. <-- ¡CAMBIO IMPORTANTE! AÑADE ESTA REGLA PARA EL USUARIO
+                        .requestMatchers("/user/**").hasRole("User")
+
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/mvc/login")
                         .loginProcessingUrl("/mvc/authenticate") // Debe coincidir con el action del form
-                        .defaultSuccessUrl("/mvc/users", true)
+
+                        // 2. <-- ¡REEMPLAZA ESTO!
+                        // .defaultSuccessUrl("/mvc/users", true) // <-- ELIMINA ESTA LÍNEA
+
+                        // ... Y AÑADE ESTE BLOQUE COMPLETO:
+                        .successHandler((request, response, authentication) -> {
+                            String redirectUrl = "/mvc/login?error"; // Fallback por si acaso
+                            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+                            for (GrantedAuthority authority : authorities) {
+                                String authorityName = authority.getAuthority();
+
+                                if (authorityName.equals("ROLE_Admin")) {
+                                    redirectUrl = "/mvc/users/";
+                                    break;
+                                } else if (authorityName.equals("ROLE_User")) {
+                                    redirectUrl = "/user/dashboard"; // <-- El dashboard del usuario
+                                    break;
+                                } else if (authorityName.equals("ROLE_Trainer")) {
+                                    redirectUrl = "/mvc/trainer/dashboard"; // (Ajusta si es otra URL)
+                                    break;
+                                }
+                            }
+                            response.sendRedirect(request.getContextPath() + redirectUrl);
+                        })
+                        // FIN DEL BLOQUE NUEVO
+
                         .failureUrl("/mvc/login?error=true")
                         .usernameParameter("username")
                         .passwordParameter("password")
