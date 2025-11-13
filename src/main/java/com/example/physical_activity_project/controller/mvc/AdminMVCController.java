@@ -97,10 +97,7 @@ public class AdminMVCController {
 
     @GetMapping("/edit")
     public String editUserForm(@RequestParam String id, Model model) {
-        // CORRECCIÓN: Usamos 'findByUsername' porque tu entidad usa el username como ID
-        // y ese es el método disponible en tu IUserService.
         Optional<User> userOpt = userService.findByUsername(id);
-
         if (userOpt.isPresent()) {
             model.addAttribute("actualUser", userOpt.get());
 

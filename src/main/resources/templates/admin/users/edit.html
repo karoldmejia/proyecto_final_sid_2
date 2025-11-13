@@ -22,25 +22,7 @@
 
     <!-- Formulario principal -->
     <form th:if="${actualUser != null}" th:action="@{/mvc/users/edit}" method="post">
-        <input type="hidden" name="id" th:value="${actualUser.id}">
-
-        <!-- Nombre -->
-        <div class="input-group">
-            <input id="name" name="name" type="text" maxlength="50"
-                   th:value="${actualUser.name}" class="form_input" placeholder=" " required>
-            <label for="name" class="form_label">
-                Nombre
-            </label>
-        </div>
-
-        <!-- Correo -->
-        <div class="input-group">
-            <input id="institutionalEmail" name="institutionalEmail" type="email" maxlength="100"
-                   th:value="${actualUser.institutionalEmail}" class="form_input" placeholder=" " required>
-            <label for="institutionalEmail" class="form_label">
-                Email
-            </label>
-        </div>
+        <input type="hidden" name="id" th:value="${actualUser.username}">
 
         <!-- Rol -->
         <div class="input-group">

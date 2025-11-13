@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es"
-
-
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <body>
 <div th:fragment="content">
 
     <link rel="stylesheet" th:href="@{/css/users/forms.css}">
-
 
     <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 mb-4 rounded">
         <p th:text="${successMessage}"></p>
@@ -15,20 +12,17 @@
         <p th:text="${errorMessage}"></p>
     </div>
 
+    <!-- Asignar entrenador a un usuario -->
     <div th:if="${viewMode == 'assignTrainer'}">
         <h1 class="text-2xl font-bold mb-6">
             Asignar Entrenador a <span th:text="${user.username}">Usuario</span>
         </h1>
 
         <form th:action="@{/mvc/assignments/create}" method="POST">
-
             <input type="hidden" name="userId" th:value="${assignmentForm.userId}" />
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2">
-                    Usuario:
-                </label>
+                <label class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
                 <p class="text-lg" th:text="${user.username}">Usuario</p>
-                <p class="text-sm text-gray-600" th:text="${user.studentId}">ID</p>
             </div>
             <div class="mb-6">
                 <label for="trainerId" class="block text-gray-700 text-sm font-bold mb-2">
@@ -38,7 +32,7 @@
                         class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">-- Seleccione un entrenador --</option>
                     <option th:each="trainer : ${trainers}"
-                            th:value="${trainer.id}"
+                            th:value="${trainer.username}"
                             th:text="${trainer.username}">
                         Entrenador
                     </option>
@@ -46,65 +40,82 @@
             </div>
 
             <div class="flex items-center justify-end gap-3 mt-6">
-
-                <button type="button" onclick="closeModal()"
-                        class="font-bold py-2 px-4 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:shadow-outline">
+                <button type="button" onclick="closeModal()" class="font-bold py-2 px-4 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:shadow-outline">
                     Cancelar
                 </button>
-
-                <button type="submit"
-                        class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button type="submit" class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     <span class="material-icons-round" style="font-size: 1.2rem;">person_add</span>
                     Guardar
                 </button>
             </div>
-
         </form>
     </div>
 
+    <!-- Asignar usuario a un entrenador -->
     <div th:if="${viewMode == 'assignUser'}">
         <h1 class="text-2xl font-bold mb-6">
             Asignar Usuario al Entrenador <span th:text="${trainer.username}">Entrenador</span>
         </h1>
 
         <form th:action="@{/mvc/assignments/create}" method="POST">
-
             <input type="hidden" name="trainerId" th:value="${assignmentForm.trainerId}" />
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2">
-                    Entrenador:
-                </label>
+                <label class="block text-gray-700 text-sm font-bold mb-2">Entrenador:</label>
                 <p class="text-lg" th:text="${trainer.username}">Entrenador</p>
-                <p class="text-sm text-gray-600" th:text="${trainer.employeeId}">Dd</p>
             </div>
             <div class="mb-6">
-                <label for="userId" class="block text-gray-700 text-sm font-bold mb-2">
-                    Seleccionar Usuario: <span class="text-red-500">*</span>
-                </label>
+                <label for="userId" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Usuario: <span class="text-red-500">*</span></label>
                 <select id="userId" name="userId" required
                         class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">-- Seleccione un usuario --</option>
                     <option th:each="user : ${users}"
-                            th:value="${user.id}"
-                            th:text="${user.username + ' (' + user.studentId + ')'}">
+                            th:value="${user.username}"
+                            th:text="${user.username}">
                         Usuario
                     </option>
                 </select>
             </div>
 
             <div class="flex items-center justify-end gap-3 mt-6">
-
-                <button type="button" onclick="closeModal()"
-                        >
-                    Cancelar
-                </button>
-
-                <button type="submit"
-                        >
+                <button type="button" onclick="closeModal()">Cancelar</button>
+                <button type="submit">
                     <span class="material-icons-round" style="font-size: 1.2rem;">group_add</span>
                     Asignar Usuario
                 </button>
             </div>
+        </form>
+    </div>
+
+    <!-- Admin asignación -->
+    <div th:if="${viewMode == 'adminAssign'}">
+        <h1 class="text-2xl font-bold mb-6">Crear nueva asignación</h1>
+
+        <form th:action="@{/mvc/assignments/create}" method="POST">
+            <div class="mb-6">
+                <label for="userId">Seleccionar usuario:</label>
+                <select id="userId" name="userId" required>
+                    <option value="">-- Seleccione un usuario --</option>
+                    <option th:each="user : ${users}"
+                            th:value="${user.username}"
+                            th:text="${user.username}">
+                        Usuario
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label for="trainerId">Seleccionar entrenador:</label>
+                <select id="trainerId" name="trainerId" required>
+                    <option value="">-- Seleccione un entrenador --</option>
+                    <option th:each="trainer : ${trainers}"
+                            th:value="${trainer.username}"
+                            th:text="${trainer.username}">
+                        Entrenador
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit">Guardar</button>
         </form>
     </div>
 

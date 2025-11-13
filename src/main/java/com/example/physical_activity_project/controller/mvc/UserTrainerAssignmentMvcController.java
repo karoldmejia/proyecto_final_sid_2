@@ -21,6 +21,22 @@ public class UserTrainerAssignmentMvcController {
     private final UserTrainerAssignmentServiceImpl assignmentService;
     private final UserServiceImpl userService;
 
+    @GetMapping("/new")
+    @PreAuthorize("hasAuthority('CREAR_ASIGNACION')")
+    public String showAdminAssignForm(Model model) {
+        // Traer todos los usuarios que puedan recibir un entrenador
+        List<User> users = userService.getUsersByRoleName("User");
+        // Traer todos los entrenadores disponibles
+        List<User> trainers = userService.getUsersByRoleName("Trainer");
+
+        model.addAttribute("users", users);
+        model.addAttribute("trainers", trainers);
+        model.addAttribute("assignmentForm", new AssignmentForm(null, null));
+        model.addAttribute("viewMode", "adminAssign");
+
+        return "assignments/assign-form :: content";
+    }
+
     /**
      * Muestra la página de lista de asignaciones para un entrenador específico.
      */
@@ -59,7 +75,7 @@ public class UserTrainerAssignmentMvcController {
         User user = userService.getUserById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
         // Buscamos a todos los entrenadores para ponerlos en un <select>
-        List<User> trainers = userService.getUsersByRoleName("TRAINER");
+        List<User> trainers = userService.getUsersByRoleName("Trainer");
 
         model.addAttribute("user", user);
         model.addAttribute("trainers", trainers);
