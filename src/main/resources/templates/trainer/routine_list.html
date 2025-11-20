@@ -1,44 +1,119 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main-layout}">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title layout:title="Lista de Rutinas">Lista de Rutinas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Rutinas</title>
+
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_negro.svg}" media="(prefers-color-scheme: light)">
+    <link rel="icon" th:href="@{/images/logo/icesifit_logo_blanco.svg}" media="(prefers-color-scheme: dark)">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin-dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/form-view.css}"> <!-- Added for button styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const layout = document.querySelector('.layout');
+
+            sidebar.classList.add('collapsed');
+            layout.classList.add('sidebar-collapsed');
+
+            sidebar.addEventListener('mouseenter', function() {
+                if (window.innerWidth > 1100) {
+                    sidebar.classList.remove('collapsed');
+                    layout.classList.remove('sidebar-collapsed');
+                }
+            });
+
+            sidebar.addEventListener('mouseleave', function() {
+                if (window.innerWidth > 1100) {
+                    sidebar.classList.add('collapsed');
+                    layout.classList.add('sidebar-collapsed');
+                }
+            });
+
+            const toggleBtn = document.querySelector('.btn-toggle-sidebar');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('is-open');
+                });
+            }
+        });
+    </script>
 </head>
-
 <body>
+<div class="layout">
 
-<main layout:fragment="content">
+    <aside class="sidebar" role="navigation" aria-label="Menú lateral">
+        <div class="sidebar-brand">
+            <a th:href="@{/trainer/dashboard}" aria-label="Ir al inicio">
+                <img th:src="@{/images/logo/icesifit_logo_blanco.svg}" alt="Logo Universidad Icesi" class="logo">
+            </a>
+        </div>
 
-    <h1 class="page-title">Lista de Rutinas</h1>
+        <nav class="sidebar-menu">
+            <ul>
+                <li><a th:href="@{mvc/trainer/dashboard}" aria-current="page"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>
+                <li><a th:href="@{mvc/trainer/exercises}"><i class="fa-solid fa-book"></i> <span>Ejercicios</span></a></li>
+                <li><a th:href="@{mvc/trainer/routines}"><i class="fa-solid fa-list-check"></i> <span>Rutinas</span></a></li>
+                <li><a th:href="@{mvc/trainer/assignments}"><i class="fa-solid fa-users"></i> <span>Asignaciones</span></a></li>
+            </ul>
+        </nav>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Duración</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
+        <div class="sidebar-footer">
+            <a href="/logout">
+                <i class="fa-solid fa-right-from-bracket"></i><span>Salir</span>
+            </a>
+        </div>
+    </aside>
 
-        <tbody>
-        <tr th:each="routine : ${routines}">
-            <td th:text="${routine.name}"></td>
-            <td th:text="${routine.description}"></td>
-            <td th:text="${routine.duration}"></td>
+    <div class="main-column">
+        <main class="admin-container">
+            <div class="content-header">
+                <h1 class="page-title">Lista de Rutinas</h1>
+                <a th:href="@{/user/routines/add}" class="action-button">
+                    <i class="fa-solid fa-plus"></i> Nueva Rutina
+                </a>
+            </div>
 
-            <td>
-                <a th:href="@{'/trainer/routines/edit/' + ${routine.id}}">Editar</a>
-                |
-                <a th:href="@{'/trainer/routines/delete/' + ${routine.id}}">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <div class="form-card"> <!-- Using form-card for general content container -->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Duración</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
 
-</main>
+                    <tbody>
+                    <tr th:each="routine : ${routines}">
+                        <td th:text="${routine.name}"></td>
+                        <td th:text="${routine.description}"></td>
+                        <td th:text="${routine.duration}"></td>
 
+                        <td>
+                            <a th:href="@{'/user/routines/edit/' + ${routine.id}}" class="action-button small">Editar</a>
+                            <a th:href="@{'/user/routines/delete/' + ${routine.id}}" class="action-button small danger-outline">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer>
+            © 2025 Universidad Icesi | Ctrl Alt Elite
+        </footer>
+    </div>
+</div>
 </body>
 </html>
