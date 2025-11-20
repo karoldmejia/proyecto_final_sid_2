@@ -1,10 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseTrainer}"
+      lang="es">
 
+<head>
+    <title>Panel de Entrenador</title>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+
+    <div class="dashboard-container">
+
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    Panel de Entrenador
+                </h1>
+                <p class="text-muted">Bienvenido, gestiona tus estudiantes, rutinas y ejercicios.</p>
+            </div>
+
+            <div class="header-stats">
+                <div class="stat-card">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-value" th:text="${assignedUsers != null ? assignedUsers.size() : 0}">0</span>
+                        <span class="stat-label">Estudiantes Asignados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID GENERAL -->
+        <div class="dashboard-grid">
+
+            <!-- 1. Gestión de Estudiantes -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-user-group"></i> Gestión de Estudiantes</h2>
+                </div>
+
+                <div class="action-grid">
+
+                    <!-- Lista de estudiantes -->
+                    <a th:href="@{/mvc/trainer/dashboard}" class="action-card primary">
+                        <div class="action-icon"><i class="fa-solid fa-address-book"></i></div>
+                        <div class="action-content">
+                            <h3>Mis Estudiantes</h3>
+                            <p>Ver estudiantes asignados y acceder a sus datos</p>
+                        </div>
+                    </a>
+
+                    <!-- Acceso a rutinas de cada estudiante -->
+                    <a th:href="@{/mvc/trainer/dashboard}" class="action-card info">
+                        <div class="action-icon"><i class="fa-solid fa-dumbbell"></i></div>
+                        <div class="action-content">
+                            <h3>Rutinas de Estudiantes</h3>
+                            <p>Selecciona un estudiante para ver sus rutinas</p>
+                        </div>
+                    </a>
+
+                    <!-- Acceso a progreso -->
+                    <a th:href="@{/mvc/trainer/dashboard}" class="action-card warning">
+                        <div class="action-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="action-content">
+                            <h3>Progreso de Estudiantes</h3>
+                            <p>Accede al progreso individual</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- 2. Biblioteca y Diseño (RUTINAS + EJERCICIOS) -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-pen-ruler"></i> Biblioteca y Diseño</h2>
+                </div>
+
+                <div class="action-grid">
+
+                    <!-- Crear nueva rutina -->
+                    <a th:href="@{/mvc/trainer/routines/add}" class="action-card purple">
+                        <div class="action-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <div class="action-content">
+                            <h3>Crear Nueva Rutina</h3>
+                            <p>Diseña rutinas personalizadas</p>
+                        </div>
+                    </a>
+
+                    <!-- Listar rutinas -->
+                    <a th:href="@{/mvc/trainer/routines}" class="action-card secondary">
+                        <div class="action-icon"><i class="fa-solid fa-list"></i></div>
+                        <div class="action-content">
+                            <h3>Listado de Rutinas</h3>
+                            <p>Ver, editar y eliminar rutinas</p>
+                        </div>
+                    </a>
+
+                    <!-- Gestionar ejercicios -->
+                    <a th:href="@{/mvc/trainer/exercises}" class="action-card success">
+                        <div class="action-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="action-content">
+                            <h3>Gestionar Ejercicios</h3>
+                            <p>Crear, editar y eliminar ejercicios</p>
+                        </div>
+                    </a>
+
+                    <!-- Crear nuevo ejercicio -->
+                    <a th:href="@{/mvc/trainer/exercises/add}" class="action-card teal">
+                        <div class="action-icon"><i class="fa-solid fa-plus"></i></div>
+                        <div class="action-content">
+                            <h3>Nuevo Ejercicio</h3>
+                            <p>Agregar ejercicios a la biblioteca</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- 3. Accesos rápidos -->
+            <div class="dashboard-section quick-access">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-folder-open"></i> Accesos Rápidos</h2>
+                </div>
+
+                <div class="quick-links">
+
+                    <a th:href="@{/mvc/trainer/routines}" class="quick-link">
+                        <i class="fa-solid fa-dumbbell"></i>
+                        <span>Rutinas</span>
+                    </a>
+
+                    <a th:href="@{/mvc/trainer/exercises}" class="quick-link">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Ejercicios</span>
+                    </a>
+
+                    <a th:href="@{/mvc/trainer/dashboard}" class="quick-link">
+                        <i class="fa-solid fa-address-book"></i>
+                        <span>Estudiantes</span>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
 </body>
 </html>
