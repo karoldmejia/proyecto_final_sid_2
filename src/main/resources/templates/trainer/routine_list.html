@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/baseTrainer :: layout(~{::title}, ~{::.content-container})}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseTrainer}">
 <head>
     <title>Gestión de Rutinas</title>
 </head>
