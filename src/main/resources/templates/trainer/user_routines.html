@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/baseTrainer :: layout(~{::title}, ~{::.content-container})}">
+<head>
+    <title th:text="'Rutinas de ' + ${user.name}"></title>
+</head>
+<body>
+<div class="content-container">
+    <div class="header">
+        <a th:href="@{/mvc/trainer/dashboard}" class="back-link">&larr; Volver al Dashboard</a>
+        <h1 th:text="'Rutinas de ' + ${user.name}"></h1>
+        <p th:text="'Viendo todas las rutinas asignadas a ' + ${user.institutionalEmail}"></p>
+    </div>
+
+    <div class="content-body">
+        <div class="routines-grid">
+            <div th:if="${routines.isEmpty()}" class="empty-state">
+                <p>Este usuario aún no tiene rutinas.</p>
+            </div>
+
+            <div class="routine-card" th:each="routine : ${routines}">
+                <div class="card-header">
+                    <h3 th:text="${routine.name}">Nombre de la Rutina</h3>
+                    <span class="tag" th:classappend="${routine.certified} ? 'certified' : 'personal'"
+                          th:text="${routine.certified} ? 'Certificada' : 'Personal'"></span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Fecha de Creación:</strong> <span th:text="${#dates.format(routine.creationDate, 'dd-MM-yyyy')}"></span></p>
+                    <h4>Ejercicios:</h4>
+                    <ul class="exercise-list">
+                        <li th:each="re : ${routine.exercises}">
+                            <strong th:text="${re.exercise.name}"></strong>
+                            - <span th:text="${re.sets} + ' series, ' + ${re.reps} + ' repeticiones'"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .content-container {
+            padding: 2rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .header {
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .routines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .routine-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        .tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .tag.certified {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .tag.personal {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .card-body {
+            padding: 1rem;
+        }
+        .exercise-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .exercise-list li {
+            background-color: #f8f8f8;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
+</div>
+</body>
+</html>

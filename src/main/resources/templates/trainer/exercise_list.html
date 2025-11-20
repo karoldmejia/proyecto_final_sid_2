@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/baseTrainer :: layout(~{::title}, ~{::.content-container})}">
+<head>
+    <title>Gestión de Ejercicios</title>
+</head>
+<body>
+<div class="content-container">
+    <div class="header">
+        <h1>Gestión de Ejercicios</h1>
+        <p>Aquí puedes ver y añadir nuevos ejercicios al catálogo del sistema.</p>
+        <a th:href="@{/mvc/trainer/exercises/add}" class="add-btn">Añadir Nuevo Ejercicio</a>
+    </div>
+
+    <div class="content-body">
+        <table class="exercise-table">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Dificultad</th>
+                <th>Duración (min)</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="exercise : ${exercises}">
+                <td th:text="${exercise.name}"></td>
+                <td th:text="${exercise.type}"></td>
+                <td th:text="${exercise.difficulty}"></td>
+                <td th:text="${exercise.duration}"></td>
+                <td class="actions">
+                    <!-- Placeholder for future actions -->
+                    <a href="#" class="action-btn">Editar</a>
+                    <a href="#" class="action-btn delete">Eliminar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <style>
+        .content-container { padding: 2rem; font-family: 'Poppins', sans-serif; }
+        .header { margin-bottom: 2rem; }
+        .add-btn { display: inline-block; margin-top: 1rem; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; }
+        .exercise-table { width: 100%; border-collapse: collapse; }
+        .exercise-table th, .exercise-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        .exercise-table th { background-color: #f8f8f8; }
+        .actions .action-btn { padding: 5px 10px; margin-right: 5px; border-radius: 5px; text-decoration: none; color: white; }
+        .action-btn { background-color: #007bff; }
+        .action-btn.delete { background-color: #dc3545; }
+    </style>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/baseTrainer :: layout(~{::title}, ~{::.content-container})}">
+<head>
+    <title th:text="'Progreso de ' + ${user.name}"></title>
+</head>
+<body>
+<div class="content-container">
+    <div class="header">
+        <a th:href="@{/mvc/trainer/dashboard}" class="back-link">&larr; Volver al Dashboard</a>
+        <h1 th:text="'Progreso de ' + ${user.name}"></h1>
+        <p>Historial de progreso de los ejercicios registrados.</p>
+    </div>
+
+    <div class="content-body">
+        <div class="progress-list-container">
+            <div th:if="${progressList.isEmpty()}" class="empty-state">
+                <p>Este usuario aún no ha registrado ningún progreso.</p>
+            </div>
+
+            <table class="progress-table" th:if="${!progressList.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Ejercicio</th>
+                    <th>Series</th>
+                    <th>Repeticiones</th>
+                    <th>Tiempo (min)</th>
+                    <th>Nivel de Esfuerzo</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="progress : ${progressList}">
+                    <td th:text="${#dates.format(progress.progressDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${progress.routineExercise.exercise.name}"></td>
+                    <td th:text="${progress.setsCompleted}"></td>
+                    <td th:text="${progress.repsCompleted}"></td>
+                    <td th:text="${progress.timeCompleted}"></td>
+                    <td>
+                        <div class="effort-level" th:style="'--effort: ' + ${progress.effortLevel}">
+                            <span th:text="${progress.effortLevel}"></span>/10
+                        </div>
+                    </td>
+                    <td class="recommendations">
+                        <div class="existing-recs" th:if="${progress.recommendations != null and !progress.recommendations.isEmpty()}">
+                            <ul>
+                                <li th:each="rec : ${progress.recommendations}" th:text="${rec.content}"></li>
+                            </ul>
+                        </div>
+                        <form th:action="@{/mvc/trainer/progress/{id}/recommend(id=${progress.id})}" method="post" class="rec-form">
+                            <input type="text" name="content" placeholder="Añadir recomendación..." required>
+                            <button type="submit">Enviar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        .content-container {
+            padding: 2rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .header {
+            margin-bottom: 2rem;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress-table th, .progress-table td {
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #ddd;
+        }
+        .progress-table th {
+            background-color: #f8f8f8;
+        }
+        .effort-level {
+            --effort-percent: calc(var(--effort, 0) / 10 * 100%);
+            background: linear-gradient(to right, #28a745 var(--effort-percent), #e9ecef var(--effort-percent));
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #fff;
+            text-shadow: 1px 1px 1px #333;
+            text-align: center;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .recommendations ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .recommendations li {
+            background-color: #e2f3e5;
+            padding: 5px 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .rec-form {
+            display: flex;
+        }
+        .rec-form input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px 0 0 4px;
+        }
+        .rec-form button {
+            border: none;
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</div>
+</body>
+</html>

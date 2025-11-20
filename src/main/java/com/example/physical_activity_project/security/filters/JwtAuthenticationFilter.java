@@ -1,6 +1,8 @@
 package com.example.physical_activity_project.security.filters;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.example.physical_activity_project.services.IJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private IJwtService jwtService;
+
+    // Define paths that should not be filtered by JWT
+    private static final List<String> EXCLUDE_URLS = Arrays.asList(
+            "/login",
+            "/signup",
+            "/css",
+            "/images",
+            "/js"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return EXCLUDE_URLS.stream().anyMatch(path::startsWith);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

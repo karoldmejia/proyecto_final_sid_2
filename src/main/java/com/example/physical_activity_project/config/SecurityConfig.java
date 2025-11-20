@@ -70,14 +70,7 @@ public class SecurityConfig {
                 .securityMatcher("/mvc/**", "/user/**", "/routines/**")
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/mvc/login", "/mvc/signup/form", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/mvc/users/").hasRole("Admin")
-                        .requestMatchers("/mvc/users/add", "/mvc/users/edit/**", "/mvc/users/delete/**").hasRole("Admin")
-                        .requestMatchers("/mvc/trainer/**").hasRole("Trainer")
-                        .requestMatchers("/mvc/roles/**", "/mvc/permissions/**").hasRole("Admin")
-                        .requestMatchers("/mvc/exercises/**").hasAnyRole("Admin", "Trainer") // NUEVO: proteger ejercicios MVC
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/routines/**").authenticated() // NUEVO: proteger rutas de rutinas
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -142,6 +135,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/trainer/**").hasRole("TRAINER")
+                        .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
