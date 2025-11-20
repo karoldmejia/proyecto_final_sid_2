@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/baseTrainer :: layout(~{::title}, ~{::.content-container})}">
+      th:replace="~{layouts/baseTrainer :: layout}">
 <head>
-    <title th:text="'Progreso de ' + ${user.name}"></title>
+    <title th:text="'Progreso de ' + ${user.username}"></title>
 </head>
 <body>
 <div class="content-container">
     <div class="header">
         <a th:href="@{/mvc/trainer/dashboard}" class="back-link">&larr; Volver al Dashboard</a>
-        <h1 th:text="'Progreso de ' + ${user.name}"></h1>
+        <h1 th:text="'Progreso de ' + ${user.username}"></h1>
         <p>Historial de progreso de los ejercicios registrados.</p>
     </div>
 

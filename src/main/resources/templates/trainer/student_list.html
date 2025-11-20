@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseTrainer}"
+      lang="es">
+<head>
+    <title>Mis Estudiantes</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="container mt-4">
+        <h1 class="mb-4">Mis Estudiantes</h1>
+
+        <div th:if="${assignedUsers.isEmpty()}" class="alert alert-info" role="alert">
+            No tienes estudiantes asignados.
+        </div>
+
+        <div th:unless="${assignedUsers.isEmpty()}" class="list-group">
+            <div th:each="user : ${assignedUsers}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <h5 th:text="${user.username}">Nombre de Estudiante</h5>
+                <div>
+                    <a th:href="@{/mvc/trainer/user/{userId}/routines(userId=${user.username})}" class="btn btn-info btn-sm me-2">
+                        <i class="fa-solid fa-dumbbell"></i> Ver Rutinas
+                    </a>
+                    <a th:href="@{/mvc/trainer/user/{userId}/progress(userId=${user.username})}" class="btn btn-success btn-sm">
+                        <i class="fa-solid fa-chart-line"></i> Ver Progreso
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

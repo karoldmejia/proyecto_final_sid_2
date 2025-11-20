@@ -48,6 +48,20 @@ public class TrainerController {
         return "trainer/dashboard";
     }
 
+    @GetMapping("/students")
+    public String listAssignedStudents(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User currentTrainer = userDetails.getUser();
+
+        List<User> assignedUsers = userTrainerAssignmentService
+                .getAssignmentsByTrainer(currentTrainer.getUsername())
+                .stream().map(UserTrainerAssignment::getUser)
+                .collect(Collectors.toList());
+
+        model.addAttribute("assignedUsers", assignedUsers);
+        model.addAttribute("trainerName", currentTrainer.getUsername());
+        return "trainer/student_list";
+    }
+
     // =====================================================
     // RUTINAS DE UN USUARIO
     // =====================================================
