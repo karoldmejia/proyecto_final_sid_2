@@ -13,4 +13,5 @@ public class ExerciseDTO {
     private Double duration;
     private String difficulty;
     private String videoUrl;
+    private String category;
 }

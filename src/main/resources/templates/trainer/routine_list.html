@@ -1,57 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/baseTrainer}">
-<head>
-    <title>Gestión de Rutinas</title>
-</head>
-<body>
-<div class="content-container">
-    <div class="header">
-        <h1>Gestión de Rutinas</h1>
-        <p>Aquí puedes ver y crear nuevas rutinas para el sistema.</p>
-        <a th:href="@{/mvc/trainer/routines/add}" class="add-btn">Añadir Nueva Rutina</a>
-    </div>
+      layout:decorate="~{layout/main-layout}">
 
-    <div class="content-body">
-        <table class="routine-table">
-            <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Fecha de Creación</th>
-                <th>Tipo</th>
-                <th>Nº Ejercicios</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="routine : ${routines}">
-                <td th:text="${routine.name}"></td>
-                <td th:text="${#dates.format(routine.creationDate, 'dd-MM-yyyy')}"></td>
-                <td>
-                    <span class="tag" th:classappend="${routine.certified} ? 'certified' : 'personal'"
-                          th:text="${routine.certified} ? 'Certificada' : 'Personal'"></span>
-                </td>
-                <td th:text="${#lists.size(routine.exercises)}"></td>
-                <td class="actions">
-                    <a href="#" class="action-btn">Ver/Editar</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <style>
-        .content-container { padding: 2rem; font-family: 'Poppins', sans-serif; }
-        .header { margin-bottom: 2rem; }
-        .add-btn { display: inline-block; margin-top: 1rem; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; }
-        .routine-table { width: 100%; border-collapse: collapse; }
-        .routine-table th, .routine-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        .routine-table th { background-color: #f8f8f8; }
-        .tag { padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
-        .tag.certified { background-color: #d4edda; color: #155724; }
-        .tag.personal { background-color: #cce5ff; color: #004085; }
-        .actions .action-btn { padding: 5px 10px; border-radius: 5px; text-decoration: none; color: white; background-color: #007bff; }
-    </style>
-</div>
+<head>
+    <title layout:title="Lista de Rutinas">Lista de Rutinas</title>
+</head>
+
+<body>
+
+<main layout:fragment="content">
+
+    <h1 class="page-title">Lista de Rutinas</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Duración</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="routine : ${routines}">
+            <td th:text="${routine.name}"></td>
+            <td th:text="${routine.description}"></td>
+            <td th:text="${routine.duration}"></td>
+
+            <td>
+                <a th:href="@{'/trainer/routines/edit/' + ${routine.id}}">Editar</a>
+                |
+                <a th:href="@{'/trainer/routines/delete/' + ${routine.id}}">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+
 </body>
 </html>
